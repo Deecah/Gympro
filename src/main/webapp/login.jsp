@@ -12,6 +12,40 @@
         <title>Login Page</title>
         <link rel="stylesheet" href="login.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <style>
+            .role-select {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin: 20px 0;
+            }
+
+            .role-option {
+                position: relative;
+                cursor: pointer;
+            }
+
+            .role-option input[type="radio"] {
+                display: none;
+            }
+
+            .role-option span {
+                display: inline-block;
+                padding: 10px 20px;
+                border: 2px solid #ff4b2b;
+                border-radius: 30px;
+                font-weight: bold;
+                color: #ff4b2b;
+                transition: 0.3s;
+            }
+
+            .role-option input[type="radio"]:checked + span {
+                background-color: #ff4b2b;
+                color: white;
+            }
+
+
+        </style>
     </head>
 
     <body>
@@ -30,11 +64,21 @@
                     <input type="text" placeholder="Name" />
                     <input type="email" placeholder="Email" />
                     <input type="password" placeholder="Password" />
-                    <button>Sign Up</button>
+                    <div class="role-select">
+                        <label class="role-option">
+                            <input type="radio" name="role" value="Customer" checked>
+                            <span>I'm Customer</span>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="role" value="Trainer">
+                            <span> I'm Trainer</span>
+                        </label>
+                    </div>
+                    <button type="submit" name="action" value="signup">Sign Up</button>
                 </form>
             </div>
             <div class="form-container sign-in-container">
-                <form action="#">
+                <form action="#" method="post">
                     <h1>Sign in</h1>
                     <div class="social-container">
                         <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -45,7 +89,7 @@
                     <input type="email" placeholder="Email" />
                     <input type="password" placeholder="Password" />
                     <a href="#">Forgot your password?</a>
-                    <button>Sign In</button>
+                    <button type="submit" name="action" value="signin">Sign In</button>
                 </form>
             </div>
             <div class="overlay-container">
