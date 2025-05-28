@@ -2,11 +2,27 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>controller.LoginServlet</servlet-class>
+        <servlet-class>.LoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeAvatarServlet</servlet-name>
+        <servlet-class>controller.ChangeAvatarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GoogleLogin</servlet-name>
+        <servlet-class>controller.GoogleLogin</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeAvatarServlet</servlet-name>
+        <url-pattern>/ChangeAvatarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GoogleLogin</servlet-name>
+        <url-pattern>/GoogleLogin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
