@@ -21,10 +21,8 @@
                 <form action="#">
                     <h1>Create Account</h1>
                     <div class="social-container">
-                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force"
                            class="social"><i class="fab fa-google-plus-g"></i></a>
-                        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your email for registration</span>
                     <input type="text" placeholder="Name" />
@@ -37,14 +35,12 @@
                 <form action="#">
                     <h1>Sign in</h1>
                     <div class="social-container">
-                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
-                        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your account</span>
                     <input type="email" placeholder="Email" />
                     <input type="password" placeholder="Password" />
-                    <a href="#">Forgot your password?</a>
+                    <a href="requestPassword.jsp">Forgot your password?</a>
                     <button>Sign In</button>
                 </form>
             </div>
@@ -66,10 +62,7 @@
 
         <footer>
             <p>
-                Created with <i class="fa fa-heart"></i> by
-                <a target="_blank" href="https://florin-pop.com">Florin Pop</a>
-                - Read how I created this and how you can join the challenge
-                <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.
+                Created by Group D02-RT01
             </p>
         </footer>
         <script>
