@@ -43,13 +43,13 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String role = request.getParameter("role"); // lấy role từ form
-        String hashedPassword = HashUtil.hashPassword(password);
+        byte[] hashedPassword = HashUtil.hashPassword(password);
         try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
             String sql = "INSERT INTO Users (Name, Email, Password, Role, Status) VALUES (?, ?, ?, ?, 'Normal')";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, name);
             ps.setString(2, email);
-            ps.setString(3, hashedPassword);
+            ps.setBytes(3, hashedPassword);
             ps.setString(4, role);
             ps.executeUpdate();
             request.setAttribute("message", "Registration successful. Please login.");
@@ -65,12 +65,12 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String hashedPassword = HashUtil.hashPassword(password);
+        byte[] hashedPassword = HashUtil.hashPassword(password);
         try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
             String sql = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
-            ps.setString(2, hashedPassword);
+            ps.setBytes(2, hashedPassword);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String role = rs.getString("Role");
@@ -88,10 +88,10 @@ public class LoginServlet extends HttpServlet {
                 // Redirect theo role
                 switch (role) {
                     case "Admin":
-                        response.sendRedirect("admin-dashboard.jsp");
+                        response.sendRedirect("index.html");
                         break;
                     case "Customer":
-                        response.sendRedirect("customer-home.jsp");
+                        response.sendRedirect("index.jsp");
                         break;
                     case "Trainer":
                         response.sendRedirect("trainer-dashboard.jsp");
