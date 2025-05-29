@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package dao;
 
 import connectDB.ConnectDatabase;
@@ -5,7 +9,50 @@ import model.User;
 
 import java.sql.*;
 
+/**
+ *
+ * @author Admin
+ */
 public class UserDAO {
+
+    public boolean updateAvatar(int userId, String avatarUrl) {
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "UPDATE Users SET Avatar_Url = ? WHERE Id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, avatarUrl);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public User getUserByEmail(String email) {
+        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT * FROM Users WHERE Email = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("Id"));
+                user.setName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatarUrl(rs.getString("Avatar_Url"));
+                user.setPassword(rs.getString("Password"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public User getUserById(int userId) {
         User user = null;
@@ -61,38 +108,18 @@ public class UserDAO {
         return null;
     }
 
-    public User getUserByEmail(String email) {
-        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "SELECT * FROM Users WHERE Email = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("Id"));
-                user.setName(rs.getString("Name"));
-                user.setGender(rs.getString("Gender"));
-                user.setEmail(rs.getString("Email"));
-                user.setPhone(rs.getString("Phone"));
-                user.setAddress(rs.getString("Address"));
-                user.setAvatarUrl(rs.getString("Avatar_Url"));
-                user.setPassword(rs.getString("Password"));
-                user.setRole(rs.getString("Role"));
-                user.setStatus(rs.getString("Status"));
-                return user;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public boolean updateAvatar(int userId, String avatarUrl) {
+    public boolean updateUser(User user) {
         try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "UPDATE Users SET Avatar_Url = ? WHERE Id = ?";
+            String sql = "UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, avatarUrl);
-            ps.setInt(2, userId);
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getGender());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getPhone());
+            ps.setString(5, user.getAddress());
+            ps.setString(6, user.getRole());
+            ps.setString(7, user.getStatus());
+            ps.setInt(8, user.getId());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
