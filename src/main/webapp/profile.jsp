@@ -1,12 +1,28 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="model.User" %>
+<%@ page import="dao.UserDAO" %>
+
 <%
-    User user = (User) session.getAttribute("user");
+    // Lấy user từ session
+    User sessionUser = (User) session.getAttribute("user");
+
+    // Nếu chưa có trong session, redirect về login
+    if (sessionUser == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    // Lấy thông tin mới nhất từ database
+    UserDAO dao = new UserDAO();
+    User user = dao.getUserById(sessionUser.getId());
+
     if (user == null) {
-        response.sendRedirect("header.jsp");
+        out.println("<p style='color:red;'>Không tìm thấy người dùng trong cơ sở dữ liệu.</p>");
         return;
     }
 %>
+
+<jsp:include page="header.jsp" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +51,7 @@
 
                 <!-- Thông tin cá nhân -->
                 <div class="col-md-8">
-                    <h3>Thông tin cá nhân</h3>
+                    <h3>User Profile</h3>
                     <table class="table table-borderless">
                         <tr><th>ID:</th><td><%= user.getId() %></td></tr>
                         <tr><th>Name:</th><td><%= user.getName() %></td></tr>
@@ -46,6 +62,7 @@
                         <tr><th>Role:</th><td><%= user.getRole() %></td></tr>
                         <tr><th>Status:</th><td><%= user.getStatus() %></td></tr>
                     </table>
+                    <a href="editprofile.jsp" class="btn btn-primary">Edit</a>
                     <a href="header.jsp" class="btn btn-link">← Back to page</a>
                 </div>
             </div>
