@@ -66,27 +66,26 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String hashedPassword = HashUtil.hashPassword(password);
-        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-            ps.setString(2, hashedPassword);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String role = rs.getString("Role");
-                String status = rs.getString("Status");
-                if ("Banned".equalsIgnoreCase(status)) {
+
+        try {
+            // Gọi DAO để lấy user từ database
+            dao.UserDAO userDao = new dao.UserDAO();
+            model.User user = userDao.getUserByEmailAndPassword(email, hashedPassword);
+
+            if (user != null) {
+                if ("Banned".equalsIgnoreCase(user.getStatus())) {
                     request.setAttribute("error", "Your account is banned.");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                     return;
                 }
+
+                // Lưu toàn bộ user vào session
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(3600);
-                session.setAttribute("userId", rs.getInt("Id"));
-                session.setAttribute("userName", rs.getString("Name"));
-                session.setAttribute("userRole", role);
-                // Redirect theo role
-                switch (role) {
+                session.setAttribute("user", user);
+
+                // Điều hướng theo role
+                switch (user.getRole()) {
                     case "Admin":
                         response.sendRedirect("admin-dashboard.jsp");
                         break;
@@ -101,13 +100,13 @@ public class LoginServlet extends HttpServlet {
                         break;
                 }
             } else {
-                request.setAttribute("error", "Invalid email or password");
+                request.setAttribute("error", "Invalid email or password.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Database error");
+            request.setAttribute("error", "Database error.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }

@@ -7,21 +7,21 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
 <%@ page import="model.User" %>
+<%@ page import="dao.UserDAO" %>
+
 <%
     User user = (User) session.getAttribute("user");
+
     if (user == null) {
-        user = new User();
-        user.setId(1);
-        user.setName("John Doe");
-        user.setGender("Male");
-        user.setEmail("john@example.com");
-        user.setPhone("0123456789");
-        user.setAddress("123 Street");
-        user.setAvatarUrl("uploads/avatar.jpg");
-        user.setPassword("123456");
-        user.setRole("Customer");
-        user.setStatus("Normal");
-        session.setAttribute("user", user);
+        UserDAO dao = new UserDAO();
+        user = dao.getUserByEmail("test2@gmail.com"); // Đổi email nếu cần
+
+        if (user != null) {
+            session.setAttribute("user", user);
+        } else {
+            out.println("<p style='color:red;'>User not found in database. Please check email.</p>");
+            return; // Dừng hiển thị tiếp
+        }
     }
 %>
 <!DOCTYPE html>
@@ -36,7 +36,7 @@
                 <a href="change_password.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">
                     🔒 Change Password
                 </a>
-                <a href="login.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">
+                <a href="LogOutServlet" style="display: block; padding: 10px; text-decoration: none; color: #333;">
                     🚪 Logout
                 </a>
             </div>

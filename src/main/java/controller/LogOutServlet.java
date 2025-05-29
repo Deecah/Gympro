@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author ACER
  */
-@WebServlet("/logout")
 public class LogOutServlet extends HttpServlet {
 
     /**
@@ -37,7 +36,7 @@ public class LogOutServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LogOutServlet</title>");            
+            out.println("<title>Servlet LogOutServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet LogOutServlet at " + request.getContextPath() + "</h1>");
@@ -59,7 +58,7 @@ public class LogOutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false); // no new session
-        if(session != null) {
+        if (session != null) {
             session.invalidate(); // logout
         }
         response.sendRedirect("login.jsp");
@@ -76,7 +75,13 @@ public class LogOutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Thực hiện các bước đăng xuất, ví dụ: xóa session
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // Xóa phiên làm việc
+        }
+        // Chuyển hướng về trang đăng nhập
+        response.sendRedirect("login.jsp");
     }
 
     /**
