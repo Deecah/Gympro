@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,38 +14,11 @@
         <link rel="stylesheet" href="login.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <style>
-            .role-select {
-                display: flex;
-                justify-content: center;
-                gap: 20px;
-                margin: 20px 0;
-            }
-
-            .role-option {
-                position: relative;
-                cursor: pointer;
-            }
-
-            .role-option input[type="radio"] {
-                display: none;
-            }
-
-            .role-option span {
-                display: inline-block;
-                padding: 10px 20px;
-                border: 2px solid #ff4b2b;
-                border-radius: 30px;
-                font-weight: bold;
-                color: #ff4b2b;
-                transition: 0.3s;
-            }
-
-            .role-option input[type="radio"]:checked + span {
-                background-color: #ff4b2b;
-                color: white;
-            }
-
-
+            .role-select { display: flex; justify-content: center; gap: 20px; margin: 20px 0;}
+            .role-option { position: relative; cursor: pointer;}
+            .role-option input[type="radio"] { display: none;}
+            .role-option span { display: inline-block; padding: 10px 20px; border: 2px solid #ff4b2b; border-radius: 30px; font-weight: bold; color: #ff4b2b; transition: 0.3s;}
+            .role-option input[type="radio"]:checked + span { background-color: #ff4b2b; color: white;}
         </style>
     </head>
 
@@ -52,13 +26,13 @@
         <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
+
                 <form action="${pageContext.request.contextPath}/EmailVerificationServlet" method="post">
                     <h1>Create Account</h1>
                     <div class="social-container">
                         <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force"
                            class="social"><i class="fab fa-google-plus-g"></i></a>
-                        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your email for registration</span>
                     <input type="text" name="name" placeholder="Name" />
@@ -80,6 +54,9 @@
             <div class="form-container sign-in-container">
                 <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
                     <h1>Sign in</h1>
+                    <c:if test="${not empty error}">
+                        <p style="color: red;">${error}</p>
+                    </c:if>
                     <div class="social-container">
                         <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>

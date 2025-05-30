@@ -11,12 +11,14 @@ import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.ClientProtocolException;
 import constant.Iconstant;
+import model.GoogleAccount;
 
 /**
  *
  * @author ASUS
  */
 public class GoogleLogin {
+    
     public static String getToken(String code) throws ClientProtocolException, IOException {
         String response;
         response = Request.Post(Iconstant.GOOGLE_LINK_GET_TOKEN)
@@ -32,5 +34,13 @@ public class GoogleLogin {
         JsonObject jobj = new Gson().fromJson(response, JsonObject.class);
         String accessToken = jobj.get("access_token").toString().replaceAll("\"", "");
         return accessToken;
+    }
+    
+    public static GoogleAccount getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
+
+        String link = Iconstant.GOOGLE_LINK_GET_USER_INFO + accessToken;
+        String response = Request.Get(link).execute().returnContent().asString();
+        GoogleAccount googlePojo = new Gson().fromJson(response, GoogleAccount.class);
+        return googlePojo;
     }
 }
