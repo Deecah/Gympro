@@ -71,11 +71,7 @@
     <body>
         <div class="container">
             <h1>Reset Password</h1>
-            <form action="resetPassword" method="post">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                </div>
+            <form action="ResetPasswordServlet" method="post">
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter new password" required>
@@ -84,7 +80,10 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" required>
                 </div>
-                <button type="submit" class="reset-btn">RESET PASSWORD</button>
+                <button type="submit" class="reset-btn" name="action" >RESET PASSWORD</button>
+                <p class="error-message">
+                     ${mess}
+                </p>
             </form>
         </div>
     </body>

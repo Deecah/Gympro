@@ -1,7 +1,7 @@
-
 package model;
 
 public class User {
+
     private int id;
     private String name;
     private String gender;
@@ -113,6 +113,5 @@ public class User {
     public String toString() {
         return "User{" + "id=" + id + ", name=" + name + ", gender=" + gender + ", email=" + email + ", phone=" + phone + ", address=" + address + ", avatarURL=" + avatarURL + ", passwork=" + password + ", role=" + role + ", status=" + status + '}';
     }
-    
-    
+
 }

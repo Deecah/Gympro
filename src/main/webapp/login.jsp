@@ -52,7 +52,7 @@
         <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
-                <form action="#">
+                <form action="LoginServlet" method="post">
                     <h1>Create Account</h1>
                     <div class="social-container">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force"
@@ -76,7 +76,7 @@
                 </form>
             </div>
             <div class="form-container sign-in-container">
-                <form action="#" method="post">
+                <form action="LoginServlet" method="post">
                     <h1>Sign in</h1>
                     <div class="social-container">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
@@ -84,13 +84,8 @@
                     <span>or use your account</span>
                     <input type="email" placeholder="Email" />
                     <input type="password" placeholder="Password" />
-<<<<<<< HEAD
                     <a href="requestPassword.jsp">Forgot your password?</a>
-                    <button>Sign In</button>
-=======
-                    <a href="#">Forgot your password?</a>
                     <button type="submit" name="action" value="signin">Sign In</button>
->>>>>>> origin/Trung
                 </form>
             </div>
             <div class="overlay-container">
