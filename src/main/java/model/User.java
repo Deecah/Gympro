@@ -54,6 +54,7 @@ public class User {
         this.address = address;
     }
 
+
     public String getAvatarUrl() {
         return avatarUrl;
     }
@@ -88,6 +89,7 @@ public class User {
 
     @Override
     public String toString() {
+
         return "User{" + "id=" + id + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
     }
     
