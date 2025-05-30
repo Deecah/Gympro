@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
+
 <%@ page import="dao.UserDAO" %>
 <%@ page import="model.User" %>
 <%
@@ -54,6 +55,27 @@
             const menu = document.getElementById("dropdownMenu");
             if (!e.target.closest('#dropdownMenu') && !e.target.matches('img')) {
                 menu.style.display = "none";
+
+<!DOCTYPE html>
+<html>
+    <a href="confirmOldPass.jsp">Change Password</a>
+
+    <div style="display: flex; justify-content: flex-end; align-items: center; padding: 10px; background-color: #18191A;">
+        <div style="position: relative;">
+            <img src="<%= user.getAvatarURL() %>" onclick="toggleMenu()" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
+            <div class="edit-icon" onclick="document.getElementById('uploadForm').style.display = 'block'; event.stopPropagation();">
+                    🖊️
+                </div>
+        </div>
+    </div>
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdownMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+        window.addEventListener("click", function (e) {
+            if (!e.target.matches("img")) {
+                document.getElementById("dropdownMenu").style.display = "none";
             }
         });
     </script>
