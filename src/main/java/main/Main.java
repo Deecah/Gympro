@@ -2,10 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package main;
 
 import connectDB.ConnectDatabase;
@@ -17,6 +19,12 @@ public class Main {
     public static void main(String[] args) {
         try {
             Connection conn = ConnectDatabase.getInstance().openConnection();
+
+
+            String sql = "SELECT * FROM Users";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
 
             String sql = "SELECT * FROM Users";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -45,4 +53,6 @@ public class Main {
         }
     }
 }
+
+
 

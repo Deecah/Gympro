@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -20,8 +21,10 @@ public class User {
     private String role; // Admin, Customer, Trainer
     private String status; // Normal, Banned
 
+  
     public User() {
     }
+
 
     // Getters and Setters for all fields
     
@@ -87,5 +90,12 @@ public class User {
     }
 }
 
+    @Override
+    public String toString() {
 
+        return "User{" + "id=" + id + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
+    }
+    
+    
+}
 
