@@ -5,6 +5,7 @@
         <servlet-class>controller.LoginServlet</servlet-class>
     </servlet>
     <servlet>
+
         <servlet-name>RequestPasswordServlet</servlet-name>
         <servlet-class>controller.RequestPasswordServlet</servlet-class>
     </servlet>
@@ -19,12 +20,25 @@
     <servlet>
         <servlet-name>ConfirmOldPassServlet</servlet-name>
         <servlet-class>controller.ConfirmOldPassServlet</servlet-class>
+
+        <servlet-name>SendEmailServlet</servlet-name>
+        <servlet-class>controller.SendEmailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyCodeServlet</servlet-name>
+        <servlet-class>controller.VerifyCodeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <servlet-class>controller.EmailVerificationServlet</servlet-class>
+
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+
         <servlet-name>RequestPasswordServlet</servlet-name>
         <url-pattern>/RequestPasswordServlet</url-pattern>
     </servlet-mapping>
@@ -39,6 +53,17 @@
     <servlet-mapping>
         <servlet-name>ConfirmOldPassServlet</servlet-name>
         <url-pattern>/ConfirmOldPassServlet</url-pattern>
+
+        <servlet-name>SendEmailServlet</servlet-name>
+        <url-pattern>/SendEmailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyCodeServlet</servlet-name>
+        <url-pattern>/VerifyCodeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <url-pattern>/EmailVerificationServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

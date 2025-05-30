@@ -1,32 +1,17 @@
-
 package model;
 
 public class User {
     private int id;
-    private String name;
-    private String gender;
+    private String userName;     
+    private String gender;       
     private String email;
-    private String phone;
-    private String address;
-    private String avatarURL;
-    private String password;
-    private String role;
-    private String status;
+    private String address;      
+    private String avatarUrl;    
+    private byte[] password;     
+    private String role;         
+    private String status;      
 
     public User() {
-    }
-
-    public User(int id, String name, String gender, String email, String phone, String address, String avatarURL, String passwork, String role, String status) {
-        this.id = id;
-        this.name = name;
-        this.gender = gender;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.avatarURL = avatarURL;
-        this.password = passwork;
-        this.role = role;
-        this.status = status;
     }
 
     public int getId() {
@@ -37,12 +22,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getGender() {
@@ -61,14 +46,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -77,19 +54,20 @@ public class User {
         this.address = address;
     }
 
-    public String getAvatarURL() {
-        return avatarURL;
+
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setAvatarURL(String avatarURL) {
-        this.avatarURL = avatarURL;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 
@@ -111,7 +89,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", name=" + name + ", gender=" + gender + ", email=" + email + ", phone=" + phone + ", address=" + address + ", avatarURL=" + avatarURL + ", passwork=" + password + ", role=" + role + ", status=" + status + '}';
+
+        return "User{" + "id=" + id + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
     }
     
     
