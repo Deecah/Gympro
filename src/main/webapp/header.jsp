@@ -7,6 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
 
+<%@ page import="model.User" %>
+<%@ page import="dao.UserDAO" %>
+
+
+
 <%@ page import="dao.UserDAO" %>
 <%@ page import="model.User" %>
 <%
@@ -24,6 +29,8 @@
         }
     }
 %>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -56,6 +63,7 @@
             if (!e.target.closest('#dropdownMenu') && !e.target.matches('img')) {
                 menu.style.display = "none";
 
+
 <!DOCTYPE html>
 <html>
     <a href="confirmOldPass.jsp">Change Password</a>
@@ -76,6 +84,7 @@
         window.addEventListener("click", function (e) {
             if (!e.target.matches("img")) {
                 document.getElementById("dropdownMenu").style.display = "none";
+
             }
         });
     </script>

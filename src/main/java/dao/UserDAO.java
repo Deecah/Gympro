@@ -4,6 +4,13 @@
  */
 package dao;
 
+
+import connectDB.ConnectDatabase;
+import model.User;
+
+import java.sql.*;
+
+
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -11,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
+
 /**
  *
  * @author Admin
@@ -100,6 +108,7 @@ public class UserDAO {
                 user.setAddress(rs.getString("Address"));
                 user.setAvatarUrl(rs.getString("Avatar_Url"));
                 user.setPassword(rs.getString("Password"));
+
 
 
     public boolean addUser(User user) {
@@ -244,6 +253,7 @@ public class UserDAO {
                 user.setUserName(rs.getString("Name"));
                 user.setEmail(rs.getString("Email"));
                 user.setPassword(rs.getBytes("Password"));
+
                 user.setRole(rs.getString("Role"));
                 user.setStatus(rs.getString("Status"));
                 return user;
@@ -273,6 +283,7 @@ public class UserDAO {
         return false;
     }
 
+
         } catch (ClassNotFoundException | SQLException e) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
@@ -293,6 +304,7 @@ public class UserDAO {
 
         return null;
     }
+
 
 
 }

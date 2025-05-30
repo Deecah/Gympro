@@ -19,6 +19,7 @@
     <servlet>
         <servlet-name>LogOutServlet</servlet-name>
         <servlet-class>controller.LogOutServlet</servlet-class>
+
     </servlet>
     <servlet>
         <servlet-name>RequestPasswordServlet</servlet-name>
@@ -47,6 +48,7 @@
         <servlet-name>EmailVerificationServlet</servlet-name>
         <servlet-class>controller.EmailVerificationServlet</servlet-class>
 
+
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -68,6 +70,18 @@
     <servlet-mapping>
         <servlet-name>LogOutServlet</servlet-name>
         <url-pattern>/LogOutServlet</url-pattern>
+
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <servlet-class>controller.EmailVerificationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <url-pattern>/verifyEmail</url-pattern>
+    </servlet-mapping>  
+
 
         <servlet-name>RequestPasswordServlet</servlet-name>
         <url-pattern>/RequestPasswordServlet</url-pattern>
@@ -95,6 +109,7 @@
         <servlet-name>EmailVerificationServlet</servlet-name>
         <url-pattern>/EmailVerificationServlet</url-pattern>
     </servlet-mapping>
+
     <session-config>
         <session-timeout>
             60

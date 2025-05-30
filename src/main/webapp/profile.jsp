@@ -22,7 +22,7 @@
     }
 %>
 
-<jsp:include page="header.jsp" />
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,7 +51,7 @@
 
                 <!-- Thông tin cá nhân -->
                 <div class="col-md-8">
-                    <h3>User Profile</h3>
+                    <h3>Thông tin cá nhân</h3>
                     <table class="table table-borderless">
                         <tr><th>ID:</th><td><%= user.getId() %></td></tr>
                         <tr><th>Name:</th><td><%= user.getName() %></td></tr>

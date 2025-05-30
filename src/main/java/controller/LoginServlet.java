@@ -82,6 +82,7 @@ public class LoginServlet extends HttpServlet {
 
             if (user != null) {
                 if ("Banned".equalsIgnoreCase(user.getStatus())) {
+
         byte[] hashedPassword = HashUtil.hashPassword(password);
         try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
             String sql = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
@@ -94,10 +95,15 @@ public class LoginServlet extends HttpServlet {
                 String status = rs.getString("Status");
                 if ("Banned".equalsIgnoreCase(status)) {
 
+
                     request.setAttribute("error", "Your account is banned.");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                     return;
                 }
+
+
+                // Lưu toàn bộ user vào session
+
                 // Lưu toàn bộ user vào session
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(3600);
@@ -110,13 +116,13 @@ public class LoginServlet extends HttpServlet {
                         break;
                     case "Customer":
                         response.sendRedirect("customer-home.jsp");
+
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(3600);
-                session.setAttribute("userId", rs.getInt("Id"));
-                session.setAttribute("userName", rs.getString("Name"));
-                session.setAttribute("userRole", role);
-                // Redirect theo role
-                switch (role) {
+                session.setAttribute("user", user);
+
+                // Điều hướng theo role
+                switch (user.getRole()) {
                     case "Admin":
                         response.sendRedirect("index.html");
                         break;
@@ -134,7 +140,11 @@ public class LoginServlet extends HttpServlet {
 
                 request.setAttribute("error", "Invalid email or password.");
 
+
+                request.setAttribute("error", "Invalid email or password.");
+
                 request.setAttribute("error", "Invalid email or password");
+
 
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
@@ -144,7 +154,11 @@ public class LoginServlet extends HttpServlet {
 
             request.setAttribute("error", "Database error.");
 
+
+            request.setAttribute("error", "Database error.");
+
             request.setAttribute("error", "Database error");
+
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
