@@ -5,7 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,7 +15,7 @@
         <title>Login Page</title>
         <link rel="stylesheet" href="login.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <style>
+        <style> 
             .role-select { display: flex; justify-content: center; gap: 20px; margin: 20px 0;}
             .role-option { position: relative; cursor: pointer;}
             .role-option input[type="radio"] { display: none;}
@@ -21,12 +23,10 @@
             .role-option input[type="radio"]:checked + span { background-color: #ff4b2b; color: white;}
         </style>
     </head>
-
     <body>
         <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
-
                 <form action="${pageContext.request.contextPath}/EmailVerificationServlet" method="post">
                     <h1>Create Account</h1>
                     <div class="social-container">
@@ -61,16 +61,11 @@
                     </div>
                     <span>or use your account</span>
 
-
-                    
-
-
                     <input type="email" name="email" placeholder="Email" />
                     <input type="password" name="password" placeholder="Password" />
 
                     <a href="requestPassword.jsp">Forgot your password?</a>
                     <button>Sign In</button>
-
                 </form>
             </div>
             <div class="overlay-container">
@@ -88,9 +83,12 @@
                 </div>
             </div>
         </div>
-
         <footer>
             <p>
+                Created with <i class="fa fa-heart"></i> by
+                <a target="_blank" href="https://florin-pop.com">Florin Pop</a>
+                - Read how I created this and how you can join the challenge
+                <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.
                 Created by Group D02-RT01
             </p>
         </footer>
