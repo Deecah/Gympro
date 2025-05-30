@@ -52,7 +52,7 @@
         <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
-                <form action="#">
+                <form action="EmailVerificationServlet" method="post">
                     <h1>Create Account</h1>
                     <div class="social-container">
                         <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -61,9 +61,9 @@
                         <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your email for registration</span>
-                    <input type="text" placeholder="Name" />
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
+                    <input type="text" name="name" placeholder="Name" />
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
                     <div class="role-select">
                         <label class="role-option">
                             <input type="radio" name="role" value="Customer" checked>
@@ -78,7 +78,7 @@
                 </form>
             </div>
             <div class="form-container sign-in-container">
-                <form action="#" method="post">
+                <form action="LoginServlet" method="post">
                     <h1>Sign in</h1>
                     <div class="social-container">
                         <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -86,8 +86,8 @@
                         <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your account</span>
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
                     <a href="#">Forgot your password?</a>
                     <button type="submit" name="action" value="signin">Sign In</button>
                 </form>
