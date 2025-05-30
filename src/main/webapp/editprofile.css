@@ -1,0 +1,17 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : May 27, 2025, 7:43:52 PM
+    Author     : ACER
+*/
+body { font-family: Arial, sans-serif; background:#eef2f7; }                    
+.container { width: 400px; background:#fff; margin: 50px auto; padding: 20px; box-shadow: 0 0 10px #ccc; }
+input[type=text], input[type=number], select, textarea { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; }
+button { margin-top: 10px; background: #007bff; border: none; color: white; padding: 10px 20px; cursor: pointer; }
+a { display:block; margin-top: 12px; text-decoration:none; color:#007bff; }
+.message { color: green; }
+.error { color: red; }
+label { font-weight: bold; }
+h3 { margin-top: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
