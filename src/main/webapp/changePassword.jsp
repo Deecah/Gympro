@@ -1,10 +1,9 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Change password</title>
+        <title>Change Password</title>
         <style>
             body {
                 margin: 0;
@@ -38,46 +37,59 @@
                 color: #333;
                 margin-bottom: 5px;
             }
-            input[type="email"],
             input[type="password"] {
                 width: 100%;
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 font-size: 14px;
-                box-sizing: border-box;
+                box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước tổng thể */
             }
             .reset-btn {
                 width: 100%;
                 padding: 10px;
                 font-size: 16px;
-                color: white; /* Chữ trắng để dễ đọc trên nền gradient hồng */
-                background: linear-gradient(to bottom, #ff5e62, #ff9966); /* Gradient giống background */
+                color: white;
+                background: linear-gradient(to bottom, #ff5e62, #ff9966);
                 border: none;
                 border-radius: 25px;
                 cursor: pointer;
                 transition: background 0.3s;
+                margin-top: 20px; /* Thêm khoảng cách phía trên nút */
             }
             .reset-btn:hover {
-                background: linear-gradient(to bottom, #ff9966, #ff5e62); /* Đảo ngược gradient khi hover */
+                background: linear-gradient(to bottom, #ff9966, #ff5e62);
+            }
+            /* CSS MỚI cho thông báo lỗi */
+            .error-message {
+                color: red; /* Màu đỏ */
+                font-weight: bold; /* In đậm */
+                margin-top: 10px; /* Khoảng cách trên */
+                margin-bottom: 10px; /* Khoảng cách dưới */
+                min-height: 1.2em; /* Giữ chỗ để tránh layout nhảy khi lỗi xuất hiện */
             }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Reset Password</h1>
-            <form action="changePassword" method="post">
+            <form action="ChangePasswordServlet" method="post">
+                <input type="hidden" name="action" value="changePassword">
+
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password1">New Password</label>
                     <input type="password" id="password1" name="password1" placeholder="Enter new password" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password2">Confirm New Password</label>
                     <input type="password" id="password2" name="password2" placeholder="Re-enter new password" required>
                 </div>
-                 <p style="color: red;">
-        <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
-    </p>
+
+                <p class="error-message">
+                    <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
+                </p>
+
                 <button type="submit" class="reset-btn">Confirm</button>
             </form>
         </div>

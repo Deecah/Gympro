@@ -34,25 +34,27 @@ public class UserDAO {
 //        stmt.executeUpdate();
 //    }
 
-//    public User getUserById(int id) throws SQLException {
-//        String sql = "SELECT * FROM Users WHERE Id = ?";
-//        PreparedStatement stmt = connection.prepareStatement(sql);
-//        stmt.setInt(1, id);
-//        ResultSet rs = stmt.executeQuery();
-//        if (rs.next()) {
-//            User user = new User();
-//            user.setId(rs.getInt("Id"));
-//            user.setName(rs.getString("Name"));
-//            user.setGender(rs.getString("Gender"));
-//            user.setEmail(rs.getString("Email"));
-//            user.setPhone(rs.getString("Phone"));
-//            user.setPassword(rs.getString("Password"));
-//            user.setRole(rs.getString("Role"));
-//            user.setStatus(rs.getString("Status"));
-//            return user;
-//        }
-//        return null;
-//    }
+    public User getUserById(int id) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE Id = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            User user = new User();
+            user.setId(rs.getInt("Id"));
+            user.setName(rs.getString("Name"));
+            user.setGender(rs.getString("Gender"));
+            user.setEmail(rs.getString("Email"));
+            user.setPhone(rs.getString("Phone"));
+            user.setAvatarURL("AvatarURL");
+            user.setPassword(rs.getString("Password"));
+            user.setRole(rs.getString("Role"));
+            user.setStatus(rs.getString("Status"));
+            return user;
+        }
+        return null;
+    }
+    
     public User getUserByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM Users WHERE Email = ?";
         PreparedStatement stmt = connection.prepareStatement(sql);

@@ -75,12 +75,15 @@
     <body>
        <div class="container">
             <h1>Enter your email</h1>
-            <form action="RequestPasswordServlet" method="post">
+            <form action="ResetPasswordServlet" method="post">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 </div>
-                <button type="submit" class="reset-btn">Send Request</button>
+                <button type="submit" class="reset-btn" name="action" value="request" >Send Request</button>
+                 <p class="error-message">
+                     ${mess}
+                </p>
             </form>
         </div>
     </body>

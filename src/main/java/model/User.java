@@ -1,15 +1,9 @@
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author ACER
- */
+
 public class User {
+
     private int id;
     private String name;
     private String gender;
@@ -95,7 +89,6 @@ public class User {
 
         return "User{" + "id=" + id + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
     }
-    
-    
+
 }
 
