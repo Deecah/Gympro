@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>12.2.0.jre17</version> 
+            <version>11.2.3.jre17</version> 
         </dependency>
         
         <!-- JSTL -->
@@ -93,6 +93,13 @@
             <groupId>org.glassfish.web</groupId>
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>3.0.1</version>
+        </dependency>
+        
+        <!-- Apache HttpClient Fluent (chứa Request và Form) -->  
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.5.13</version>
         </dependency>
         
     </dependencies>
