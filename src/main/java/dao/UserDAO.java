@@ -301,7 +301,6 @@ public class UserDAO {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         return null;
     }
 
