@@ -13,12 +13,9 @@ import org.apache.http.client.ClientProtocolException;
 import constant.Iconstant;
 import model.GoogleAccount;
 
-/**
- *
- * @author ASUS
- */
+
+
 public class GoogleLogin {
-    
     public static String getToken(String code) throws ClientProtocolException, IOException {
         String response;
         response = Request.Post(Iconstant.GOOGLE_LINK_GET_TOKEN)
@@ -44,3 +41,4 @@ public class GoogleLogin {
         return googlePojo;
     }
 }
+
