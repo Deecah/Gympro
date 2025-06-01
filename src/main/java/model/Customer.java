@@ -1,4 +1,3 @@
-
 package model;
 
 public class Customer extends User{
@@ -30,6 +29,7 @@ public class Customer extends User{
     }
 
     public void setHeight(double height) {
+
         this.height = height;
     }
 
@@ -55,4 +55,5 @@ public class Customer extends User{
     }
    
     
+
 }

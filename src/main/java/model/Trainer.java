@@ -1,4 +1,3 @@
-
 package model;
 
 public class Trainer extends User{
@@ -12,6 +11,7 @@ public class Trainer extends User{
         this.specialization = specialization;
     }
 
+
     public Trainer() {
     }
 
@@ -20,6 +20,7 @@ public class Trainer extends User{
     }
 
     public void setExperienceYears(int experienceYears) {
+
         this.experienceYears = experienceYears;
     }
 
@@ -43,9 +44,5 @@ public class Trainer extends User{
     public String toString() {
         return "Trainer{" + "experienceYears=" + experienceYears + ", description=" + description + ", specialization=" + specialization + '}';
     }
-    
-    
-    
-    
-    
+
 }

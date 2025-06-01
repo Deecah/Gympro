@@ -1,6 +1,6 @@
 package controller;
 
-import DAO.UserDAO;
+import dao.UserDAO;
 import DAO.UserTokenDAO;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
@@ -28,7 +28,14 @@ import model.UserToken;
 public class ResetPasswordServlet extends HttpServlet {
 
     private final int EXPIRY_TIME = 10;
+    
+    private static class TokenGenerator {
 
+        public static String generateShortToken() {
+            return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
+        }
+    }
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -134,12 +141,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
     }
 
-    public class TokenGenerator {
-
-        public static String generateShortToken() {
-            return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
-        }
-    }
+    
 
     public LocalDateTime expireDateTime() {
         return LocalDateTime.now().plusMinutes(EXPIRY_TIME);
@@ -175,13 +177,9 @@ public class ResetPasswordServlet extends HttpServlet {
                 }
                 return;
             }
-            try {
-                userDAO.updatePassword(u.getId(), password1);
-                request.setAttribute("error", "Change Password Successful!!!");
-                userToken.setUsed(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            userDAO.updatePassword(u.getId(), password1);
+            request.setAttribute("error", "Change Password Successful!!!");
+            userToken.setUsed(true);
         } catch (SQLException e) {
         }
 

@@ -1,6 +1,6 @@
 package controller;
 
-import DAO.UserDAO;
+import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
@@ -57,26 +56,20 @@ public class ChangePasswordServlet extends HttpServlet {
     }
 
     private void confirmPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String oldPassword = request.getParameter("oldPassword");
+//      String oldPassword = request.getParameter("oldPassword");
 
         UserDAO userdao;
-        try {
-            userdao = new UserDAO();
-            HttpSession session = request.getSession();
-            session.setAttribute("oldPassword", "chanh123");                        //test
-            String oldPassword = (String) session.getAttribute("oldPassword");      //test
-            session.setAttribute("email", "pchanhdn@gmail.com");
-            String email = (String) session.getAttribute("email");
-
-            User u = userdao.getUserByEmail(email);
-            if (oldPassword.equals(u.getPassword())) {
-                request.getRequestDispatcher("changePassword.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
-            }
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+        userdao = new UserDAO();
+        HttpSession session = request.getSession();
+        session.setAttribute("oldPassword", "chanh123");                        //test
+        String oldPassword = (String) session.getAttribute("oldPassword");      //test
+        session.setAttribute("email", "pchanhdn@gmail.com");
+        String email = (String) session.getAttribute("email");
+        User u = userdao.getUserByEmail(email);
+        if (oldPassword.equals(u.getPassword())) {
+            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
         }
     }
 
@@ -93,18 +86,11 @@ public class ChangePasswordServlet extends HttpServlet {
             return;                                                 // Quan trọng: Thoát khỏi phương thức nếu có lỗi
         } 
             UserDAO userdao;
-            try {
-
-                userdao = new UserDAO();
-                HttpSession session = request.getSession();
-                String email = (String) session.getAttribute("email");
-                User u = userdao.getUserByEmail(email);
-
-                userdao.updatePassword(u.getId(), password1);
-                request.setAttribute("error", "Change Password Successful!!!");
-
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            userdao = new UserDAO();
+            HttpSession session = request.getSession();
+            String email = (String) session.getAttribute("email");
+            User u = userdao.getUserByEmail(email);
+            userdao.updatePassword(u.getId(), password1);
+            request.setAttribute("error", "Change Password Successful!!!");
         }
     }
