@@ -46,28 +46,41 @@
                 color: #333;
                 margin-bottom: 5px;
             }
-            input[type="email"],
-            input[type="password"] {
+            input[type="text"],
+            input[type="password"],
+            input[type="email"] { 
                 width: 100%;
-                padding: 10px;
+                padding: 12px 15px;
+                margin: 8px 0;
+                display: inline-block;
                 border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
+                border-radius: 25px;
                 box-sizing: border-box;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+           
+            input[type="text"]:focus,
+            input[type="password"]:focus,
+            input[type="email"]:focus {
+                border-color: #88c0ff;
+                outline: none;
+                box-shadow: 0 0 5px rgba(136, 192, 255, 0.5); 
             }
             .reset-btn {
                 width: 100%;
                 padding: 10px;
                 font-size: 16px;
-                color: white; /* Chữ trắng để dễ đọc trên nền gradient hồng */
-                background: linear-gradient(to bottom, #ff5e62, #ff9966); /* Gradient giống background */
+                color: white;
+                background: linear-gradient(to bottom, #ff5e62, #ff9966);
                 border: none;
                 border-radius: 25px;
                 cursor: pointer;
                 transition: background 0.3s;
             }
             .reset-btn:hover {
-                background: linear-gradient(to bottom, #ff9966, #ff5e62); /* Đảo ngược gradient khi hover */
+                background: linear-gradient(to bottom, #ff9966, #ff5e62);
             }
             
         </style>

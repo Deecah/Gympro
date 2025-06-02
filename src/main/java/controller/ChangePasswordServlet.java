@@ -1,5 +1,6 @@
 package controller;
 
+import Utils.HashUtil;
 import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
@@ -56,19 +58,16 @@ public class ChangePasswordServlet extends HttpServlet {
     }
 
     private void confirmPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//      String oldPassword = request.getParameter("oldPassword");
-
-        UserDAO userdao;
-        userdao = new UserDAO();
+        String oldPassword = request.getParameter("oldPassword");
         HttpSession session = request.getSession();
-        session.setAttribute("oldPassword", "chanh123");                        //test
-        String oldPassword = (String) session.getAttribute("oldPassword");      //test
-        session.setAttribute("email", "pchanhdn@gmail.com");
-        String email = (String) session.getAttribute("email");
-        User u = userdao.getUserByEmail(email);
-        if (oldPassword.equals(u.getPassword())) {
+        int userId = (int) session.getAttribute("userId");
+        UserDAO userdao = new UserDAO();
+        User u = userdao.getUserById(userId);
+        byte[] oldPasswordHashed = HashUtil.hashPassword(oldPassword);
+        if (Arrays.equals(oldPasswordHashed, u.getPassword())) {
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         } else {
+            request.setAttribute("mess", "Wrong password!!!!");
             request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
         }
     }
@@ -76,21 +75,22 @@ public class ChangePasswordServlet extends HttpServlet {
     private void changePassword(HttpServletRequest request, HttpServletResponse response) {
         String password1 = request.getParameter("password1");
         String password2 = request.getParameter("password2");
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("userId");
+        UserDAO userdao = new UserDAO();
+        User u = userdao.getUserById(userId);
         if (password1 == null || password2 == null || !password1.equals(password2)) {
-            request.setAttribute("error", "Passwords do not match or are missing!!!");
+           
             try {
-                request.getRequestDispatcher("changePassword.jsp").forward(request, response); // Quay lại trang nhập mật khẩu
+                request.setAttribute("mess", "Passwords do not match or are missing!!!");
+                request.getRequestDispatcher("changePassword.jsp").forward(request, response);
             } catch (ServletException | IOException ex) {
                 Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return;                                                 // Quan trọng: Thoát khỏi phương thức nếu có lỗi
-        } 
-            UserDAO userdao;
-            userdao = new UserDAO();
-            HttpSession session = request.getSession();
-            String email = (String) session.getAttribute("email");
-            User u = userdao.getUserByEmail(email);
-            userdao.updatePassword(u.getId(), password1);
-            request.setAttribute("error", "Change Password Successful!!!");
+            return;
         }
+        byte[] newPasswordHashed = HashUtil.hashPassword(password1);
+        userdao.updatePassword(u.getId(), newPasswordHashed);
+        request.setAttribute("mess", "Change Password Successful!!!");
     }
+}

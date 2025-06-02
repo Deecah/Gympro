@@ -1,10 +1,7 @@
 package dao;
 
-
-
 import connectDB.ConnectDatabase;
 import model.User;
-
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -252,11 +249,11 @@ public class UserDAO {
         return false;
     }
     
-     public boolean updatePassword(int userId, String newPassword) {
+     public boolean updatePassword(int userId, byte[] newPassword) {
     try (Connection con = ConnectDatabase.getInstance().openConnection()) {
         String sql = "UPDATE Users SET Password = ? WHERE Id = ?";
         PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, newPassword);
+        ps.setBytes(1, newPassword);
         ps.setInt(2, userId);
         return ps.executeUpdate() > 0;
     } catch (Exception e) {

@@ -5,6 +5,26 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Confirm password</title>
         <style>
+            input[type="text"],
+            input[type="password"],
+            input[type="email"] { 
+                width: 100%;
+                padding: 12px 15px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 25px;
+                box-sizing: border-box;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+            input[type="text"]:focus,
+            input[type="password"]:focus,
+            input[type="email"]:focus {
+                border-color: #88c0ff;
+                outline: none;
+                box-shadow: 0 0 5px rgba(136, 192, 255, 0.5); 
+            }
             body {
                 margin: 0;
                 height: 100vh;
@@ -37,14 +57,6 @@
                 margin-bottom: 5px;
                 display: block;
             }
-            input[type="email"] {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
-                box-sizing: border-box;
-            }
             .reset-btn {
                 width: 100%;
                 padding: 10px;
@@ -69,6 +81,9 @@
                     <input type="password" id="oldPassword" name="oldPassword" placeholder="Enter your old password" required>
                 </div>
                 <button type="submit" class="reset-btn" name="action" value="confirm" >CONFIRM PASSWORD</button>
+                <p class="error-message">
+                    ${mess}
+                </p>
             </form>
         </div>
     </body>
