@@ -37,14 +37,6 @@
                 margin-bottom: 5px;
                 display: block;
             }
-            input[type="email"] {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
-                box-sizing: border-box;
-            }
             .reset-btn {
                 width: 100%;
                 padding: 10px;
@@ -71,9 +63,7 @@
                 box-sizing: border-box;
                 font-size: 16px;
                 line-height: 1.5;
-            }
-
-           
+            }          
             input[type="text"]:focus,
             input[type="password"]:focus,
             input[type="email"]:focus {
