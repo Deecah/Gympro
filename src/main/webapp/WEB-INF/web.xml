@@ -2,7 +2,7 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>.LoginServlet</servlet-class>
+        <servlet-class>controller.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ChangeAvatarServlet</servlet-name>
@@ -19,6 +19,26 @@
     <servlet>
         <servlet-name>LogOutServlet</servlet-name>
         <servlet-class>controller.LogOutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>controller.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmOldPassServlet</servlet-name>
+        <servlet-class>controller.ConfirmOldPassServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestPasswordServlet</servlet-name>
+        <servlet-class>controller.RequestPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <servlet-class>controller.ResetPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>controller.ProfileServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -44,11 +64,30 @@
         <servlet-name>EmailVerificationServlet</servlet-name>
         <servlet-class>controller.EmailVerificationServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>EmailVerificationServlet</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
-    </servlet-mapping>  
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/ChangePasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmOldPassServlet</servlet-name>
+        <url-pattern>/ConfirmOldPassServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestPasswordServlet</servlet-name>
+        <url-pattern>/RequestPasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/ResetPasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/ProfileServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

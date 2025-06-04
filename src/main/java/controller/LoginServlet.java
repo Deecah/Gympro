@@ -6,6 +6,7 @@ package controller;
 
 import Utils.HashUtil;
 import connectDB.ConnectDatabase;
+import dao.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -15,13 +16,20 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import model.GoogleAccount;
+import model.User;
 
 public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        String code = request.getParameter("code");
+        if (code != null) {
+            handleGoogleLogin(request, response, code);
+        } else {
+            doPost(request, response); // fallback cho các action khác
+        }
     }
 
     @Override
@@ -88,10 +96,10 @@ public class LoginServlet extends HttpServlet {
                 // Redirect theo role
                 switch (role) {
                     case "Admin":
-                        response.sendRedirect("admin-dashboard.jsp");
+                        response.sendRedirect("index.html");
                         break;
                     case "Customer":
-                        response.sendRedirect("customer-home.jsp");
+                        response.sendRedirect("index.jsp");
                         break;
                     case "Trainer":
                         response.sendRedirect("trainer-dashboard.jsp");
@@ -111,5 +119,59 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
+
+    private void handleGoogleLogin(HttpServletRequest request, HttpServletResponse response, String code)
+            throws ServletException, IOException {
+        try {
+            String accessToken = GoogleLogin.getToken(code);
+            GoogleAccount googleAcc = GoogleLogin.getUserInfo(accessToken);
+
+            UserDAO userDao = new UserDAO();
+            if (!userDao.isEmailExists(googleAcc.getEmail())) {
+                userDao.addUserFromGoogle(googleAcc); // thêm user mới (Customer mặc định)
+            }
+
+            User user = userDao.getUserByEmail(googleAcc.getEmail()); // lấy thông tin đầy đủ từ DB
+            if (user == null) {
+                request.setAttribute("error", "Login failed. Try again.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
+            if ("Banned".equalsIgnoreCase(user.getStatus())) {
+                request.setAttribute("error", "Your account is banned.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+
+            HttpSession session = request.getSession();
+            session.setMaxInactiveInterval(3600);
+            session.setAttribute("userId", user.getUserId());
+            session.setAttribute("userName", user.getUserName());
+            session.setAttribute("userRole", user.getRole());
+
+            // Redirect theo role
+            switch (user.getRole()) {
+                case "Admin":
+                    response.sendRedirect("index.html");
+                    break;
+                case "Customer":
+                    response.sendRedirect("index.jsp");
+                    break;
+                case "Trainer":
+                    response.sendRedirect("trainer-dashboard.jsp");
+                    break;
+                default:
+                    response.sendRedirect("login.jsp?error=Unknown role");
+                    break;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Google login failed.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
+    }
+
 
 }
