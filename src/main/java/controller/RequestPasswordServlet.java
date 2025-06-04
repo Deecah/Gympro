@@ -1,4 +1,4 @@
-package controller;
+/*package controller;
 
 import dao.UserDAO;
 import dao.UserTokenDAO;
@@ -88,4 +88,4 @@ public class RequestPasswordServlet extends HttpServlet {
         return "Short description";
     }
 
-}
+}*/
