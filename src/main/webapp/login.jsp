@@ -63,8 +63,8 @@
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <span>or use your account</span>
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
                     <a href="requestPassword.jsp">Forgot your password?</a>
                     <button type="submit" name="action" value="signin">Sign In</button>
                 </form>
