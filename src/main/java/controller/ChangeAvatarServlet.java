@@ -61,7 +61,7 @@ public class ChangeAvatarServlet extends HttpServlet {
 
             // Cập nhật trong database (nếu có)
             UserDAO dao = new UserDAO();
-            dao.updateAvatar(user.getId(), avatarPath); // Giả sử bạn có hàm này
+            dao.updateAvatar(user.getUserId(), avatarPath); // Giả sử bạn có hàm này
         }
 
         response.sendRedirect("profile.jsp");
