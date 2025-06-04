@@ -4,25 +4,12 @@
  */
 package model;
 
-public class Trainer {
-    private int id;
+public class Trainer extends User{
     private Integer experienceYears; 
     private String description;      
     private String specialization;   
 
     public Trainer() {
-    }
-
-    public Trainer(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Integer getExperienceYears() {
@@ -48,4 +35,6 @@ public class Trainer {
     public void setSpecialization(String specialization) {
         this.specialization = specialization;
     }
+
+    
 }

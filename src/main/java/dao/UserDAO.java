@@ -51,7 +51,7 @@ public class UserDAO {
             }
             int userId = generatedKeys.getInt(1);
 
-            // Insert vào bảng Customer hoặc Trainer
+            // Insert by role
             switch (user.getRole()) {
                 case "Customer":
                     insertRoleSQL = "INSERT INTO Customer (Id) VALUES (?)";
@@ -154,7 +154,7 @@ public class UserDAO {
 
             if (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("Id"));
+                user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
                 user.setEmail(rs.getString("Email"));
                 user.setPassword(rs.getBytes("Password"));
@@ -183,6 +183,54 @@ public class UserDAO {
         return null;
     }
 
+    public void deleteUser(String id) {
+        String sql = "delete from Users WHERE id=? ;";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            int userId = Integer.parseInt(id);
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
-
+    public void updateAvatar(int userId, String avatarUrl) {
+        String sql = "UPDATE Users SET avatarUrl = ? WHERE id = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            statement.setString(1, avatarUrl);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+   
 }
