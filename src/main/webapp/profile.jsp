@@ -1,78 +1,87 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="model.User" %>
-<%@ page import="dao.UserDAO" %>
-
+<%@ page import="model.User, model.Customer, model.Trainer" %>
 <%
-    // Lấy user từ session
-    User sessionUser = (User) session.getAttribute("user");
-
-    // Nếu chưa có trong session, redirect về login
-    if (sessionUser == null) {
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 
-    // Lấy thông tin mới nhất từ database
-    UserDAO dao = new UserDAO();
-    User user = dao.getUserById(sessionUser.getId());
-
-    if (user == null) {
-        out.println("<p style='color:red;'>Không tìm thấy người dùng trong cơ sở dữ liệu.</p>");
-        return;
-    }
+    String role = user.getRole();
+    Customer customer = (Customer) session.getAttribute("customer");
+    Trainer trainer = (Trainer) session.getAttribute("trainer");
 %>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap + FontAwesome -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="container mt-5">
+        <!-- Profile Basic Info -->
         <div class="card p-4 shadow-sm">
             <div class="row">
-                <!-- Avatar + Upload -->
+                <!-- Avatar Section -->
                 <div class="col-md-4 text-center">
-                    <img src="<%= user.getAvatarUrl()%>" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    <img src="<%= user.getAvatarUrl() %>" class="img-thumbnail rounded-circle" style="width:150px; height:150px; object-fit:cover;">
                     <form action="ChangeAvatarServlet" method="post" enctype="multipart/form-data" class="mt-3">
                         <div class="custom-file mb-2">
                             <input type="file" name="avatar" class="custom-file-input" id="avatarInput" required>
                             <label class="custom-file-label" for="avatarInput">Choose avatar...</label>
                         </div>
-                        <button class="btn btn-primary btn-sm" type="submit">Change avatar</button>
+                        <button class="btn btn-primary btn-sm" type="submit">Change Avatar</button>
                     </form>
                 </div>
 
-                <!-- Thông tin cá nhân -->
+                <!-- Basic Info -->
                 <div class="col-md-8">
-                    <h3>Thông tin cá nhân</h3>
+                    <h3>Profile Details</h3>
                     <table class="table table-borderless">
-                        <tr><th>ID:</th><td><%= user.getId() %></td></tr>
-                        <tr><th>Name:</th><td><%= user.getName() %></td></tr>
+                        <tr><th>ID:</th><td><%= user.getUserId() %></td></tr>
+                        <tr><th>Name:</th><td><%= user.getUserName() %></td></tr>
                         <tr><th>Gender:</th><td><%= user.getGender() %></td></tr>
-                        <tr><th>Email:</th><td><%= user.getEmail() %></td></tr>
-                        <tr><th>Number:</th><td><%= user.getPhone() %></td></tr>
                         <tr><th>Address:</th><td><%= user.getAddress() %></td></tr>
                         <tr><th>Role:</th><td><%= user.getRole() %></td></tr>
-                        <tr><th>Status:</th><td><%= user.getStatus() %></td></tr>
                     </table>
+
                     <a href="editprofile.jsp" class="btn btn-primary">Edit</a>
-                    <a href="header.jsp" class="btn btn-link">← Back to page</a>
+                    <a href="index.jsp" class="btn btn-secondary ml-2">← Back</a>
                 </div>
             </div>
         </div>
+
+        <!-- Role-Specific Info -->
+        <div class="col-md-8">
+        <% if ("Customer".equalsIgnoreCase(role) && customer != null) { %>
+            <div class="card p-4 mt-4 shadow-sm">
+                <h4>🏋️‍♂️ Customer Details</h4>
+                <table class="table table-borderless">
+                    <tr><th>Weight:</th><td><%= customer.getWeight() %> kg</td></tr>
+                    <tr><th>Height:</th><td><%= customer.getHeight() %> cm</td></tr>
+                    <tr><th>Goal:</th><td><%= customer.getGoal() %></td></tr>
+                    <tr><th>Medical Conditions:</th><td><%= customer.getMedicalConditions() %></td></tr>
+                </table>
+            </div>
+        <% } else if ("Trainer".equalsIgnoreCase(role) && trainer != null) { %>
+            <div class="card p-4 mt-4 shadow-sm">
+                <h4>💪 Trainer Details</h4>
+                <table class="table table-borderless">
+                    <tr><th>Experience (years):</th><td><%= trainer.getExperienceYears() %></td></tr>
+                    <tr><th>Specialization:</th><td><%= trainer.getSpecialization() %></td></tr>
+                    <tr><th>Description:</th><td><%= trainer.getDescription() %></td></tr>
+                </table>
+            </div>
+        <% } %>
+        </div>
     </div>
 
-    <!-- Bootstrap scripts -->
+    <!-- Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
-        // Cập nhật tên file khi chọn ảnh
         $(".custom-file-input").on("change", function () {
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
