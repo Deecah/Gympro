@@ -40,10 +40,6 @@
         <servlet-class>controller.SendEmailServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>VerifyCodeServlet</servlet-name>
-        <servlet-class>controller.VerifyCodeServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>EmailVerificationServlet</servlet-name>
         <servlet-class>controller.EmailVerificationServlet</servlet-class>
 
@@ -86,10 +82,6 @@
 
         <servlet-name>SendEmailServlet</servlet-name>
         <url-pattern>/SendEmailServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>VerifyCodeServlet</servlet-name>
-        <url-pattern>/VerifyCodeServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmailVerificationServlet</servlet-name>

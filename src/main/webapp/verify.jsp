@@ -2,7 +2,7 @@
 <html>
 <head><title>Email Verification</title></head>
 <body>
-    <form action="VerifyCodeServlet" method="post">
+    <form action="EmailVerificationServlet" method="post">
         Enter verification code: <input type="text" name="code" required><br>
         <input type="submit" value="Verify">
     </form>

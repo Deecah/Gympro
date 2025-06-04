@@ -12,6 +12,13 @@ public class User {
     private String role;         
     private String status;      
 
+    public User(String userName, String email, byte[] password, String role) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     public User() {
     }
 
