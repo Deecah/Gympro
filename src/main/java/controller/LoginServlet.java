@@ -39,30 +39,6 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
         }
     }
-//
-//    private void handleSignup(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        String name = request.getParameter("name");
-//        String email = request.getParameter("email");
-//        String password = request.getParameter("password");
-//        String role = request.getParameter("role"); // lấy role từ form
-//        byte[] hashedPassword = HashUtil.hashPassword(password);
-//        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
-//            String sql = "INSERT INTO Users (Name, Email, Password, Role, Status) VALUES (?, ?, ?, ?, 'Normal')";
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            ps.setString(1, name);
-//            ps.setString(2, email);
-//            ps.setBytes(3, hashedPassword);
-//            ps.setString(4, role);
-//            ps.executeUpdate();
-//            request.setAttribute("message", "Registration successful. Please login.");
-//            request.getRequestDispatcher("login.jsp").forward(request, response);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            request.setAttribute("error", "Email already exists or database error.");
-//            request.getRequestDispatcher("login.jsp").forward(request, response);
-//        }
-//    }
 
     private void handleSignin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -233,4 +233,43 @@ public class UserDAO {
         }
     }
    
+    public User getUserById(int userId) {
+        User user = null;
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT * FROM Users WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("id"));
+                user.setUserName(rs.getString("name"));
+                user.setGender(rs.getString("gender"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
+                user.setAvatarUrl(rs.getString("avatar_url"));
+                user.setPassword(rs.getBytes("password"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public boolean updatePassword(int userId, byte[] newPassword) {
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "UPDATE Users SET Password = ? WHERE Id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setBytes(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

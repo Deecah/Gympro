@@ -79,7 +79,7 @@
                     <span>or use your account</span>
                     <input type="email" name="email" placeholder="Email" />
                     <input type="password" name="password" placeholder="Password" />
-                    <a href="#">Forgot your password?</a>
+                    <a href="requestPassword.jsp">Forgot your password?</a>
                     <button type="submit" name="action" value="signin">Sign In</button>
                 </form>
             </div>

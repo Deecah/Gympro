@@ -101,6 +101,8 @@
 
                 <div class="btn-group-custom">
                     <a href="editprofile.jsp" class="btn btn-primary">Edit Profile</a>
+                    <a href="confirmOldPass.jsp" class="btn btn-warning ml-2">Change Password</a>
+                    <a href="LogoutServlet" class="btn btn-danger ml-2">Logout</a>
                     <a href="index.jsp" class="btn btn-secondary ml-2">← Back to Home</a>
                 </div>
             </div>
