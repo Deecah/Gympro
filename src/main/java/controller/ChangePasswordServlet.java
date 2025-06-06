@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 
 package controller;
 
@@ -15,6 +11,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
+
 
 
 @WebServlet(name="ChangePasswordServlet", urlPatterns={"/ChangePasswordServlet"})
@@ -80,5 +77,4 @@ public class ChangePasswordServlet extends HttpServlet {
         userdao.updatePassword(u.getUserId(), newPasswordHashed);
         request.setAttribute("mess", "Change Password Successful!!!");
     }
-
 }

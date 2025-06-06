@@ -165,4 +165,6 @@ public class ResetPasswordServlet extends HttpServlet {
         request.getRequestDispatcher("login.jsp").forward(request, response);
 
     }
+
 }
+
