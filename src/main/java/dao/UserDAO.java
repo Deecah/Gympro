@@ -11,19 +11,6 @@ import Utils.PasswordUtil;
 
 public class UserDAO {
 
-    public boolean updateAvatar(int userId, String avatarUrl) {
-        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "UPDATE Users SET Avatar_Url = ? WHERE Id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, avatarUrl);
-            ps.setInt(2, userId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public User getUserByEmail(String email) {
         try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
             String sql = "SELECT * FROM Users WHERE Email = ?";
@@ -32,7 +19,7 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("Id"));
+                user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
                 user.setGender(rs.getString("Gender"));
                 user.setEmail(rs.getString("Email"));
@@ -60,7 +47,7 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User();
-                user.setId(rs.getInt("id"));
+                user.setUserId(rs.getInt("id"));
                 user.setUserName(rs.getString("name"));
                 user.setGender(rs.getString("gender"));
                 user.setEmail(rs.getString("email"));
@@ -86,7 +73,7 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("Id"));
+                user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
                 user.setGender(rs.getString("Gender"));
                 user.setEmail(rs.getString("Email"));
@@ -100,10 +87,6 @@ public class UserDAO {
         }
         return null;
     }
-
-
-
-
 
     public boolean addUser(User user) {
         if (isEmailExists(user.getEmail())) {
@@ -140,7 +123,7 @@ public class UserDAO {
             }
             int userId = generatedKeys.getInt(1);
 
-            // Insert vào bảng Customer hoặc Trainer
+            // Insert by role
             switch (user.getRole()) {
                 case "Customer":
                     insertRoleSQL = "INSERT INTO Customer (Id) VALUES (?)";
@@ -199,7 +182,6 @@ public class UserDAO {
         return addUser(user); 
     }
 
-    
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -227,27 +209,52 @@ public class UserDAO {
         }
         return false;
     }
-  
-   
 
-    public boolean updateUser(User user) {
-        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, user.getUserName());
-            ps.setString(2, user.getGender());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPhone());
-            ps.setString(5, user.getAddress());
-            ps.setString(6, user.getRole());
-            ps.setString(7, user.getStatus());
-            ps.setInt(8, user.getId());
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void deleteUser(String id) {
+        String sql = "delete from Users WHERE id=? ;";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            int userId = Integer.parseInt(id);
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        return false;
     }
+    
+   public boolean updateUser(User user) {
+    try (Connection con = ConnectDatabase.getInstance().openConnection();
+         PreparedStatement ps = con.prepareStatement("UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?")) {
+
+        ps.setString(1, user.getUserName());
+        ps.setString(2, user.getGender());
+        ps.setString(3, user.getEmail());
+        ps.setString(4, user.getPhone());
+        ps.setString(5, user.getAddress());
+        ps.setString(6, user.getRole());
+        ps.setString(7, user.getStatus());
+        ps.setInt(8, user.getUserId());
+
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for debugging
+        return false; // Return false if an exception occurs
+    }
+}
+
     
      public boolean updatePassword(int userId, byte[] newPassword) {
     try (Connection con = ConnectDatabase.getInstance().openConnection()) {
@@ -260,6 +267,34 @@ public class UserDAO {
         e.printStackTrace();
     }
     return false;
+    }
+     
+    public void updateAvatar(int userId, String avatarUrl) {
+        String sql = "UPDATE Users SET avatarUrl = ? WHERE id = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            statement.setString(1, avatarUrl);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+
+   
 }
     
-}

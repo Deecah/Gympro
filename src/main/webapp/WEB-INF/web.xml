@@ -48,7 +48,6 @@
         <servlet-name>RequestPasswordServlet</servlet-name>
         <servlet-class>controller.RequestPasswordServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -97,11 +96,6 @@
         <servlet-name>VerifyCodeServlet</servlet-name>
         <url-pattern>/VerifyCodeServlet</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>EmailVerificationServlet</servlet-name>
-        <url-pattern>/EmailVerificationServlet</url-pattern>
-    </servlet-mapping>
-
     <session-config>
         <session-timeout>
             60

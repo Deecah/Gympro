@@ -3,12 +3,10 @@ package controller;
 import Utils.HashUtil;
 import dao.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +31,7 @@ public class ChangePasswordServlet extends HttpServlet {
     }
 
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
@@ -51,7 +50,7 @@ public class ChangePasswordServlet extends HttpServlet {
         }
 
     }
-
+    
     @Override
     public String getServletInfo() {
         return "Short description";
@@ -80,7 +79,7 @@ public class ChangePasswordServlet extends HttpServlet {
         UserDAO userdao = new UserDAO();
         User u = userdao.getUserById(userId);
         if (password1 == null || password2 == null || !password1.equals(password2)) {
-           
+
             try {
                 request.setAttribute("mess", "Passwords do not match or are missing!!!");
                 request.getRequestDispatcher("changePassword.jsp").forward(request, response);
@@ -90,7 +89,9 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
         byte[] newPasswordHashed = HashUtil.hashPassword(password1);
-        userdao.updatePassword(u.getId(), newPasswordHashed);
+        userdao.updatePassword(u.getUserId(), newPasswordHashed);
         request.setAttribute("mess", "Change Password Successful!!!");
     }
+
+
 }

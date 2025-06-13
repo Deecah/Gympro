@@ -13,7 +13,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login Page</title>
-        <link rel="stylesheet" href="login.css" type="text/css">
+        <link rel="stylesheet" href="stylecss/login.css" type="text/css">
+        <link rel="stylesheet" href="stylecss/alert.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <style> 
             .role-select { display: flex; justify-content: center; gap: 20px; margin: 20px 0;}
@@ -24,11 +25,23 @@
         </style>
     </head>
     <body>
-        <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
+        <c:if test="${param.msg == 'success'}">
+            <div class="alert alert-success">
+                Verification successful! You can now log in.
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+        </c:if>
+        <c:if test="${param.msg == 'fail'}">
+            <div class="alert alert-danger">
+                Verification failed! Please try again.
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+        </c:if>
+
+        <h2>Weekly Coding Challenge: Sign in/up Form</h2>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
-
-                <form action="${pageContext.request.contextPath}/EmailVerificationServlet" method="post">
+                <form action="${pageContext.request.contextPath}/VerificationServlet" method="post">
                     <h1>Create Account</h1>
                     <div class="social-container">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force"
@@ -52,9 +65,7 @@
                 </form>
             </div>
             <div class="form-container sign-in-container">
-
                 <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
-
                     <h1>Sign in</h1>
                     <c:if test="${not empty error}">
                         <p style="color: red;">${error}</p>

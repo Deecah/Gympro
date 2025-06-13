@@ -55,6 +55,7 @@ public class ResetPasswordServlet extends HttpServlet {
         }
     }
 
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -93,6 +94,7 @@ public class ResetPasswordServlet extends HttpServlet {
         return "Short description";
     }
 
+
     private void requestPassword(HttpServletRequest request, HttpServletResponse response) throws IOException, ClassNotFoundException, SQLException, ServletException {
         String email = request.getParameter("email");
         String token = TokenGenerator.generateShortToken();
@@ -107,7 +109,7 @@ public class ResetPasswordServlet extends HttpServlet {
                 response.getWriter().println("Your email is not exist. Please try again.");
             }
             UserTokenDAO tokenDAO = new UserTokenDAO();
-            UserToken userToken = new UserToken(u.getId(), token, "password_reset", expireDateTime(), false, LocalDateTime.now());
+            UserToken userToken = new UserToken(u.getUserId(), token, "password_reset", expireDateTime(), false, LocalDateTime.now());
             tokenDAO.addUserToken(userToken);
 
             //send email
@@ -190,9 +192,8 @@ public class ResetPasswordServlet extends HttpServlet {
         String email = (String) session.getAttribute("email");
         User u = userDAO.getUserByEmail(email);
         byte[] newPasswordHashed = HashUtil.hashPassword(password1); // Băm mật khẩu mới
-        userDAO.updatePassword(u.getId(), newPasswordHashed); // Cập nhật mật khẩu trong Users
+        userDAO.updatePassword(u.getUserId(), newPasswordHashed); // Cập nhật mật khẩu trong Users
         request.setAttribute("mess", "Reset password successfully!!!");
         request.getRequestDispatcher("login.jsp").forward(request, response);
-
     }
 }
