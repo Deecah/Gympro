@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 
 public class Progress {
     private int progressID;
-    private int userID;
+    private int customerID;
+    private int trainerID;
+    private int workoutID;
     private LocalDateTime recordedAt;
     private double weight;
     private double bodyFatPercent;
@@ -15,9 +17,11 @@ public class Progress {
     public Progress() {
     }
 
-    public Progress(int progressID, int userID, LocalDateTime recordedAt, double weight, double bodyFatPercent, double muscleMass, String notes) {
+    public Progress(int progressID, int customerID, int trainerID, int workoutID, LocalDateTime recordedAt, double weight, double bodyFatPercent, double muscleMass, String notes) {
         this.progressID = progressID;
-        this.userID = userID;
+        this.customerID = customerID;
+        this.trainerID = trainerID;
+        this.workoutID = workoutID;
         this.recordedAt = recordedAt;
         this.weight = weight;
         this.bodyFatPercent = bodyFatPercent;
@@ -31,14 +35,6 @@ public class Progress {
 
     public void setProgressID(int progressID) {
         this.progressID = progressID;
-    }
-
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
     }
 
     public LocalDateTime getRecordedAt() {
@@ -81,6 +77,29 @@ public class Progress {
         this.notes = notes;
     }
 
-   
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
+
+    public int getTrainerID() {
+        return trainerID;
+    }
+
+    public void setTrainerID(int trainerID) {
+        this.trainerID = trainerID;
+    }
+
+    public int getWorkoutID() {
+        return workoutID;
+    }
+
+    public void setWorkoutID(int workoutID) {
+        this.workoutID = workoutID;
+    }
+
 }
 

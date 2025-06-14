@@ -14,7 +14,6 @@ public class Trainer extends User{
     public Trainer() {
     }
 
-
     public void setExperienceYears(int experienceYears) {
         this.experienceYears = experienceYears;
     }

@@ -24,9 +24,7 @@ public class Customer extends User{
         this.goal = goal;
         this.medicalConditions = medicalConditions;
     }
-    
-    
-
+   
     public Double getWeight() {
         return weight;
     }

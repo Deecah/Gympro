@@ -3,13 +3,14 @@ package model;
 import java.time.LocalDateTime;
 
 public class UserToken {
+
     private int id;
     private int userId;
     private String token;
     private String tokenType;
+    private LocalDateTime createdAt;
     private LocalDateTime expiry;
     private boolean isUsed;
-    private LocalDateTime createdAt;
 
     public UserToken() {
     }
@@ -33,8 +34,6 @@ public class UserToken {
         this.createdAt = createdAt;
     }
 
-    
-    
     public int getId() {
         return id;
     }
