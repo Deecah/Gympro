@@ -28,7 +28,7 @@ public class EditProfileServlet extends HttpServlet {
         String status = request.getParameter("status");
 
         User user = new User();
-        user.setId(id);
+        user.setUserId(id);
         user.setUserName(name);
         user.setGender(gender);
         user.setEmail(email);

@@ -25,7 +25,7 @@ public class UserDAO {
                 user.setEmail(rs.getString("Email"));
                 user.setPhone(rs.getString("Phone"));
                 user.setAddress(rs.getString("Address"));
-                user.setAvatarUrl(rs.getString("Avatar_Url"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setPassword(rs.getBytes("Password"));
                 user.setRole(rs.getString("Role"));
                 user.setStatus(rs.getString("Status"));
@@ -35,6 +35,7 @@ public class UserDAO {
             e.printStackTrace();
         }
         return null;
+        
     }
 
     public User getUserById(int userId) {
@@ -53,7 +54,7 @@ public class UserDAO {
                 user.setEmail(rs.getString("email"));
                 user.setPhone(rs.getString("phone"));
                 user.setAddress(rs.getString("address"));
-                user.setAvatarUrl(rs.getString("avatar_url"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setPassword(rs.getBytes("password"));
                 user.setRole(rs.getString("role"));
                 user.setStatus(rs.getString("status"));
@@ -79,7 +80,7 @@ public class UserDAO {
                 user.setEmail(rs.getString("Email"));
                 user.setPhone(rs.getString("Phone"));
                 user.setAddress(rs.getString("Address"));
-                user.setAvatarUrl(rs.getString("Avatar_Url"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setPassword(rs.getBytes("Password"));
                 return user;
 
@@ -270,7 +271,7 @@ public class UserDAO {
     }
      
     public void updateAvatar(int userId, String avatarUrl) {
-        String sql = "UPDATE Users SET avatarUrl = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Avatar_url = ? WHERE id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
