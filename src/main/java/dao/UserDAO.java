@@ -259,7 +259,25 @@ public class UserDAO {
         }
         return user;
     }
+    public boolean updateUser(User user) {
+    try (Connection con = ConnectDatabase.getInstance().openConnection();
+         PreparedStatement ps = con.prepareStatement("UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?")) {
 
+        ps.setString(1, user.getUserName());
+        ps.setString(2, user.getGender());
+        ps.setString(3, user.getEmail());
+        ps.setString(4, user.getPhone());
+        ps.setString(5, user.getAddress());
+        ps.setString(6, user.getRole());
+        ps.setString(7, user.getStatus());
+        ps.setInt(8, user.getUserId());
+
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for debugging
+        return false; // Return false if an exception occurs
+    }
+}
     public boolean updatePassword(int userId, byte[] newPassword) {
         try (Connection con = ConnectDatabase.getInstance().openConnection()) {
             String sql = "UPDATE Users SET Password = ? WHERE Id = ?";
