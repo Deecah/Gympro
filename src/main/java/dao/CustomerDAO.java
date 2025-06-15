@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package dao;
 
 import connectDB.ConnectDatabase;
@@ -32,7 +36,7 @@ public class CustomerDAO {
             customer.setUserName(userRs.getString("Name"));
             customer.setGender(userRs.getString("Gender"));
             customer.setEmail(userRs.getString("Email"));
-            //customer.setPhone(userRs.getString("Phone"));
+            customer.setPhone(userRs.getString("Phone"));
             customer.setAddress(userRs.getString("Address"));
             customer.setAvatarUrl(userRs.getString("AvatarUrl"));
 
@@ -93,11 +97,10 @@ public class CustomerDAO {
             userStmt = con.prepareStatement(updateUserSQL);
             userStmt.setString(1, customer.getUserName());
             userStmt.setString(2, customer.getGender());
-            userStmt.setString(3, customer.getEmail());
+            userStmt.setString(3, customer.getPhone());
             userStmt.setString(4, customer.getAddress());
             userStmt.setString(5, customer.getAvatarUrl());
             userStmt.setInt(6, customer.getUserId());
-
             userStmt.executeUpdate();
 
             // Update bảng Customer
@@ -139,4 +142,5 @@ public class CustomerDAO {
             }
         }
     }
+
 }

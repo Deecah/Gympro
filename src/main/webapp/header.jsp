@@ -20,7 +20,6 @@
 
 <!-- Header Section Begin -->
 <header class="header-section" style="position: relative;">
-    <!-- Avatar floating top right -->
     <% if (user != null) { %>
     <div style="position: absolute; top: 10px; right: 20px; z-index: 1000;">
         <img src="<%= user.getAvatarUrl() %>" onclick="toggleMenu()"

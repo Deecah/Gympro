@@ -15,8 +15,8 @@ import constant.Iconstant;
 import model.GoogleAccount;
 
 
-
 public class GoogleLogin {
+    
     public static String getToken(String code) throws ClientProtocolException, IOException {
         String response;
         response = Request.Post(Iconstant.GOOGLE_LINK_GET_TOKEN)

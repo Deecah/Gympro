@@ -1,3 +1,4 @@
+
 package dao;
 
 import connectDB.ConnectDatabase;
@@ -35,7 +36,7 @@ public class TrainerDAO {
             trainer.setUserName(userRs.getString("Name"));
             trainer.setGender(userRs.getString("Gender"));
             trainer.setEmail(userRs.getString("Email"));
-            //trainer.setPhone(userRs.getString("Phone"));
+            trainer.setPhone(userRs.getString("Phone"));
             trainer.setAddress(userRs.getString("Address"));
             trainer.setAvatarUrl(userRs.getString("AvatarUrl"));
 
@@ -95,7 +96,7 @@ public class TrainerDAO {
             userStmt = con.prepareStatement(updateUserSQL);
             userStmt.setString(1, trainer.getUserName());
             userStmt.setString(2, trainer.getGender());
-            userStmt.setString(3, trainer.getEmail());
+            userStmt.setString(3, trainer.getPhone());
             userStmt.setString(4, trainer.getAddress());
             userStmt.setString(5, trainer.getAvatarUrl());
             userStmt.setInt(6, trainer.getUserId());

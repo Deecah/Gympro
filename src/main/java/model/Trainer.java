@@ -1,12 +1,15 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
-public class Trainer extends User {
+public class Trainer extends User{
     private Integer experienceYears; 
     private String description;      
     private String specialization;   
 
     public Trainer() {
-        super(); // Gọi constructor của lớp User
     }
 
     public Integer getExperienceYears() {
@@ -33,19 +36,5 @@ public class Trainer extends User {
         this.specialization = specialization;
     }
 
-    @Override
-    public String toString() {
-        return "Trainer{" +
-                ", userName=" + getUserName() +
-                ", gender=" + getGender() +
-                ", email=" + getEmail() +
-                ", address=" + getAddress() +
-                ", avatarUrl=" + getAvatarUrl() +
-                ", role=" + getRole() +
-                ", status=" + getStatus() +
-                ", experienceYears=" + experienceYears +
-                ", description='" + description + '\'' +
-                ", specialization='" + specialization + '\'' +
-                '}';
-    }
+    
 }

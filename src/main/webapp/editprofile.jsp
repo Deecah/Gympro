@@ -1,9 +1,9 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page import="model.User, model.Customer, model.Trainer" %>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
-        response.sendRedirect("profile.jsp");
+        response.sendRedirect("login.jsp");
         return;
     }
 
@@ -29,6 +29,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         .form-group i { margin-right: 10px; color: #007bff; }
+        .role-section h5 { margin-top: 30px; color: #343a40; }
     </style>
 </head>
 <body>
@@ -66,9 +67,9 @@
                     </select>
                 </div>
 
-                <!-- Customer Fields -->
-                <div id="customerFields" style="display: none;">
-                    <h5 class="mt-4">Customer Details</h5>
+                <!-- Customer Section -->
+                <div id="customerFields" class="role-section" style="display: none;">
+                    <h5>Customer Details</h5>
                     <div class="form-group">
                         <label><i class="fa fa-weight"></i> Weight (kg):</label>
                         <input type="number" step="0.1" class="form-control" name="weight" value="<%= customer != null ? customer.getWeight() : "" %>">
@@ -87,9 +88,9 @@
                     </div>
                 </div>
 
-                <!-- Trainer Fields -->
-                <div id="trainerFields" style="display: none;">
-                    <h5 class="mt-4">Trainer Details</h5>
+                <!-- Trainer Section -->
+                <div id="trainerFields" class="role-section" style="display: none;">
+                    <h5>Trainer Details</h5>
                     <div class="form-group">
                         <label><i class="fa fa-calendar-alt"></i> Years of Experience:</label>
                         <input type="number" class="form-control" name="experienceYears" value="<%= trainer != null ? trainer.getExperienceYears() : "" %>">
@@ -112,7 +113,6 @@
         </div>
     </div>
 
-    <!-- JavaScript to show/hide fields -->
     <script>
         function toggleRoleFields() {
             const role = document.getElementById("role").value;
