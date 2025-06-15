@@ -1,71 +1,84 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 
 package controller;
 
-import DAO.UserDAO;
+import Utils.HashUtil;
+import dao.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
 
-public class ChangePasswordServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ChangePasswordServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ChangePasswordServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+@WebServlet(name="ChangePasswordServlet", urlPatterns={"/ChangePasswordServlet"})
+public class ChangePasswordServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            throws ServletException, IOException {
+        request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String password1 = (String) request.getAttribute("password1");
-        String password2 = (String) request.getAttribute("password2");
-        if(!password1.equals(password2)){
-            request.setAttribute("error", "Incorrect password!!!");
-        }else{
-            UserDAO userdao;
-        try {
-            
-            userdao = new UserDAO();
-            HttpSession session = request.getSession();
-            User u = (User) session.getAttribute("user");
-            userdao.updatePassword(u.getId(), password1);
-            request.setAttribute("error", "Change Password Successful!!!");
-           
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+        if ("confirm".equals(action)) {
+            confirmPassword(request, response);
         }
+        if ("changePassword".equals(action)) {
+            changePassword(request, response);
         }
-        
-        
+
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
+    private void confirmPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String oldPassword = request.getParameter("oldPassword");
+        HttpSession session = request.getSession();
+        User sessionUser = (User) session.getAttribute("user");
+        int userId = sessionUser.getUserId();
+
+        UserDAO userdao = new UserDAO();
+        User dbUser = userdao.getUserById(userId);
+        byte[] userPass = dbUser.getPassword();
+
+        byte[] oldPasswordHashed = HashUtil.hashPassword(oldPassword);
+        if (Arrays.equals(oldPasswordHashed, userPass)) {
+            request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+        } else {
+            request.setAttribute("mess", "Wrong password!!!!");
+            request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
+        }
+    }
+
+    private void changePassword(HttpServletRequest request, HttpServletResponse response) {
+        String password1 = request.getParameter("password1");
+        String password2 = request.getParameter("password2");
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("userId");
+        UserDAO userdao = new UserDAO();
+        User u = userdao.getUserById(userId);
+        if (password1 == null || password2 == null || !password1.equals(password2)) {
+           
+            try {
+                request.setAttribute("mess", "Passwords do not match or are missing!!!");
+                request.getRequestDispatcher("changePassword.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                Logger.getLogger(ChangePasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return;
+        }
+        byte[] newPasswordHashed = HashUtil.hashPassword(password1);
+        userdao.updatePassword(u.getUserId(), newPasswordHashed);
+        request.setAttribute("mess", "Change Password Successful!!!");
     }
 
 }

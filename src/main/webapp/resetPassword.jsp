@@ -43,39 +43,48 @@
                 color: #333;
                 margin-bottom: 5px;
             }
-            input[type="email"],
-            input[type="password"] {
+            input[type="text"],
+            input[type="password"],
+            input[type="email"] { 
                 width: 100%;
-                padding: 10px;
+                padding: 12px 15px;
+                margin: 8px 0;
+                display: inline-block;
                 border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
+                border-radius: 25px;
                 box-sizing: border-box;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+           
+            input[type="text"]:focus,
+            input[type="password"]:focus,
+            input[type="email"]:focus {
+                border-color: #88c0ff;
+                outline: none;
+                box-shadow: 0 0 5px rgba(136, 192, 255, 0.5); 
             }
             .reset-btn {
                 width: 100%;
                 padding: 10px;
                 font-size: 16px;
-                color: white; /* Chữ trắng để dễ đọc trên nền gradient hồng */
-                background: linear-gradient(to bottom, #ff5e62, #ff9966); /* Gradient giống background */
+                color: white;
+                background: linear-gradient(to bottom, #ff5e62, #ff9966);
                 border: none;
                 border-radius: 25px;
                 cursor: pointer;
                 transition: background 0.3s;
             }
             .reset-btn:hover {
-                background: linear-gradient(to bottom, #ff9966, #ff5e62); /* Đảo ngược gradient khi hover */
+                background: linear-gradient(to bottom, #ff9966, #ff5e62);
             }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Reset Password</h1>
-            <form action="resetPassword" method="post">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                </div>
+            <form action="ResetPasswordServlet" method="post">
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter new password" required>
@@ -84,7 +93,10 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" required>
                 </div>
-                <button type="submit" class="reset-btn">RESET PASSWORD</button>
+                <button type="submit" class="reset-btn" name="action" >RESET PASSWORD</button>
+                <p class="error-message">
+                     ${mess}
+                </p>
             </form>
         </div>
     </body>

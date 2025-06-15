@@ -4,28 +4,13 @@
  */
 package model;
 
-public class Customer {
-    private int id;
+public class Customer extends User{
     private Double weight;             
     private Double height;             
     private String goal;              
     private String medicalConditions;  
 
     public Customer() {
-    }
-
-    public Customer(int id) {
-        this.id = id;
-    }
-
-    // Getter & Setter
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Double getWeight() {
@@ -59,4 +44,5 @@ public class Customer {
     public void setMedicalConditions(String medicalConditions) {
         this.medicalConditions = medicalConditions;
     }
+
 }
