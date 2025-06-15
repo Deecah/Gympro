@@ -14,10 +14,6 @@ import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
 
-/**
- *
- * @author DELL
- */
 public class UserDAO {
 
     public boolean addUser(User user) {
@@ -104,7 +100,14 @@ public class UserDAO {
             }
         }
     }
-
+    public boolean addUserFromGoogle(GoogleAccount googleAcc) {
+        User user = new User();
+        user.setUserName(googleAcc.getName());
+        user.setEmail(googleAcc.getEmail());
+        user.setPassword(PasswordUtil.generateRandomPassword()); 
+        user.setRole("Customer"); 
+        return addUser(user); 
+    }
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -129,6 +132,139 @@ public class UserDAO {
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        return false;
+    }
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE Email = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = db.openConnection();
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("Id"));
+                user.setUserName(rs.getString("Name"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getBytes("Password"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                return user;
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
+
+    public void deleteUser(String id) {
+        String sql = "delete from Users WHERE id=? ;";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            int userId = Integer.parseInt(id);
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void updateAvatar(int userId, String avatarUrl) {
+        String sql = "UPDATE Users SET avatarUrl = ? WHERE id = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            statement.setString(1, avatarUrl);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+   
+    public User getUserById(int userId) {
+        User user = null;
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT * FROM Users WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("id"));
+                user.setUserName(rs.getString("name"));
+                user.setGender(rs.getString("gender"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
+                user.setAvatarUrl(rs.getString("avatar_url"));
+                user.setPassword(rs.getBytes("password"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public boolean updatePassword(int userId, byte[] newPassword) {
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "UPDATE Users SET Password = ? WHERE Id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setBytes(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

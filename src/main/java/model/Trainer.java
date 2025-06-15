@@ -1,28 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-public class Trainer {
-    private int id;
+public class Trainer extends User{
     private Integer experienceYears; 
     private String description;      
     private String specialization;   
 
     public Trainer() {
-    }
-
-    public Trainer(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Integer getExperienceYears() {
@@ -48,4 +31,6 @@ public class Trainer {
     public void setSpecialization(String specialization) {
         this.specialization = specialization;
     }
+
+    
 }

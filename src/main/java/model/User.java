@@ -1,11 +1,11 @@
-
 package model;
 
 public class User {
-    private int id;
+    private int userId;
     private String userName;     
     private String gender;       
     private String email;
+    private String phone;
     private String address;      
     private String avatarUrl;    
     private byte[] password;     
@@ -21,13 +21,12 @@ public class User {
 
     public User() {
     }
-
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
@@ -52,6 +51,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAddress() {
@@ -97,9 +104,6 @@ public class User {
 
     @Override
     public String toString() {
-
-        return "User{" + "id=" + id + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
+    return "User{" + "userId=" + userId + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", phone=" + phone + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
     }
-    
-    
 }
