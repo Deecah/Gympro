@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 public class Customer extends User{
+
     private Double weight;             
     private Double height;             
     private String goal;              
@@ -13,19 +10,35 @@ public class Customer extends User{
     public Customer() {
     }
 
+    public Customer(Double weight, Double height, String goal, String medicalConditions) {
+        this.weight = weight;
+        this.height = height;
+        this.goal = goal;
+        this.medicalConditions = medicalConditions;
+    }
+
+    public Customer(Double weight, Double height, String goal, String medicalConditions, String userName, String email, byte[] password, String role) {
+        super(userName, email, password, role);
+        this.weight = weight;
+        this.height = height;
+        this.goal = goal;
+        this.medicalConditions = medicalConditions;
+    }
+   
     public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
-    public Double getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(Double height) {
+    public void setHeight(double height) {
+
         this.height = height;
     }
 
@@ -44,5 +57,7 @@ public class Customer extends User{
     public void setMedicalConditions(String medicalConditions) {
         this.medicalConditions = medicalConditions;
     }
+
+  
 
 }

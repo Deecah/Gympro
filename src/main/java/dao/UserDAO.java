@@ -1,20 +1,93 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import connectDB.ConnectDatabase;
 import model.User;
 import java.sql.*;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
 
+
 public class UserDAO {
+
+    public User getUserByEmail(String email) {
+        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT * FROM Users WHERE Email = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("Id"));
+                user.setUserName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
+                user.setPassword(rs.getBytes("Password"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+        
+    }
+
+    public User getUserById(int userId) {
+        User user = null;
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT * FROM Users WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("id"));
+                user.setUserName(rs.getString("name"));
+                user.setGender(rs.getString("gender"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
+                user.setPassword(rs.getBytes("password"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public User getUserByEmailAndPassword(String email, String hashedPassword) throws ClassNotFoundException, SQLException {
+        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, hashedPassword);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("Id"));
+                user.setUserName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
+                user.setPassword(rs.getBytes("Password"));
+                return user;
+
+            }
+        }
+        return null;
+    }
 
     public boolean addUser(User user) {
         if (isEmailExists(user.getEmail())) {
@@ -110,7 +183,6 @@ public class UserDAO {
         return addUser(user); 
     }
 
-    
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -138,50 +210,6 @@ public class UserDAO {
         }
         return false;
     }
-  
-    public User getUserByEmail(String email) {
-        String sql = "SELECT * FROM Users WHERE Email = ?";
-        ConnectDatabase db = ConnectDatabase.getInstance();
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            con = db.openConnection();
-            stmt = con.prepareStatement(sql);
-            stmt.setString(1, email);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getInt("Id"));
-                user.setUserName(rs.getString("Name"));
-                user.setEmail(rs.getString("Email"));
-                user.setPassword(rs.getBytes("Password"));
-                user.setRole(rs.getString("Role"));
-                user.setStatus(rs.getString("Status"));
-                return user;
-            }
-
-        } catch (ClassNotFoundException | SQLException e) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return null;
-    }
 
     public void deleteUser(String id) {
         String sql = "delete from Users WHERE id=? ;";
@@ -208,8 +236,42 @@ public class UserDAO {
         }
     }
     
+   public boolean updateUser(User user) {
+    try (Connection con = ConnectDatabase.getInstance().openConnection();
+         PreparedStatement ps = con.prepareStatement("UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?")) {
+
+        ps.setString(1, user.getUserName());
+        ps.setString(2, user.getGender());
+        ps.setString(3, user.getEmail());
+        ps.setString(4, user.getPhone());
+        ps.setString(5, user.getAddress());
+        ps.setString(6, user.getRole());
+        ps.setString(7, user.getStatus());
+        ps.setInt(8, user.getUserId());
+
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for debugging
+        return false; // Return false if an exception occurs
+    }
+}
+
+    
+     public boolean updatePassword(int userId, byte[] newPassword) {
+    try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+        String sql = "UPDATE Users SET Password = ? WHERE Id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setBytes(1, newPassword);
+        ps.setInt(2, userId);
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+    }
+     
     public void updateAvatar(int userId, String avatarUrl) {
-        String sql = "UPDATE Users SET avatarUrl = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Avatar_url = ? WHERE id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -232,62 +294,8 @@ public class UserDAO {
             }
         }
     }
+
+
    
-    public User getUserById(int userId) {
-        User user = null;
-        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "SELECT * FROM Users WHERE id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, userId);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                user = new User();
-                user.setUserId(rs.getInt("id"));
-                user.setUserName(rs.getString("name"));
-                user.setGender(rs.getString("gender"));
-                user.setEmail(rs.getString("email"));
-                user.setPhone(rs.getString("phone"));
-                user.setAddress(rs.getString("address"));
-                user.setAvatarUrl(rs.getString("avatar_url"));
-                user.setPassword(rs.getBytes("password"));
-                user.setRole(rs.getString("role"));
-                user.setStatus(rs.getString("status"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-    public boolean updateUser(User user) {
-    try (Connection con = ConnectDatabase.getInstance().openConnection();
-         PreparedStatement ps = con.prepareStatement("UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?")) {
-
-        ps.setString(1, user.getUserName());
-        ps.setString(2, user.getGender());
-        ps.setString(3, user.getEmail());
-        ps.setString(4, user.getPhone());
-        ps.setString(5, user.getAddress());
-        ps.setString(6, user.getRole());
-        ps.setString(7, user.getStatus());
-        ps.setInt(8, user.getUserId());
-
-        return ps.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging
-        return false; // Return false if an exception occurs
-    }
 }
-    public boolean updatePassword(int userId, byte[] newPassword) {
-        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "UPDATE Users SET Password = ? WHERE Id = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setBytes(1, newPassword);
-            ps.setInt(2, userId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-}
+    

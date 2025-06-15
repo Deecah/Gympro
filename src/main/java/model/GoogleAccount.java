@@ -1,19 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author ASUS
- */
 public class GoogleAccount {
-
     private String id, email, name, first_name, given_name, family_name, picture;
-
     private boolean verified_email;
-
+    
     public GoogleAccount() {
     }
 
@@ -96,5 +86,5 @@ public class GoogleAccount {
     public String toString() {
         return "GoogleAccount{" + "id=" + id + ", email=" + email + ", name=" + name + ", first_name=" + first_name + ", given_name=" + given_name + ", family_name=" + family_name + ", picture=" + picture + ", verified_email=" + verified_email + '}';
     }
-    
+
 }

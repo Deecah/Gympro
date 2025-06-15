@@ -3,12 +3,21 @@ package controller;
 import Utils.HashUtil;
 import dao.UserDAO;
 import dao.UserTokenDAO;
-import jakarta.mail.*;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Properties;
@@ -29,6 +38,23 @@ public class ResetPasswordServlet extends HttpServlet {
             return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
         }
     }
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet UserServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet UserServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +88,12 @@ public class ResetPasswordServlet extends HttpServlet {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }
+
 
     private void requestPassword(HttpServletRequest request, HttpServletResponse response) throws IOException, ClassNotFoundException, SQLException, ServletException {
         String email = request.getParameter("email");
@@ -163,6 +195,5 @@ public class ResetPasswordServlet extends HttpServlet {
         userDAO.updatePassword(u.getUserId(), newPasswordHashed); // Cập nhật mật khẩu trong Users
         request.setAttribute("mess", "Reset password successfully!!!");
         request.getRequestDispatcher("login.jsp").forward(request, response);
-
     }
 }
