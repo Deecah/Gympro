@@ -7,7 +7,7 @@ import model.Trainer;
 
 public class DAOTest {
     public static void main(String[] args) {
-        int testUserId = 1; // Thay đổi ID này theo user bạn muốn test
+        int testUserId = 2; // Thay đổi ID này theo user bạn muốn test
 
         testCustomerDAO(testUserId);
         testTrainerDAO(testUserId);
