@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
+import java.util.ArrayList;
 
 
 public class UserDAO {
@@ -38,6 +39,31 @@ public class UserDAO {
         
     }
 
+     public ArrayList<User> getAllUsers() {
+        ArrayList<User> userList = new ArrayList<>(); // Khởi tạo ArrayList
+        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
+            String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) { // Dùng while để duyệt qua tất cả các dòng
+                User user = new User();
+                user.setUserId(rs.getInt("Id"));
+                user.setUserName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                userList.add(user); // Thêm user vào danh sách
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+    
     public User getUserById(int userId) {
         User user = null;
         try (Connection con = ConnectDatabase.getInstance().openConnection()) {
@@ -271,7 +297,7 @@ public class UserDAO {
     }
      
     public void updateAvatar(int userId, String avatarUrl) {
-        String sql = "UPDATE Users SET Avatar_url = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Avatarurl = ? WHERE id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -295,7 +321,57 @@ public class UserDAO {
         }
     }
 
-
-   
+    public boolean banUser(int userId){
+        String sql = "UPDATE Users SET Status = ? WHERE id = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            statement.setString(1, "Banned");
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+                return true;
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        return false;
+    }
+    public boolean unbanUser(int userId){
+        String sql = "UPDATE Users SET Status = ? WHERE id = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = db.openConnection();
+            statement = con.prepareStatement(sql);
+            statement.setString(1, "Normal");
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                statement.close();
+                con.close();
+                return true;
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        return false;
+    }
 }
     
