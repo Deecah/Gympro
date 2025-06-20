@@ -4,7 +4,6 @@ import Utils.HashUtil;
 import dao.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.PrintWriter;
 import java.util.Arrays;

@@ -3,10 +3,8 @@ package controller;
 import Utils.HashUtil;
 import dao.UserDAO;
 import dao.UserTokenDAO;
-import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
-import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
@@ -32,8 +30,25 @@ public class ResetPasswordServlet extends HttpServlet {
     private final int EXPIRY_TIME = 10;
     private static final Logger LOGGER = Logger.getLogger(ResetPasswordServlet.class.getName());
 
-    private static class TokenGenerator {
+    // Class MailAuthenticator đã được định nghĩa bên ngoài hoặc bạn có thể định nghĩa lại ở đây
+    // Nếu bạn muốn dùng lại MailAuthenticator đã sửa ở câu trước, hãy đặt nó ở một file riêng
+    // hoặc ngay trong file này (nhưng không phải là inner class)
+    final class MailAuthenticator extends jakarta.mail.Authenticator {
+        private final String user;
+        private final String password;
 
+        public MailAuthenticator(String user, String password) {
+            this.user = user;
+            this.password = password;
+        }
+
+        @Override
+        protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
+            return new jakarta.mail.PasswordAuthentication(user, password);
+        }
+    }
+
+    private static class TokenGenerator {
         public static String generateShortToken() {
             return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
         }
@@ -55,12 +70,10 @@ public class ResetPasswordServlet extends HttpServlet {
         }
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
-
     }
 
     @Override
@@ -69,7 +82,7 @@ public class ResetPasswordServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            if (null == action) {
+            if (action == null) { // Đổi từ null == action sang action == null để dễ đọc hơn
                 resetPassword(request, response);
             } else {
                 switch (action) {
@@ -86,6 +99,9 @@ public class ResetPasswordServlet extends HttpServlet {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            // Có thể thêm forward đến trang lỗi hoặc hiển thị thông báo lỗi thân thiện hơn
+            request.setAttribute("errorMessage", "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.");
+            request.getRequestDispatcher("errorPage.jsp").forward(request, response);
         }
     }
 
@@ -94,81 +110,94 @@ public class ResetPasswordServlet extends HttpServlet {
         return "Short description";
     }
 
-
     private void requestPassword(HttpServletRequest request, HttpServletResponse response) throws IOException, ClassNotFoundException, SQLException, ServletException {
         String email = request.getParameter("email");
         String token = TokenGenerator.generateShortToken();
 
         if (email == null || email.isEmpty()) {
-            response.getWriter().println("Invalid email. Please try again.");
+            request.setAttribute("mess", "Email không hợp lệ. Vui lòng thử lại.");
+            request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
             return;
-        } else {
-            UserDAO userDAO = new UserDAO();
-            User u = userDAO.getUserByEmail(email);
-            if (u == null) {
-                response.getWriter().println("Your email is not exist. Please try again.");
-            }
-            UserTokenDAO tokenDAO = new UserTokenDAO();
-            UserToken userToken = new UserToken(u.getUserId(), token, "password_reset", expireDateTime(), false, LocalDateTime.now());
-            tokenDAO.addUserToken(userToken);
-
-            //send email
-            try {
-                String from = "swptest391@gmail.com";
-                String pass = "qnvekkrbltwixoqg";
-                Properties props = new Properties();
-                props.put("mail.smtp.host", "smtp.gmail.com");
-                props.put("mail.smtp.port", "587");
-                props.put("mail.smtp.auth", "true");
-                props.put("mail.smtp.starttls.enable", "true"); // Enable TLS
-                Session mailSession = Session.getInstance(props, new Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(from, pass);
-                    }
-                });
-                mailSession.setDebug(true);
-                Message message = new MimeMessage(mailSession);
-                message.setFrom(new InternetAddress(from));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-                message.setSubject("Your verify code to reset password");
-                message.setContent("<h1>" + token + "</h1>", "text/html; charset=UTF-8");
-                Transport.send(message);
-                HttpSession session = request.getSession();
-                session.setAttribute("email", email);
-                request.setAttribute("mess", "An email is sent to you. Please check your inbox.");
-                request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);     
-            } catch (MessagingException e) {
-                Logger.getLogger(ResetPasswordServlet.class.getName()).log(Level.SEVERE, "Failed to send email", e);
-                request.setAttribute("mess", "Failed to send email. Please try again later.");
-                request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
-            }
         }
 
+        UserDAO userDAO = new UserDAO();
+        User u = userDAO.getUserByEmail(email);
+        if (u == null) {
+            request.setAttribute("mess", "Email của bạn không tồn tại. Vui lòng thử lại.");
+            request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
+            return; // Thêm return để dừng xử lý nếu email không tồn tại
+        }
+
+        UserTokenDAO tokenDAO = new UserTokenDAO();
+        UserToken userToken = new UserToken(u.getUserId(), token, "password_reset", expireDateTime(), false, LocalDateTime.now());
+        tokenDAO.addUserToken(userToken);
+
+        //send email
+        try {
+            String fromEmail = "swptest391@gmail.com";
+            // Sử dụng mật khẩu ứng dụng (App Password) thay vì mật khẩu thông thường của Gmail
+            String appPassword = "yggqrlbuinwhpkny"; 
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true"); // Enable TLS
+            props.put("mail.debug", "true"); // Rất hữu ích cho việc debug
+
+            // Sử dụng lớp MailAuthenticator đã định nghĩa
+            Session mailSession = Session.getInstance(props, new MailAuthenticator(fromEmail, appPassword));
+            
+            mailSession.setDebug(true); // Đã có ở trên, có thể bỏ dòng này
+            Message message = new MimeMessage(mailSession);
+            message.setFrom(new InternetAddress(fromEmail)); // Sử dụng fromEmail
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("Your verify code to reset password");
+            message.setContent("<h1>" + token + "</h1>", "text/html; charset=UTF-8");
+            Transport.send(message);
+
+            HttpSession session = request.getSession();                 
+            session.setAttribute("email", email);
+            request.setAttribute("mess", "Một email đã được gửi đến bạn. Vui lòng kiểm tra hộp thư đến.");
+            request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
+        } catch (MessagingException e) {
+            LOGGER.log(Level.SEVERE, "Failed to send email", e);
+            request.setAttribute("mess", "Không thể gửi email. Vui lòng thử lại sau.");
+            request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
+        }
     }
 
     private void confirmToken(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, ServletException, IOException, SQLException {
         String token = request.getParameter("token");
         UserTokenDAO tokenDAO = new UserTokenDAO();
         UserToken userToken = tokenDAO.getUserTokenbyToken(token);
+
         if (userToken == null) {
-            request.setAttribute("mess", "Please enter verify code!!!");
+            request.setAttribute("mess", "Vui lòng nhập mã xác minh!!!");
             request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
+            return; // Thêm return
         }
+
         if (isExpiredTime(userToken.getExpiry())) {
-            request.setAttribute("mess", "Your verify code is expired!!! Re-enter your gmail to get new code");
+            request.setAttribute("mess", "Mã xác minh của bạn đã hết hạn!!! Vui lòng nhập lại gmail để nhận mã mới.");
             request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
+            return; // Thêm return
         }
+
         if (userToken.isUsed()) {
-            request.setAttribute("mess", "Your verify code is used!!! Re-enter your gmail to get new code");
+            request.setAttribute("mess", "Mã xác minh của bạn đã được sử dụng!!! Vui lòng nhập lại gmail để nhận mã mới.");
             request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
+            return; // Thêm return
         }
+
         if (token.equals(userToken.getToken())) {
             userToken.setUsed(true);
             tokenDAO.updateUserToken(userToken);
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+        } else {
+             request.setAttribute("mess", "Mã xác minh không đúng. Vui lòng kiểm tra lại.");
+             request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
         }
-
     }
 
     public LocalDateTime expireDateTime() {
@@ -180,20 +209,39 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     private void resetPassword(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException { // Thêm ServletException, IOException
-        String password1 = request.getParameter("password");
-        String password2 = request.getParameter("confirmPassword");
-        if (password1 == null || password2 == null || password1.isEmpty() || password2.isEmpty() || !password1.equals(password2)) {
-            request.setAttribute("mess", "Password is not match or missing!!!");
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
+        String password = request.getParameter("password"); // Đổi password1 thành password
+        String confirmPassword = request.getParameter("confirmPassword"); // Đổi password2 thành confirmPassword
+
+        if (password == null || confirmPassword == null || password.isEmpty() || confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
+            request.setAttribute("mess", "Mật khẩu không khớp hoặc bị thiếu!!!");
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            return; // Thêm return
         }
+
         UserDAO userDAO = new UserDAO();
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
+
+        if (email == null || email.isEmpty()) {
+            // Trường hợp không có email trong session (ví dụ: người dùng truy cập trực tiếp)
+            request.setAttribute("mess", "Phiên làm việc hết hạn hoặc không hợp lệ. Vui lòng bắt đầu lại quá trình đặt lại mật khẩu.");
+            request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
+            return;
+        }
+
         User u = userDAO.getUserByEmail(email);
-        byte[] newPasswordHashed = HashUtil.hashPassword(password1); // Băm mật khẩu mới
+        if (u == null) {
+            // Trường hợp email trong session không tìm thấy trong DB (hiếm khi xảy ra nếu logic đúng)
+            request.setAttribute("mess", "Người dùng không tồn tại. Vui lòng bắt đầu lại quá trình đặt lại mật khẩu.");
+            request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
+            return;
+        }
+
+        byte[] newPasswordHashed = HashUtil.hashPassword(password); // Băm mật khẩu mới
         userDAO.updatePassword(u.getUserId(), newPasswordHashed); // Cập nhật mật khẩu trong Users
-        request.setAttribute("mess", "Reset password successfully!!!");
+
+        request.setAttribute("mess", "Đặt lại mật khẩu thành công!!!");
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }
