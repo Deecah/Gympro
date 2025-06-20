@@ -11,30 +11,46 @@ import Utils.PasswordUtil;
 public class UserDAO {
 
     public User getUserByEmail(String email) {
-        try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "SELECT * FROM Users WHERE Email = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
+        String sql = "SELECT * FROM Users WHERE Email = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = db.openConnection();
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, email);
+            rs = stmt.executeQuery();
             if (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
-                user.setGender(rs.getString("Gender"));
                 user.setEmail(rs.getString("Email"));
-                user.setPhone(rs.getString("Phone"));
-                user.setAddress(rs.getString("Address"));
-                user.setAvatarUrl(rs.getString("Avatar_Url"));
                 user.setPassword(rs.getBytes("Password"));
                 user.setRole(rs.getString("Role"));
                 user.setStatus(rs.getString("Status"));
                 return user;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return null;
     }
+
 
     public User getUserById(int userId) {
         User user = null;

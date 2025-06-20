@@ -3,18 +3,22 @@ package model;
 
 public class Package {
     private int packageID;
+    private int trainerID;
     private String name;
     private String description;
+    private String imageUrl;
     private double price;
-    private int duration; //theo thang, vi du 1, thang 2 thang
+    private int duration; 
 
     public Package() {
     }
 
-    public Package(int packageID, String name, String description, double price, int duration) {
+    public Package(int packageID, int trainerID, String name, String description, String imageUrl, double price, int duration) {
         this.packageID = packageID;
+        this.trainerID = trainerID;
         this.name = name;
         this.description = description;
+        this.imageUrl = imageUrl;
         this.price = price;
         this.duration = duration;
     }
@@ -25,6 +29,14 @@ public class Package {
 
     public void setPackageID(int packageID) {
         this.packageID = packageID;
+    }
+
+    public int getTrainerID() {
+        return trainerID;
+    }
+
+    public void setTrainerID(int trainerID) {
+        this.trainerID = trainerID;
     }
 
     public String getName() {
@@ -43,6 +55,14 @@ public class Package {
         this.description = description;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -58,6 +78,8 @@ public class Package {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+    
     
     
 }
