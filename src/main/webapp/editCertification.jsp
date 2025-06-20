@@ -1,8 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.Certification" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%
     Certification cert = (Certification) request.getAttribute("cert");
+    if (cert == null) {
 %>
+        <p style="color: red;">Error: Certification data not available.</p>
+        <a href="viewCertification.jsp">Back to Certifications</a>
+<%
+        return;
+    }
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    String expireDateFormatted = cert.getExpireDate().format(formatter);
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +32,7 @@
 
         <label>Expire Date:</label><br>
         <input type="datetime-local" name="expireDate"
-               value="<%= cert.getExpireDate().toString().replace('T', 'T') %>" required><br><br>
+               value="<%= expireDateFormatted %>" required><br><br>
 
         <input type="submit" value="Update Certification">
     </form>

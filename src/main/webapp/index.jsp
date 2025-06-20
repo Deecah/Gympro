@@ -1,14 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ include file="header.jsp" %>
-<!DOCTYPE html>
-<html lang="zxx">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Gutim Template">
-    <meta name="keywords" content="Gutim, unica, creative, html">
-
-
 <%@ page import="model.User" %>
 <%
     User user = (User) session.getAttribute("user");
@@ -45,9 +35,6 @@
 
     <!-- Header Section Begin -->
     <header class="header-section">
-
-        <div class="container">
-
         <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
 
             <!-- Logo bên trái -->
@@ -56,9 +43,6 @@
                     <img src="img/logo.png" alt="">
                 </a>
             </div>
-            <div class="nav-menu">
-                <nav class="mainmenu mobile-menu">
-                    <ul>
 
             <!-- Menu chính ở giữa -->
             <div class="nav-menu" style="flex: 1; text-align: center;">
@@ -72,21 +56,19 @@
                         <li><a href="./contact.html">Contacts</a></li>
                     </ul>
                 </nav>
-                <a href="login.jsp" class="primary-btn signup-btn">Sign Up Today</a>
-            </div>
-            <div id="mobile-menu-wrap"></div>
             </div>
 
             <div class="header-avatar" style="position: relative;">
                 <img src="<%= (user != null && user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) ? user.getAvatarUrl() : "images/default-avatar.png" %>" 
                      onclick="toggleMenu()" 
                      style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid white; cursor: pointer;">
-                <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background-color: white; border: 1px solid #ccc; border-radius: 5px; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); font-family: sans-serif;">
+<div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background-color: white; border: 1px solid #ccc; border-radius: 5px; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); font-family: sans-serif;">
                     <a href="profile.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">👤 Profile</a>
                     <a href="confirmOldPass.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">🔒 Password</a>
                     <a href="LogOutServlet" style="display: block; padding: 10px; text-decoration: none; color: #333;">🚪 Logout</a>
                 </div>
             </div>
+
         </div>
     </header>
     <!-- Header End -->
@@ -99,7 +81,6 @@
                     <div class="hero-text">
                         <span>FITNESS ELEMENTS</span>
                         <h1>BMI CALCULATOR</h1>
-                        <p>Gutim comes packed with the user-friendly BMI Calculator<br /> shortcode which lets</p>
                         <p>Gympro comes packed with the user-friendly BMI Calculator<br /> shortcode which lets</p>
                         <a href="#" class="primary-btn">Read More</a>
                     </div>
@@ -141,7 +122,7 @@
     <!-- Services Section Begin -->
     <section class="services-section">
         <div class="container-fluid">
-            <div class="row">
+<div class="row">
                 <div class="col-lg-6">
                     <div class="services-pic">
                         <img src="img/services/service-pic.jpg" alt="">
@@ -201,7 +182,7 @@
                     <div class="single-class-item set-bg" data-setbg="img/classes/classes-1.jpg">
                         <div class="si-text">
                             <h4>Yoga</h4>
-                            <span><i class="fa fa-user"></i> Ryan Knight</span>
+<span><i class="fa fa-user"></i> Ryan Knight</span>
                         </div>
                     </div>
                     <div class="single-class-item set-bg" data-setbg="img/classes/classes-4.jpg">
@@ -264,7 +245,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>EXPERT TRAINERS</h2>
+<h2>EXPERT TRAINERS</h2>
                     </div>
                 </div>
             </div>
@@ -317,7 +298,7 @@
                                 <a href="#"><i class="fa fa-twitter"></i></a>
                                 <a href="#"><i class="fa fa-pinterest"></i></a>
                             </div>
-                        </div>
+</div>
                     </div>
                 </div>
             </div>
@@ -381,7 +362,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="banner-text">
-                        <h2>Get training today</h2>
+<h2>Get training today</h2>
                         <p>Gimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                             industry’s standard.</p>
                         <a href="#" class="primary-btn banner-btn">Contact Now</a>
@@ -452,7 +433,7 @@
                             </li>
                             <li>
                                 <p>Amount of people</p>
-                                <span>01 person</span>
+<span>01 person</span>
                             </li>
                             <li>
                                 <p>Number of visits</p>
@@ -518,7 +499,7 @@
                                 <div class="col-lg-6">
                                     <label for="last-name">Last Name</label>
                                     <input type="text" id="last-name">
-                                </div>
+</div>
                                 <div class="col-lg-6">
                                     <label for="mobile">Mobile No*</label>
                                     <input type="text" id="mobile">
@@ -589,7 +570,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="footer-banner-item set-bg" data-setbg="img/footer-banner/footer-banner-1.jpg">
+<div class="footer-banner-item set-bg" data-setbg="img/footer-banner/footer-banner-1.jpg">
                         <span>New member</span>
                         <h2>7 days for free</h2>
                         <p>Complete the training sessions with us, surely you will be happy</p>
@@ -647,13 +628,7 @@
                     <li><a href="#">Term&Use</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                 </ul>
-
-                <p>&copy;<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></p>
-
                 <p>&copy;<p> Copyright &copy;
-
                 <div class="footer-social">
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
@@ -663,8 +638,7 @@
             </div>
         </div>
     </footer>
-    <!-- Footer Section End -->
-
+<!-- Footer Section End -->
 
     <script>
     function toggleMenu() {
@@ -680,7 +654,6 @@
     });
     </script>
     
-
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -691,6 +664,4 @@
     <script src="js/main.js"></script>
 </body>
 
-
 </html>
-

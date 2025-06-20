@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="6.0"
-         xmlns="https://jakarta.ee/xml/ns/jakartaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <!-- Servlets -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -57,8 +53,15 @@
         <servlet-name>EmailVerificationServlet</servlet-name>
         <servlet-class>controller.EmailVerificationServlet</servlet-class>
     </servlet>
-
     <!-- Servlet Mappings -->
+    <servlet>
+        <servlet-name>SearchTrainerServlet</servlet-name>
+        <servlet-class>controller.SearchTrainerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPackageServlet</servlet-name>
+        <servlet-class>controller.SearchPackageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -105,14 +108,21 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddCertificationServlet</servlet-name>
-        <url-pattern>/AddCertificationServlet</url-pattern>
+        <url-pattern>/addCertification</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmailVerificationServlet</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
     </servlet-mapping>
-
     <!-- Session Config -->
+    <servlet-mapping>
+        <servlet-name>SearchTrainerServlet</servlet-name>
+        <url-pattern>/searchTrainer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPackageServlet</servlet-name>
+        <url-pattern>/searchPackage</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

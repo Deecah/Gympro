@@ -1,70 +1,92 @@
 package dao;
 
+import connectDB.ConnectDatabase;
+import model.Certification;
+
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import model.Certification;
-import utils.DBUtils;
 
 public class CertificationDAO {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-
-    public void addCertification(Certification c) throws SQLException {
+    // Thêm chứng chỉ mới
+    public void addCertification(Certification cert) throws SQLException, ClassNotFoundException {
         String sql = "INSERT INTO Certification (Name, Description, ExpireDate) VALUES (?, ?, ?)";
-        try (Connection conn = DBUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, c.getName());
-            ps.setString(2, c.getDescription());
-            ps.setTimestamp(3, Timestamp.valueOf(c.getExpireDate()));
-            ps.executeUpdate();
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cert.getName());
+            stmt.setString(2, cert.getDescription());
+            stmt.setTimestamp(3, Timestamp.valueOf(cert.getExpireDate()));
+            stmt.executeUpdate();
         }
     }
 
-    public void updateCertification(Certification c) throws SQLException {
-        String sql = "UPDATE Certification SET Name=?, Description=?, ExpireDate=? WHERE CertificationID=?";
-        try (Connection conn = DBUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, c.getName());
-            ps.setString(2, c.getDescription());
-            ps.setTimestamp(3, Timestamp.valueOf(c.getExpireDate()));
-            ps.setInt(4, c.getCertificationID());
-            ps.executeUpdate();
+    // Cập nhật chứng chỉ
+    public void updateCertification(Certification cert) throws SQLException, ClassNotFoundException {
+        String sql = "UPDATE Certification SET Name = ?, Description = ?, ExpireDate = ? WHERE CertificationID = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cert.getName());
+            stmt.setString(2, cert.getDescription());
+            stmt.setTimestamp(3, Timestamp.valueOf(cert.getExpireDate()));
+            stmt.setInt(4, cert.getCertificationID());
+            stmt.executeUpdate();
         }
     }
 
-    public Certification getCertificationById(int id) throws SQLException {
-        String sql = "SELECT * FROM Certification WHERE CertificationID=?";
-        try (Connection conn = DBUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new Certification(
-                        rs.getInt("CertificationID"),
-                        rs.getString("Name"),
-                        rs.getString("Description"),
-                        rs.getTimestamp("ExpireDate").toLocalDateTime()
-                    );
-                }
+    // Lấy 1 chứng chỉ theo ID
+        public Certification getCertificationByID(int id) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT * FROM Certification WHERE CertificationID = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Certification cert = new Certification();
+                cert.setCertificationID(rs.getInt("CertificationID"));
+                cert.setName(rs.getString("Name"));
+                cert.setDescription(rs.getString("Description"));
+                Timestamp ts = rs.getTimestamp("ExpireDate");
+                cert.setExpireDate(ts != null ? ts.toLocalDateTime() : null);
+                return cert;
             }
         }
         return null;
     }
 
-    public List<Certification> getAllCertifications() throws SQLException {
+    // Lấy tất cả chứng chỉ
+    public List<Certification> getAllCertifications() throws SQLException, ClassNotFoundException {
         List<Certification> list = new ArrayList<>();
-        String sql = "SELECT * FROM Certification";
-        try (Connection conn = DBUtils.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+        String sql = "SELECT * FROM Certification ORDER BY ExpireDate DESC";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
-                Certification c = new Certification(
-                    rs.getInt("CertificationID"),
-                    rs.getString("Name"),
-                    rs.getString("Description"),
-                    rs.getTimestamp("ExpireDate").toLocalDateTime()
-                );
-                list.add(c);
+                Certification cert = new Certification();
+                cert.setCertificationID(rs.getInt("CertificationID"));
+                cert.setName(rs.getString("Name"));
+                cert.setDescription(rs.getString("Description"));
+                Timestamp ts = rs.getTimestamp("ExpireDate");
+                cert.setExpireDate(ts != null ? ts.toLocalDateTime() : null);
+                list.add(cert);
             }
         }
         return list;
+    }
+
+    // Xóa chứng chỉ
+    public void deleteCertification(int id) throws SQLException, ClassNotFoundException {
+        String sql = "DELETE FROM Certification WHERE CertificationID = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
     }
 }

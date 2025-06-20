@@ -2,13 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-<<<<<<< HEAD
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-=======
->>>>>>> 6e8f4d57b22266e152bba8aae60389a2c10e5fc1
 package main;
 
 import connectDB.ConnectDatabase;
@@ -20,17 +13,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             Connection conn = ConnectDatabase.getInstance().openConnection();
-<<<<<<< HEAD
-
             String sql = "SELECT * FROM Users";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-
-=======
-            String sql = "SELECT * FROM Users";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
->>>>>>> 6e8f4d57b22266e152bba8aae60389a2c10e5fc1
             System.out.println("== Danh sách tài khoản ==");
             while (rs.next()) {
                 int id = rs.getInt("Id");
@@ -54,7 +39,3 @@ public class Main {
         }
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 6e8f4d57b22266e152bba8aae60389a2c10e5fc1
