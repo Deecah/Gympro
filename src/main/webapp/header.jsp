@@ -2,22 +2,6 @@
 <%@ page session="true" %>
 <%@ page import="model.User" %>
 <%@ page import="dao.UserDAO" %>
-
-<%
-    User user = (User) session.getAttribute("user");
-
-    if (user == null) {
-        UserDAO dao = new UserDAO();
-        user = dao.getUserByEmail("nguyenvana@example.com"); // Replace with session or actual user check in production
-        if (user != null) {
-            session.setAttribute("user", user);
-        } else {
-            out.println("<p style='color:red;'>User not found in database. Please check email.</p>");
-            return;
-        }
-    }
-%>
-
 <!-- Header Section Begin -->
 <header class="header-section" style="position: relative;">
     <% if (user != null) { %>
@@ -66,8 +50,3 @@
 
     window.addEventListener("click", function (e) {
         const menu = document.getElementById("dropdownMenu");
-        if (!e.target.closest('#dropdownMenu') && !e.target.matches('img')) {
-            menu.style.display = "none";
-        }
-    });
-</script>

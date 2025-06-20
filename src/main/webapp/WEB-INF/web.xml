@@ -20,6 +20,36 @@
     <servlet>
         <servlet-name>LogOutServlet</servlet-name>
         <servlet-class>controller.LogOutServlet</servlet-class>
+
+    </servlet>
+    <servlet>
+        <servlet-name>RequestPasswordServlet</servlet-name>
+        <servlet-class>controller.RequestPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <servlet-class>controller.ResetPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>controller.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmOldPassServlet</servlet-name>
+        <servlet-class>controller.ConfirmOldPassServlet</servlet-class>
+
+        <servlet-name>SendEmailServlet</servlet-name>
+        <servlet-class>controller.SendEmailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyCodeServlet</servlet-name>
+        <servlet-class>controller.VerifyCodeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <servlet-class>controller.EmailVerificationServlet</servlet-class>
+
+
     </servlet>
     <servlet>
         <servlet-name>ChangePasswordServlet</servlet-name>
@@ -67,6 +97,7 @@
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+
         <servlet-name>ChangeAvatarServlet</servlet-name>
         <url-pattern>/ChangeAvatarServlet</url-pattern>
     </servlet-mapping>
@@ -81,6 +112,7 @@
     <servlet-mapping>
         <servlet-name>LogOutServlet</servlet-name>
         <url-pattern>/LogOutServlet</url-pattern>
+
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ChangePasswordServlet</servlet-name>
@@ -113,6 +145,7 @@
     <servlet-mapping>
         <servlet-name>EmailVerificationServlet</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
+<<<<<<< HEAD
     </servlet-mapping>
     <!-- Session Config -->
     <servlet-mapping>
@@ -125,5 +158,41 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
+=======
+    </servlet-mapping>  
+
+
+        <servlet-name>RequestPasswordServlet</servlet-name>
+        <url-pattern>/RequestPasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/ResetPasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/ChangePasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmOldPassServlet</servlet-name>
+        <url-pattern>/ConfirmOldPassServlet</url-pattern>
+
+        <servlet-name>SendEmailServlet</servlet-name>
+        <url-pattern>/SendEmailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyCodeServlet</servlet-name>
+        <url-pattern>/VerifyCodeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <url-pattern>/EmailVerificationServlet</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>
+            60
+        </session-timeout>
+>>>>>>> efc50787fe01a901b91052f81490e3c8eb0f3d7f
     </session-config>
 </web-app>

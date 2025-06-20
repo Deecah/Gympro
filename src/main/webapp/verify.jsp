@@ -1,7 +1,7 @@
 <%-- 
     Document   : verify
-    Created on : June 2, 2025
-    Author     : ACER / ASUS
+    Created on : Jun 2, 2025, 12:22:17 AM
+    Author     : ASUS
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -15,14 +15,13 @@
         body {
             background-color: #f0f2f5;
         }
-
         .verify-box {
             max-width: 400px;
             margin: 100px auto;
             padding: 30px;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -31,7 +30,7 @@
 <div class="container">
     <div class="verify-box">
         <h4 class="text-center mb-4">Email Verification</h4>
-        <form action="VerifyCodeServlet" method="post">
+        <form action="VerificationServlet" method="get">
             <div class="mb-3">
                 <label for="code" class="form-label">Enter Verification Code</label>
                 <input type="text" class="form-control" id="code" name="code" required>

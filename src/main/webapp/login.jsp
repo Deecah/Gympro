@@ -1,11 +1,13 @@
 <%-- 
-    Document   : login.jsp
+    Document   : login
     Created on : May 26, 2025, 9:28:22 PM
     Author     : ASUS
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,27 +17,14 @@
         <link rel="stylesheet" href="stylecss/alert.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <style> 
-            .role-select { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
-            .role-option { position: relative; cursor: pointer; }
-            .role-option input[type="radio"] { display: none; }
-            .role-option span { 
-                display: inline-block; 
-                padding: 10px 20px; 
-                border: 2px solid #ff4b2b; 
-                border-radius: 30px; 
-                font-weight: bold; 
-                color: #ff4b2b; 
-                transition: 0.3s;
-            }
-            .role-option input[type="radio"]:checked + span {
-                background-color: #ff4b2b;
-                color: white;
-            }
+            .role-select { display: flex; justify-content: center; gap: 20px; margin: 20px 0;}
+            .role-option { position: relative; cursor: pointer;}
+            .role-option input[type="radio"] { display: none;}
+            .role-option span { display: inline-block; padding: 10px 20px; border: 2px solid #ff4b2b; border-radius: 30px; font-weight: bold; color: #ff4b2b; transition: 0.3s;}
+            .role-option input[type="radio"]:checked + span { background-color: #ff4b2b; color: white;}
         </style>
     </head>
     <body>
-
-        <!-- Alerts -->
         <c:if test="${param.msg == 'success'}">
             <div class="alert alert-success">
                 Verification successful! You can now log in.
@@ -51,19 +40,17 @@
 
         <h2>Weekly Coding Challenge: Sign in/up Form</h2>
         <div class="container" id="container">
-
-            <!-- Sign-Up Form -->
             <div class="form-container sign-up-container">
-                <form action="${pageContext.request.contextPath}/EmailVerificationServlet" method="post">
+                <form action="${pageContext.request.contextPath}/VerificationServlet" method="post">
                     <h1>Create Account</h1>
                     <div class="social-container">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force"
                            class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <span>or use your email for registration</span>
-                    <input type="text" name="name" placeholder="Name" required />
-                    <input type="email" name="email" placeholder="Email" required />
-                    <input type="password" name="password" placeholder="Password" required />
+                    <input type="text" name="name" placeholder="Name" />
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
                     <div class="role-select">
                         <label class="role-option">
                             <input type="radio" name="role" value="Customer" checked>
@@ -71,14 +58,12 @@
                         </label>
                         <label class="role-option">
                             <input type="radio" name="role" value="Trainer">
-                            <span>I'm Trainer</span>
+                            <span> I'm Trainer</span>
                         </label>
                     </div>
                     <button type="submit" name="action" value="signup">Sign Up</button>
                 </form>
             </div>
-
-            <!-- Sign-In Form -->
             <div class="form-container sign-in-container">
                 <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
                     <h1>Sign in</h1>
@@ -86,18 +71,15 @@
                         <p style="color: red;">${error}</p>
                     </c:if>
                     <div class="social-container">
-                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force"
-                           class="social"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <span>or use your account</span>
-                    <input type="email" name="email" placeholder="Email" required />
-                    <input type="password" name="password" placeholder="Password" required />
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
                     <a href="requestPassword.jsp">Forgot your password?</a>
                     <button type="submit" name="action" value="signin">Sign In</button>
                 </form>
             </div>
-
-            <!-- Overlay -->
             <div class="overlay-container">
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
@@ -113,8 +95,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Footer -->
         <footer>
             <p>
                 Created with <i class="fa fa-heart"></i> by
@@ -124,17 +104,13 @@
                 Created by Group D02-RT01
             </p>
         </footer>
-
-        <!-- Toggle JS -->
         <script>
             const signUpButton = document.getElementById('signUp');
             const signInButton = document.getElementById('signIn');
             const container = document.getElementById('container');
-
             signUpButton.addEventListener('click', () => {
                 container.classList.add("right-panel-active");
             });
-
             signInButton.addEventListener('click', () => {
                 container.classList.remove("right-panel-active");
             });

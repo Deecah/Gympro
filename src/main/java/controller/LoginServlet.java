@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 package controller;
 
 import Utils.HashUtil;
@@ -15,6 +12,7 @@ import model.Customer;
 import model.GoogleAccount;
 import model.Trainer;
 import model.User;
+import controller.GoogleLogin;
 
 public class LoginServlet extends HttpServlet {
 
@@ -61,7 +59,7 @@ public class LoginServlet extends HttpServlet {
                     return;
                 }
                 User user = new User();
-                user.setUserId(userId);
+                user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
                 user.setEmail(rs.getString("Email"));
                 user.setGender(rs.getString("Gender"));
@@ -69,9 +67,9 @@ public class LoginServlet extends HttpServlet {
                 user.setAddress(rs.getString("Address"));
                 user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setRole(role);
-
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(3600);
+                session.setAttribute("email", email);
                 session.setAttribute("user", user);
                 switch (role) {
                     case "Customer":
