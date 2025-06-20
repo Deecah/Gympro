@@ -48,7 +48,14 @@
         <servlet-name>RequestPasswordServlet</servlet-name>
         <servlet-class>controller.RequestPasswordServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>controller.NotificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminManagementServlet</servlet-name>
+        <servlet-class>controller.AdminManagementServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -98,10 +105,13 @@
         <url-pattern>/VerifyCodeServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EmailVerificationServlet</servlet-name>
-        <url-pattern>/EmailVerificationServlet</url-pattern>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/NotificationServlet</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>AdminManagementServlet</servlet-name>
+        <url-pattern>/AdminManagementServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             60

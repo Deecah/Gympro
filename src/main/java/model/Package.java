@@ -1,8 +1,9 @@
-
 package model;
 
 public class Package {
+
     private int packageID;
+    private int trainerID;
     private String name;
     private String description;
     private double price;
@@ -11,8 +12,9 @@ public class Package {
     public Package() {
     }
 
-    public Package(int packageID, String name, String description, double price, int duration) {
+    public Package(int packageID, int trainerID, String name, String description, double price, int duration) {
         this.packageID = packageID;
+        this.trainerID = trainerID;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -58,6 +60,13 @@ public class Package {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-    
-    
+
+    public int getTrainerID() {
+        return trainerID;
+    }
+
+    public void setTrainerID(int trainerID) {
+        this.trainerID = trainerID;
+    }
+
 }

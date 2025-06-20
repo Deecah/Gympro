@@ -11,16 +11,10 @@ public class Trainer extends User{
         this.specialization = specialization;
     }
 
-
     public Trainer() {
     }
 
-    public int getExperienceYears() {
-        return experienceYears;
-    }
-
     public void setExperienceYears(int experienceYears) {
-
         this.experienceYears = experienceYears;
     }
 
@@ -40,9 +34,9 @@ public class Trainer extends User{
         this.specialization = specialization;
     }
 
-    @Override
-    public String toString() {
-        return "Trainer{" + "experienceYears=" + experienceYears + ", description=" + description + ", specialization=" + specialization + '}';
+    public int getExperienceYears() {
+        return experienceYears;
     }
+
 
 }
