@@ -49,6 +49,22 @@
         <servlet-class>controller.RequestPasswordServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ViewCertificationServlet</servlet-name>
+        <servlet-class>controller.ViewCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCertificationServlet</servlet-name>
+        <servlet-class>controller.AddCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditCertificationServlet</servlet-name>
+        <servlet-class>controller.EditCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCertificationServlet</servlet-name>
+        <servlet-class>controller.DeleteCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>NotificationServlet</servlet-name>
         <servlet-class>controller.NotificationServlet</servlet-class>
     </servlet>
@@ -104,6 +120,22 @@
         <servlet-name>VerifyCodeServlet</servlet-name>
         <url-pattern>/VerifyCodeServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewCertificationServlet</servlet-name>
+        <url-pattern>/ViewCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCertificationServlet</servlet-name>
+        <url-pattern>/AddCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditCertificationServlet</servlet-name>
+        <url-pattern>/EditCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCertificationServlet</servlet-name>
+        <url-pattern>/DeleteCertificationServlet</url-pattern>
+      </servlet-mapping>
     <servlet-mapping>
         <servlet-name>NotificationServlet</servlet-name>
         <url-pattern>/NotificationServlet</url-pattern>
