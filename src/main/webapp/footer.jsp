@@ -52,3 +52,17 @@
 </footer>
 <!-- Footer Section End -->
 
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    window.addEventListener("click", function (e) {
+        const menu = document.getElementById("dropdownMenu");
+        const avatar = document.querySelector(".header-avatar img");
+        if (!menu.contains(e.target) && !avatar.contains(e.target)) {
+            menu.style.display = "none";
+        }
+    });
+</script>

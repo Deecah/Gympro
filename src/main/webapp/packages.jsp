@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
         <style>
             .package-card:hover {
                 transform: scale(1.02);
@@ -78,7 +79,7 @@
                                             <div class="card-body">
                                                 <div class="blog-widget mb-2">
                                                     <div class="bw-date text-muted">Duration: ${p.duration} days</div>
-                                                    <span class="tag badge bg-primary text-white">#${p.price} USD</span>
+                                                    <span class="tag badge bg-primary text-white">#${p.price} VNĐ</span>
                                                 </div>
                                                 <h5 class="card-title mt-2">${p.name}</h5>
                                                 <p class="card-text text-muted">${p.description}</p>

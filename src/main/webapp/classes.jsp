@@ -1,3 +1,10 @@
+<%-- 
+    Document   : classes
+    Created on : Jun 21, 2025, 12:28:06 AM
+    Author     : ASUS
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -20,6 +27,7 @@
     <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
 </head>
 
 <body>
@@ -28,41 +36,9 @@
         <div class="loader"></div>
     </div>
 
-        <!-- Header Section Begin -->
-    <header class="header-section">
-        <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
-            <div class="logo">
-                <a href="./index.jsp">
-                    <img src="img/logo-web.png" class="gympro-logo" alt="">
-                </a>
-            </div>
-
-            <div class="nav-menu" style="flex: 1; text-align: center;">
-                <nav class="mainmenu mobile-menu">
-                    <ul style="display: inline-flex; gap: 20px;">
-                        <li class="active"><a href="./index.jsp">Home</a></li>
-                        <li><a href="./about-us.html">About</a></li>
-                        <li><a href="./classes.html">Classes</a></li>
-                        <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./gallery.html">Gallery</a></li>
-                        <li><a href="./contact.html">Contacts</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="header-avatar" style="position: relative;">
-                <img src="<%= (user != null && user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) ? user.getAvatarUrl() : "images/default-avatar.png" %>" 
-                     onclick="toggleMenu()" 
-                     style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid white; cursor: pointer;">
-                <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background-color: white; border: 1px solid #ccc; border-radius: 5px; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); font-family: sans-serif;">
-                    <a href="profile.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">👤 Profile</a>
-                    <a href="LogOutServlet" style="display: block; padding: 10px; text-decoration: none; color: #333;">🚪 Logout</a>
-                </div>
-            </div>
-        </div>
-    </header>
+    <!-- Header Section Begin -->
+    <jsp:include page="header.jsp" />
     <!-- Header End -->
-
 
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb/classes-breadcrumb.jpg">
@@ -451,55 +427,7 @@
     <!-- Footer Banner Section End -->
 
     <!-- Footer Section Begin -->
-    <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="contact-option">
-                        <span>Phone</span>
-                        <p>(123) 118 9999 - (123) 118 9999</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="contact-option">
-                        <span>Address</span>
-                        <p>72 Kangnam, 45 Opal Point Suite 391</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="contact-option">
-                        <span>Email</span>
-                        <p>contactcompany@Gutim.com</p>
-                    </div>
-                </div>
-            </div>
-            <div class="subscribe-option set-bg" data-setbg="img/footer-signup.jpg">
-                <div class="so-text">
-                    <h4>Subscribe To Our Mailing List</h4>
-                    <p>Sign up to receive the latest information </p>
-                </div>
-                <form action="#" class="subscribe-form">
-                    <input type="text" placeholder="Enter Your Mail">
-                    <button type="submit"><i class="fa fa-send"></i></button>
-                </form>
-            </div>
-            <div class="copyright-text">
-                <ul>
-                    <li><a href="#">Term&Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-                <p>&copy;<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></p>
-                <div class="footer-social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-dribbble"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <jsp:include page="footer.jsp" />
     <!-- Footer Section End -->
 
     <!-- Js Plugins -->

@@ -73,6 +73,7 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(3600);
                 session.setAttribute("user", user);
+                session.setAttribute("userId", user.getUserId());
                 switch (role) {
                     case "Customer":
                         CustomerDAO customerDAO = new CustomerDAO();
@@ -137,8 +138,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(3600);
             session.setAttribute("user", user);
-
-            // Vì mặc định là Customer, nên load thêm thông tin từ CustomerDAO
+            session.setAttribute("userId", user.getUserId());
             if ("Customer".equalsIgnoreCase(user.getRole())) {
                 CustomerDAO customerDAO = new CustomerDAO();
                 Customer customer = customerDAO.getProfile(user.getUserId());

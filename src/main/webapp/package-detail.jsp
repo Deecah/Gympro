@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link rel="stylesheet" href="stylecss/package-detail.css" type="text/css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
 
     </head>
     <body>
@@ -51,11 +52,14 @@
                             <h2 class="fw-bold mb-3 text-center">${pkg.name}</h2>
                             <p class="mb-3">${pkg.description}</p>
                             <p><i class="fa fa-clock-o text-success me-2"></i><span class="info-label">  Duration:</span> ${pkg.duration} days</p>
-                            <p><i class="fa fa-usd text-success me-2"></i><span class="info-label">  Price:</span> $${pkg.price}</p>
+                            <p><i class="fa fa-usd text-success me-2"></i><span class="info-label">  Price:</span> ${pkg.price} VNĐ</p>
                             <div class="text-end mt-4">
-                                <a href="purchase.jsp?packageId=${pkg.packageID}" class="btn btn-success purchase-btn">
-                                    <i class="fa fa-shopping-cart me-1"></i> Purchase Package
-                                </a>
+                                <form action="${pageContext.request.contextPath}/payment" method="post">
+                                    <input type="hidden" name="packageId" value="${pkg.packageID}" />
+                                    <button type="submit" class="btn btn-success purchase-btn">
+                                        <i class="fa fa-shopping-cart me-1"></i> Purchase Package
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -118,24 +122,8 @@
             </div>
         </section>
 
-
         <!-- Footer -->
         <jsp:include page="footer.jsp" />
-
-        <!-- Avatar Toggle Script -->
-        <script>
-            function toggleMenu() {
-                const menu = document.getElementById("dropdownMenu");
-                menu.style.display = (menu.style.display === "block") ? "none" : "block";
-            }
-            window.addEventListener("click", function (e) {
-                const menu = document.getElementById("dropdownMenu");
-                const avatar = document.querySelector(".header-avatar img");
-                if (!menu.contains(e.target) && !avatar.contains(e.target)) {
-                    menu.style.display = "none";
-                }
-            });
-        </script>
 
         <!-- JS Plugins -->
         <script src="js/jquery-3.3.1.min.js"></script>

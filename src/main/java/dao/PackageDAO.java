@@ -1,6 +1,7 @@
 package dao;
 
 import connectDB.ConnectDatabase;
+import java.math.BigDecimal;
 import model.Package;
 
 import java.sql.*;
@@ -267,5 +268,98 @@ public class PackageDAO {
         }
         return false;
     }
+
+    public int getTrainerIdByPackage(int packageId) {
+        String sql = "SELECT TrainerID FROM Package WHERE PackageID = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = db.openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, packageId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("TrainerID");
+            }
+        } catch (Exception e) {
+            Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return -1;
+    }
+
+    public int getDurationByPackage(int packageId) {
+        String sql = "SELECT Duration FROM Package WHERE PackageID = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = db.openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, packageId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("Duration");
+            }
+        } catch (Exception e) {
+            Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return 0;
+    }
+
+    public BigDecimal getPriceByPackageId(int packageId) {
+        String sql = "SELECT Price FROM Package WHERE PackageID = ?";
+        BigDecimal price = BigDecimal.ZERO;
+
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = db.openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, packageId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                price = rs.getBigDecimal("Price");
+            }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return price;
+    }
+
 
 }
