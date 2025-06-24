@@ -1,29 +1,22 @@
 package model;
 
-
-import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Schedule {
 
     private int scheduleID;
     private int trainerID;
-    private int userID;
-    private String weekday; //t2 t3 t4
-    private int duration; // minute
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private int customerID;
+    private ArrayList<Workout> workouts; //t2 t3 t4
 
     public Schedule() {
     }
-
-    public Schedule(int scheduleID, int trainerID, int userID, String weekday,int duration, LocalTime startTime, LocalTime endTime) {
+    
+     public Schedule(int scheduleID, int trainerID, int customerID, ArrayList<Workout> workouts) {
         this.scheduleID = scheduleID;
         this.trainerID = trainerID;
-        this.userID = userID;
-        this.weekday = weekday;
-        this.duration = duration;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.customerID = customerID;
+        this.workouts = workouts;
     }
 
     public int getScheduleID() {
@@ -42,32 +35,20 @@ public class Schedule {
         this.trainerID = trainerID;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getCustomerID() {
+        return customerID;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
     }
 
-    public String getWeekday() {
-        return weekday;
+    public ArrayList<Workout> getWorkouts() {
+        return workouts;
     }
 
-    public void setWeekday(String weekday) {
-        this.weekday = weekday;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
+    public void setWorkouts(ArrayList<Workout> workouts) {
+        this.workouts = workouts;
     }
 
     public void setStartTime(LocalTime startTime) {
@@ -81,6 +62,5 @@ public class Schedule {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-
-
 }
+

@@ -1,6 +1,8 @@
 package model;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Notification {
     private int notificationID;
@@ -60,5 +62,30 @@ public class Notification {
         this.createdTime = createdTime;
     }
  
-    
+ public String getTimeAgo() {
+        if (createdTime == null) {
+            return "";
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(createdTime, now);
+
+        long seconds = duration.getSeconds();
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        if (days > 7) {
+            // Nếu quá 7 ngày, hiển thị ngày cụ thể
+            return createdTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } else if (days > 0) {
+            return days + " ngày trước";
+        } else if (hours > 0) {
+            return hours + " giờ trước";
+        } else if (minutes > 0) {
+            return minutes + " phút trước";
+        } else {
+            return "Vừa xong";
+        }
+    }
 }

@@ -1,7 +1,7 @@
-
 package model;
 
 public class Package {
+
     private int packageID;
     private int trainerID;
     private String name;
@@ -78,8 +78,4 @@ public class Package {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-
-    
-    
-    
 }
