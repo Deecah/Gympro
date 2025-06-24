@@ -13,14 +13,6 @@
         <servlet-class>controller.GoogleLogin</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>EditProfileServlet</servlet-name>
-        <servlet-class>controller.EditProfileServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>LogOutServlet</servlet-name>
-        <servlet-class>controller.LogOutServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
         <servlet-class>controller.ResetPasswordServlet</servlet-class>
     </servlet>
@@ -72,6 +64,7 @@
         <servlet-name>AdminManagementServlet</servlet-name>
         <servlet-class>controller.AdminManagementServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -83,22 +76,6 @@
     <servlet-mapping>
         <servlet-name>GoogleLogin</servlet-name>
         <url-pattern>/GoogleLogin</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>EditProfileServlet</servlet-name>
-        <url-pattern>/EditProfileServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LogOutServlet</servlet-name>
-        <url-pattern>/LogOutServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>EmailVerificationServlet</servlet-name>
-        <url-pattern>/verifyEmail</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RequestPasswordServlet</servlet-name>
-        <url-pattern>/RequestPasswordServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ResetPasswordServlet</servlet-name>

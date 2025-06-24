@@ -29,16 +29,15 @@ public class Customer extends User{
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
-
+    public void setHeight(Double height) {
         this.height = height;
     }
 
@@ -57,7 +56,10 @@ public class Customer extends User{
     public void setMedicalConditions(String medicalConditions) {
         this.medicalConditions = medicalConditions;
     }
+    @Override
+    public String toString() {
+        return "Customer{" + "weight=" + weight + ", height=" + height + ", goal=" + goal + ", medicalConditions=" + medicalConditions + '}';
+    }
 
-  
 
 }

@@ -1,9 +1,11 @@
+
 package controller;
 
 import Utils.HashUtil;
 import dao.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -11,26 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
 
+
+
+
+@WebServlet(name="ChangePasswordServlet", urlPatterns={"/ChangePasswordServlet"})
 public class ChangePasswordServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ChangePasswordServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ChangePasswordServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     @Override
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("confirmOldPass.jsp").forward(request, response);
@@ -50,27 +39,19 @@ public class ChangePasswordServlet extends HttpServlet {
 
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
-
     private void confirmPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String oldPassword = request.getParameter("oldPassword");
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         UserDAO userDAO = new UserDAO();
         User u = userDAO.getUserByEmail(email);
-
         if (u == null) {
             System.out.println("DEBUG: User object (u) is null. Email: " + email);
             request.setAttribute("mess", "Phiên làm việc đã hết hạn hoặc tài khoản không tồn tại. Vui lòng đăng nhập lại.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return; // Dừng xử lý nếu u là null
         }
-
         byte[] password = u.getPassword();
-
         byte[] oldPasswordHashed = HashUtil.hashPassword(oldPassword);
         if (Arrays.equals(oldPasswordHashed, password)) {
             System.out.println(Arrays.toString(u.getPassword()));
@@ -99,6 +80,7 @@ public class ChangePasswordServlet extends HttpServlet {
             }
             return;
         }
+        
         byte[] newPasswordHashed = HashUtil.hashPassword(password1);
         UserDAO userDAO = new UserDAO();
         userDAO.updatePassword(u.getUserId(), newPasswordHashed);
@@ -106,3 +88,4 @@ public class ChangePasswordServlet extends HttpServlet {
     }
 
 }
+
