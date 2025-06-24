@@ -7,10 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author ASUS
- */
+
 public class ConnectDatabase implements DatabaseInfor{
     private static ConnectDatabase instance;
     public Connection openConnection() throws ClassNotFoundException{

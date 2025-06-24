@@ -3,12 +3,20 @@ package model;
 
 public class Feedback {
     private int feedbackID;
-    private int customerID;
-    private int packageID;
+    private int userID;
+    private String feedbackType; // 'trainer' hoặc 'package'
     private String feedbackContent;
-    private int star; // 0–5
+    private int point; // 0–5
 
     public Feedback() {
+    }
+
+    public Feedback(int feedbackID, int userID, String feedbackType, String feedbackContent, int point) {
+        this.feedbackID = feedbackID;
+        this.userID = userID;
+        this.feedbackType = feedbackType;
+        this.feedbackContent = feedbackContent;
+        this.point = point;
     }
 
     public int getFeedbackID() {
@@ -19,20 +27,20 @@ public class Feedback {
         this.feedbackID = feedbackID;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
-    public int getPackageID() {
-        return packageID;
+    public String getFeedbackType() {
+        return feedbackType;
     }
 
-    public void setPackageID(int packageID) {
-        this.packageID = packageID;
+    public void setFeedbackType(String feedbackType) {
+        this.feedbackType = feedbackType;
     }
 
     public String getFeedbackContent() {
@@ -43,12 +51,12 @@ public class Feedback {
         this.feedbackContent = feedbackContent;
     }
 
-    public int getStar() {
-        return star;
+    public int getPoint() {
+        return point;
     }
 
-    public void setStar(int star) {
-        this.star = star;
+    public void setPoint(int point) {
+        this.point = point;
     }
 
     

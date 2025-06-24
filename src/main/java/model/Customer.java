@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 public class Customer extends User{
+
     private Double weight;             
     private Double height;             
     private String goal;              
@@ -44,5 +41,13 @@ public class Customer extends User{
     public void setMedicalConditions(String medicalConditions) {
         this.medicalConditions = medicalConditions;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "weight=" + weight + ", height=" + height + ", goal=" + goal + ", medicalConditions=" + medicalConditions + '}';
+    }
+
+    
+
 
 }

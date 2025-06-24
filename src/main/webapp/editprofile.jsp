@@ -1,4 +1,10 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%-- 
+    Document   : editprofile
+    Created on : Jun 4, 2025, 1:01:48 AM
+    Author     : ASUS
+--%>
+
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="model.User, model.Customer, model.Trainer" %>
 <%
     User user = (User) session.getAttribute("user");
@@ -6,120 +12,117 @@
         response.sendRedirect("login.jsp");
         return;
     }
-
     String role = user.getRole();
-    Customer customer = (Customer) session.getAttribute("customer");
-    Trainer trainer = (Trainer) session.getAttribute("trainer");
+
+    Customer customer = null;
+    Trainer trainer = null;
+
+    if ("Customer".equalsIgnoreCase(role)) {
+        customer = (Customer) session.getAttribute("customer");
+    } else if ("Trainer".equalsIgnoreCase(role)) {
+        trainer = (Trainer) session.getAttribute("trainer");
+    }
 %>
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Profile</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body { background-color: #f8f9fa; }
-        .card {
-            max-width: 750px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .form-group i { margin-right: 10px; color: #007bff; }
-        .role-section h5 { margin-top: 30px; color: #343a40; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="card">
-            <h3 class="text-center mb-4">Edit Profile</h3>
-            <form action="EditProfileServlet" method="post">
-                <input type="hidden" name="id" value="<%= user.getUserId() %>" />
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit Profile</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+        <style>
+            .profile-card {
+                max-width: 900px;
+                margin: auto;
+            }
+            .role-header {
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 5px;
+            }
+            .form-label {
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container profile-card mt-5">
+            <div class="card shadow-sm p-4">
+                <h3 class="role-header">Edit Profile</h3>
+                <form action="ProfileServlet" method="post">
+                    <!-- Basic Info -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" value="<%= user.getUserName() %>">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-control" required>
+                                <option value="Male" <%= "Male".equalsIgnoreCase(user.getGender()) ? "selected" : "" %>>Male</option>
+                                <option value="Female" <%= "Female".equalsIgnoreCase(user.getGender()) ? "selected" : "" %>>Female</option>
+                                <option value="Other" <%= "Other".equalsIgnoreCase(user.getGender()) ? "selected" : "" %>>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone" class="form-control" value="<%= user.getPhone() %>" >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Address</label>
+                            <input type="text" name="address" class="form-control" value="<%= user.getAddress() %>" >
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label><i class="fa fa-user"></i> Name:</label>
-                    <input type="text" class="form-control" name="username" value="<%= user.getUserName() %>" required />
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa fa-venus-mars"></i> Gender:</label>
-                    <select class="form-control" name="gender" required>
-                        <option value="he/him" <%= "he/him".equals(user.getGender()) ? "selected" : "" %>>Male</option>
-                        <option value="she/her" <%= "she/her".equals(user.getGender()) ? "selected" : "" %>>Female</option>
-                        <option value="they/them" <%= "they/them".equals(user.getGender()) ? "selected" : "" %>>Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa fa-map-marker-alt"></i> Address:</label>
-                    <input type="text" class="form-control" name="address" value="<%= user.getAddress() %>" required />
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa fa-user-tag"></i> Role:</label>
-                    <select class="form-control" name="role" id="role" onchange="toggleRoleFields()" required>
-                        <option value="Customer" <%= "Customer".equalsIgnoreCase(role) ? "selected" : "" %>>Customer</option>
-                        <option value="Trainer" <%= "Trainer".equalsIgnoreCase(role) ? "selected" : "" %>>Trainer</option>
-                        <option value="Admin" <%= "Admin".equalsIgnoreCase(role) ? "selected" : "" %>>Admin</option>
-                    </select>
-                </div>
-
-                <!-- Customer Section -->
-                <div id="customerFields" class="role-section" style="display: none;">
-                    <h5>Customer Details</h5>
-                    <div class="form-group">
-                        <label><i class="fa fa-weight"></i> Weight (kg):</label>
-                        <input type="number" step="0.1" class="form-control" name="weight" value="<%= customer != null ? customer.getWeight() : "" %>">
+                    <!-- Role-Specific Info -->
+                    <% if ("Customer".equalsIgnoreCase(role) && customer != null) { %>
+                    <h4 class="role-header mt-4">🏋️‍♂️ Customer Details</h4>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Weight (kg)</label>
+                            <input type="number" name="weight" step="0.1" class="form-control" value="<%= customer.getWeight() %>" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Height (cm)</label>
+                            <input type="number" name="height" step="0.1" class="form-control" value="<%= customer.getHeight() %>" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Medical Conditions</label>
+                            <input type="text" name="medicalConditions" class="form-control" value="<%= customer.getMedicalConditions() %>">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label><i class="fa fa-ruler-vertical"></i> Height (cm):</label>
-                        <input type="number" step="0.1" class="form-control" name="height" value="<%= customer != null ? customer.getHeight() : "" %>">
+                        <label class="form-label">Goal</label>
+                        <textarea name="goal" class="form-control" rows="2"><%= customer.getGoal() %></textarea>
+                    </div>
+                    <% } else if ("Trainer".equalsIgnoreCase(role) && trainer != null) { %>
+                    <h4 class="role-header mt-4">💪 Trainer Details</h4>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Experience (years)</label>
+                            <input type="number" name="experienceYears" class="form-control" value="<%= trainer.getExperienceYears() %>" required>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label class="form-label">Specialization</label>
+                            <input type="text" name="specialization" class="form-control" value="<%= trainer.getSpecialization() %>">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label><i class="fa fa-bullseye"></i> Goals:</label>
-                        <textarea class="form-control" name="goal" rows="3"><%= customer != null ? customer.getGoal() : "" %></textarea>
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2"><%= trainer.getDescription() %></textarea>
                     </div>
-                    <div class="form-group">
-                        <label><i class="fa fa-notes-medical"></i> Medical Conditions:</label>
-                        <textarea class="form-control" name="medicalConditions" rows="3"><%= customer != null ? customer.getMedicalConditions() : "" %></textarea>
-                    </div>
-                </div>
+                    <% } %>
 
-                <!-- Trainer Section -->
-                <div id="trainerFields" class="role-section" style="display: none;">
-                    <h5>Trainer Details</h5>
-                    <div class="form-group">
-                        <label><i class="fa fa-calendar-alt"></i> Years of Experience:</label>
-                        <input type="number" class="form-control" name="experienceYears" value="<%= trainer != null ? trainer.getExperienceYears() : "" %>">
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                        <a href="profile.jsp" class="btn btn-secondary ml-2">Cancel</a>
                     </div>
-                    <div class="form-group">
-                        <label><i class="fa fa-star"></i> Specialization:</label>
-                        <input type="text" class="form-control" name="specialization" value="<%= trainer != null ? trainer.getSpecialization() : "" %>">
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fa fa-align-left"></i> Description:</label>
-                        <textarea class="form-control" name="description" rows="4"><%= trainer != null ? trainer.getDescription() : "" %></textarea>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <a href="profile.jsp" class="btn btn-secondary ml-2">Back</a>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-
-    <script>
-        function toggleRoleFields() {
-            const role = document.getElementById("role").value;
-            document.getElementById("customerFields").style.display = role === "Customer" ? "block" : "none";
-            document.getElementById("trainerFields").style.display = role === "Trainer" ? "block" : "none";
-        }
-        window.onload = toggleRoleFields;
-    </script>
-</body>
+    </body>
 </html>
