@@ -18,31 +18,56 @@
     }
 %>
 <html>
-<head><title>Search Trainer</title></head>
-<body>
-    <h2>Search Trainer</h2>
-    <form action="searchTrainer" method="get">
-        <input type="text" name="keyword" placeholder="Enter name or specialization">
-        <input type="submit" value="Search">
-    </form>
-
-    <h3>Results:</h3>
-    <ul>
-        <%
-            if (list != null) {
-                for (Trainer t : list) {
-        %>
-        <li>
-            <strong><%= t.getUserName() %></strong> - <%= t.getSpecialization() %> - <%= t.getExperienceYears() %> years
-            <br><%= t.getDescription() %>
-        </li>
-        <%
-                }
+    <head><title>Search Trainer</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
             }
-        %>
-    </ul>
+            form {
+                margin-bottom: 20px;
+            }
+            input[type="text"] {
+                padding: 5px;
+                width: 300px;
+            }
+            input[type="submit"] {
+                padding: 5px 10px;
+            }
+            ul {
+                list-style: none;
+                padding-left: 0;
+            }
+            li {
+                margin-bottom: 15px;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 10px;
+            }
+        </style></head>
+    <body>
+        <h2>Search Trainer</h2>
+        <form action="searchTrainer" method="get">
+            <input type="text" name="keyword" placeholder="Enter name or specialization">
+            <input type="submit" value="Search">
+        </form>
 
-</body>
+        <h3>Results:</h3>
+        <ul>
+            <%
+                if (list != null) {
+                    for (Trainer t : list) {
+            %>
+            <li>
+                <strong><%= t.getUserName() %></strong> - <%= t.getSpecialization() %> - <%= t.getExperienceYears() %> years
+                <br><%= t.getDescription() %>
+            </li>
+            <%
+                    }
+                }
+            %>
+        </ul>
+
+    </body>
 </html>
 
 
