@@ -100,8 +100,5 @@
             </form>
         </div>
     </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 77bdf73c40e53992cb918cecdb2ab64b4df9d95b
+
