@@ -1,14 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controller;
 
 import dao.PackageDAO;
 import model.Package;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,41 +11,34 @@ import java.util.List;
 
 public class SearchPackageServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SearchPackageServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SearchPackageServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
+        // Lấy từ khóa tìm kiếm từ request
         String keyword = request.getParameter("keyword");
-        PackageDAO dao = new PackageDAO();
-        List<Package> list = dao.searchByKeyword(keyword != null ? keyword : "");
 
+        // Gọi DAO để tìm kiếm gói tập theo từ khóa
+        PackageDAO dao = new PackageDAO();
+        List<Package> list = null;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            list = dao.searchByKeyword(keyword.trim());
+        }
+
+        // Gửi dữ liệu sang JSP
         request.setAttribute("packageList", list);
+        request.setAttribute("keyword", keyword); // để giữ lại giá trị ô input khi reload
         request.getRequestDispatcher("searchPackage.jsp").forward(request, response);
-    } 
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException {
+        doGet(request, response); // Có thể dùng chung nếu form POST
     }
 
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Handles search functionality for training packages.";
     }
 }
