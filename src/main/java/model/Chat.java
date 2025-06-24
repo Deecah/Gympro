@@ -1,5 +1,6 @@
 package model;
 
+import jakarta.mail.Message;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
