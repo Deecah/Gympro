@@ -1,7 +1,7 @@
-
 package model;
 
 public class Package {
+
     private int packageID;
     private int trainerID;
     private String name;
@@ -79,7 +79,5 @@ public class Package {
         this.duration = duration;
     }
 
-    
-    
-    
+
 }

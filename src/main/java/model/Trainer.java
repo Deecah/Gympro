@@ -8,8 +8,7 @@ public class Trainer extends User{
     public Trainer() {
     }
     
-
-    public Trainer(int experienceYears, String description, String specialization) {
+    public Trainer(Integer experienceYears, String description, String specialization) {
         this.experienceYears = experienceYears;
         this.description = description;
         this.specialization = specialization;
@@ -44,6 +43,5 @@ public class Trainer extends User{
         return "Trainer{" + "experienceYears=" + experienceYears + ", description=" + description + ", specialization=" + specialization + '}';
     }
 
-    
 
 }
