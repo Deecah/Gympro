@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+<web-app version="6.0"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <!-- Servlets -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.LoginServlet</servlet-class>
@@ -19,6 +24,10 @@
     <servlet>
         <servlet-name>LogOutServlet</servlet-name>
         <servlet-class>controller.LogOutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RequestPasswordServlet</servlet-name>
+        <servlet-class>controller.RequestPasswordServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
@@ -45,8 +54,42 @@
         <servlet-class>controller.EmailVerificationServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>controller.ProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditCertificationServlet</servlet-name>
+        <servlet-class>controller.EditCertificationServlet</servlet-class>
+      </servlet>
+   <servlet>
         <servlet-name>RequestPasswordServlet</servlet-name>
         <servlet-class>controller.RequestPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewCertificationServlet</servlet-name>
+        <servlet-class>controller.ViewCertificationServlet</servlet-class>
+      </servlet>
+    <servlet>
+        <servlet-name>AddCertificationServlet</servlet-name>
+        <servlet-class>controller.AddCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchTrainerServlet</servlet-name>
+        <servlet-class>controller.SearchTrainerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPackageServlet</servlet-name>
+        <servlet-class>controller.SearchPackageServlet</servlet-class>
+    </servlet>
+
+    <!-- Servlet Mappings -->
+  <servlet>
+        <servlet-name>EditCertificationServlet</servlet-name>
+        <servlet-class>controller.EditCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCertificationServlet</servlet-name>
+        <servlet-class>controller.DeleteCertificationServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>NotificationServlet</servlet-name>
@@ -77,10 +120,6 @@
         <url-pattern>/LogOutServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EmailVerificationServlet</servlet-name>
-        <url-pattern>/verifyEmail</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>RequestPasswordServlet</servlet-name>
         <url-pattern>/RequestPasswordServlet</url-pattern>
     </servlet-mapping>
@@ -105,6 +144,39 @@
         <url-pattern>/VerifyCodeServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>EmailVerificationServlet</servlet-name>
+        <url-pattern>/EmailVerificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/ProfileServlet</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>ViewCertificationServlet</servlet-name>
+        <url-pattern>/ViewCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCertificationServlet</servlet-name>
+        <url-pattern>/AddCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditCertificationServlet</servlet-name>
+        <url-pattern>/EditCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchTrainerServlet</servlet-name>
+        <url-pattern>/searchTrainer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPackageServlet</servlet-name>
+        <url-pattern>/searchPackage</url-pattern>
+    </servlet-mapping>
+    <!-- Single Valid Session Config -->
+  <servlet-mapping>
+        <servlet-name>DeleteCertificationServlet</servlet-name>
+        <url-pattern>/DeleteCertificationServlet</url-pattern>
+      </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>NotificationServlet</servlet-name>
         <url-pattern>/NotificationServlet</url-pattern>
     </servlet-mapping>
@@ -113,8 +185,6 @@
         <url-pattern>/AdminManagementServlet</url-pattern>
     </servlet-mapping>
     <session-config>
-        <session-timeout>
-            60
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 </web-app>

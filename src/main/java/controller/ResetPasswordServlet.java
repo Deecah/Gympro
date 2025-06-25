@@ -3,19 +3,13 @@ package controller;
 import Utils.HashUtil;
 import dao.UserDAO;
 import dao.UserTokenDAO;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
+import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Properties;
@@ -31,6 +25,7 @@ public class ResetPasswordServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(ResetPasswordServlet.class.getName());
 
     final class MailAuthenticator extends jakarta.mail.Authenticator {
+
         private final String user;
         private final String password;
 
@@ -46,6 +41,7 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     private static class TokenGenerator {
+
         public static String generateShortToken() {
             return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
         }
@@ -141,7 +137,7 @@ public class ResetPasswordServlet extends HttpServlet {
             props.put("mail.debug", "true");
 
             Session mailSession = Session.getInstance(props, new MailAuthenticator(fromEmail, appPassword));
-            
+
             mailSession.setDebug(true);
             Message message = new MimeMessage(mailSession);
             message.setFrom(new InternetAddress(fromEmail));

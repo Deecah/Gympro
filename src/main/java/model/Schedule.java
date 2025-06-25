@@ -51,4 +51,4 @@ public class Schedule {
         this.workouts = workouts;
     }
 
-}
+    }
