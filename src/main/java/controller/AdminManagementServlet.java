@@ -47,7 +47,6 @@ public class AdminManagementServlet extends HttpServlet {
             default:
                 // Nếu không phải AJAX request cho một phần cụ thể, có thể forward
                 // đến trang chính hoặc hiển thị một thông báo
-                request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
                 break;
         }
     }
