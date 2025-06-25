@@ -17,7 +17,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background: linear-gradient(to bottom, #ff5e62, #ff9966);
+                background: linear-gradient(to right, #4AA6CE,#A2C8D3);
                 font-family: Arial, sans-serif;
             }
             .container {
