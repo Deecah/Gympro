@@ -15,6 +15,7 @@ import model.Customer;
 import model.GoogleAccount;
 import model.Trainer;
 import model.User;
+import controller.GoogleLogin;
 
 public class LoginServlet extends HttpServlet {
 
@@ -61,7 +62,7 @@ public class LoginServlet extends HttpServlet {
                     return;
                 }
                 User user = new User();
-                user.setUserId(userId);
+                user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
                 user.setEmail(rs.getString("Email"));
                 user.setGender(rs.getString("Gender"));
@@ -69,9 +70,9 @@ public class LoginServlet extends HttpServlet {
                 user.setAddress(rs.getString("Address"));
                 user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setRole(role);
-
                 HttpSession session = request.getSession();
                 session.setMaxInactiveInterval(3600);
+                session.setAttribute("email", email);
                 session.setAttribute("user", user);
                 session.setAttribute("userId", user.getUserId());
                 switch (role) {
@@ -81,6 +82,7 @@ public class LoginServlet extends HttpServlet {
                         if (customer != null) {
                             session.setAttribute("customer", customer);
                         }
+                        session.setAttribute("user", user);
                         response.sendRedirect("index.jsp");
                         break;
                     case "Trainer":
@@ -89,10 +91,11 @@ public class LoginServlet extends HttpServlet {
                         if (trainer != null) {
                             session.setAttribute("trainer", trainer);
                         }
+                        session.setAttribute("user", user);
                         response.sendRedirect("trainer/trainer.jsp");
                         break;
                     case "Admin":
-                        response.sendRedirect("index.html");
+                        response.sendRedirect("adminDashboard.jsp");
                         break;
                     default:
                         response.sendRedirect("login.jsp?error=Unknown role");
@@ -137,32 +140,36 @@ public class LoginServlet extends HttpServlet {
 
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(3600);
-            session.setAttribute("user", user);
             session.setAttribute("userId", user.getUserId());
-            if ("Customer".equalsIgnoreCase(user.getRole())) {
-                CustomerDAO customerDAO = new CustomerDAO();
-                Customer customer = customerDAO.getProfile(user.getUserId());
-                if (customer != null) {
-                    session.setAttribute("customer", customer);
-                }
-                response.sendRedirect("index.jsp");
-            } else {
-                switch (user.getRole()) {
-                    case "Trainer":
-                        TrainerDAO trainerDAO = new TrainerDAO();
-                        Trainer trainer = trainerDAO.getProfile(user.getUserId());
-                        if (trainer != null) {
-                            session.setAttribute("trainer", trainer);
-                        }
-                        response.sendRedirect("trainer/trainer.jsp");
-                        break;
-                    case "Admin":
-                        response.sendRedirect("index.html");
-                        break;
-                    default:
-                        response.sendRedirect("login.jsp?error=Unknown role");
-                        break;
-                }
+            session.setAttribute("user", user);
+            String role = user.getRole() != null ? user.getRole().trim() : "";
+
+            switch (role) {
+                case "Customer":
+                    CustomerDAO customerDAO = new CustomerDAO();
+                    Customer customer = customerDAO.getProfile(user.getUserId());
+                    if (customer != null) {
+                        session.setAttribute("customer", customer);
+                    }
+                    response.sendRedirect("index.jsp");
+                    break;
+
+                case "Trainer":
+                    TrainerDAO trainerDAO = new TrainerDAO();
+                    Trainer trainer = trainerDAO.getProfile(user.getUserId());
+                    if (trainer != null) {
+                        session.setAttribute("trainer", trainer);
+                    }
+                    response.sendRedirect("trainer/trainer.jsp");
+                    break;
+
+                case "Admin":
+                    response.sendRedirect("index.html");
+                    break;
+
+                default:
+                    response.sendRedirect("login.jsp?error=Unknown role");
+                    break;
             }
 
         } catch (Exception e) {

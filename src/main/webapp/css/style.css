@@ -232,17 +232,13 @@ ul, ol {
 	width: 100%;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-.logo i{
+.logo {
 	float: left;
-        transform: scale(0.2);
 }
 .logo a {
-    display: flex;
-    align-items: center;
-    padding: 24px 0 29px; 
-    height: 38px;         
+	display: inline-block;
+	padding: 24px 0 29px;
 }
-
 .nav-menu {
 	float: right;
 }

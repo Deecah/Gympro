@@ -62,6 +62,14 @@
         <servlet-class>controller.EditCertificationServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RequestPasswordServlet</servlet-name>
+        <servlet-class>controller.RequestPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewCertificationServlet</servlet-name>
+        <servlet-class>controller.ViewCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AddCertificationServlet</servlet-name>
         <servlet-class>controller.AddCertificationServlet</servlet-class>
     </servlet>
@@ -75,6 +83,22 @@
     </servlet>
 
     <!-- Servlet Mappings -->
+    <servlet>
+        <servlet-name>EditCertificationServlet</servlet-name>
+        <servlet-class>controller.EditCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCertificationServlet</servlet-name>
+        <servlet-class>controller.DeleteCertificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>controller.NotificationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminManagementServlet</servlet-name>
+        <servlet-class>controller.AdminManagementServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -128,6 +152,14 @@
         <url-pattern>/ProfileServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>ViewCertificationServlet</servlet-name>
+        <url-pattern>/ViewCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCertificationServlet</servlet-name>
+        <url-pattern>/AddCertificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>EditCertificationServlet</servlet-name>
         <url-pattern>/EditCertificationServlet</url-pattern>
     </servlet-mapping>
@@ -145,6 +177,18 @@
     </servlet-mapping>
 
     <!-- Single Valid Session Config -->
+    <servlet-mapping>
+        <servlet-name>DeleteCertificationServlet</servlet-name>
+        <url-pattern>/DeleteCertificationServlet</url-pattern>
+      </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/NotificationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminManagementServlet</servlet-name>
+        <url-pattern>/AdminManagementServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

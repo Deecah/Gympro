@@ -1,3 +1,4 @@
+
 package controller;
 
 import dao.CertificationDAO;
@@ -37,7 +38,8 @@ public class AddCertificationServlet extends HttpServlet {
             dao.addCertification(certification);
 
             // Chuyển hướng đến trang xem danh sách (bạn có thể đổi URL nếu cần)
-            response.sendRedirect("viewCertification.jsp");
+            response.sendRedirect("ViewCertificationServlet");
+
 
         } catch (Exception e) {
             e.printStackTrace();

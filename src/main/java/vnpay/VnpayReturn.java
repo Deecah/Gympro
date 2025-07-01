@@ -3,6 +3,7 @@ package vnpay;
 import dao.ContractDAO;
 import dao.PackageDAO;
 import dao.TransactionDAO;
+import dao.ChatDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -43,7 +44,8 @@ public class VnpayReturn extends HttpServlet {
 
         String signValue = Config.hashAllFields(fields);
         if (signValue.equals(vnp_SecureHash)) {
-            int transactionId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
+            String vnpTxnRef = request.getParameter("vnp_TxnRef");
+            int transactionId = Integer.parseInt(vnpTxnRef.split("_")[0]);
             String transactionStatus = request.getParameter("vnp_TransactionStatus");
             int packageId = Integer.parseInt(request.getParameter("vnp_OrderInfo"));
 
@@ -62,6 +64,13 @@ public class VnpayReturn extends HttpServlet {
                 LocalDate endDate = startDate.plusDays(durationDays);
 
                 contractDAO.createContract(trainerId, customerId, packageId, startDate, endDate);
+
+                // tạo Chat
+                ChatDAO chatDAO = new ChatDAO();
+                if (chatDAO.isChatAllowed(customerId, trainerId)) {
+                    chatDAO.createChatIfNotExists(customerId, trainerId);
+                }
+
                 transSuccess = true;
             } else {
                 transactionDAO.updateTransactionStatus(transactionId, "Fail");
