@@ -1,57 +1,55 @@
-
 package model;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public class Transaction {
-    private int id;
-    private int contractID;
-    private double amount;
-    private LocalDateTime createdTime; //('pending', 'success', 'fail')) DEFAULT 'pending'
+    private int transactionId;
+    private int customerId;
+    private BigDecimal amount;
+    private Timestamp createdTime;
     private String status;
-    private String description;
 
     public Transaction() {
     }
 
-    public Transaction(int id, int contractID, double amount, LocalDateTime createdTime, String status, String description) {
-        this.id = id;
-        this.contractID = contractID;
+    public Transaction(int transactionId, int customerId, BigDecimal amount, Timestamp createdTime, String status) {
+        this.transactionId = transactionId;
+        this.customerId = customerId;
         this.amount = amount;
         this.createdTime = createdTime;
         this.status = status;
-        this.description = description;
+    }
+    
+    public int getTransactionId() {
+        return transactionId;
     }
 
-    public int getId() {
-        return id;
+    public void setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public int getContractID() {
-        return contractID;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
-    public void setContractID(int contractID) {
-        this.contractID = contractID;
-    }
-
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public Timestamp getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
+    public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
     }
 
@@ -63,12 +61,4 @@ public class Transaction {
         this.status = status;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
 }

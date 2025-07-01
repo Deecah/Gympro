@@ -1,20 +1,24 @@
 package model;
 
 public class Trainer extends User{
-    private int experienceYears;
-    private String description;
-    private String specialization;
+    private Integer experienceYears; 
+    private String description;      
+    private String specialization;   
 
-    public Trainer(int experienceYears, String description, String specialization) {
+    public Trainer() {
+    }
+    
+    public Trainer(Integer experienceYears, String description, String specialization) {
         this.experienceYears = experienceYears;
         this.description = description;
         this.specialization = specialization;
     }
 
-    public Trainer() {
+    public Integer getExperienceYears() {
+        return experienceYears;
     }
 
-    public void setExperienceYears(int experienceYears) {
+    public void setExperienceYears(Integer experienceYears) {
         this.experienceYears = experienceYears;
     }
 
@@ -34,8 +38,9 @@ public class Trainer extends User{
         this.specialization = specialization;
     }
 
-    public int getExperienceYears() {
-        return experienceYears;
+    @Override
+    public String toString() {
+        return "Trainer{" + "experienceYears=" + experienceYears + ", description=" + description + ", specialization=" + specialization + '}';
     }
 
 

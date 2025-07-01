@@ -39,6 +39,7 @@ public class AddCertificationServlet extends HttpServlet {
             // Chuyển hướng đến trang xem danh sách (bạn có thể đổi URL nếu cần)
             response.sendRedirect("ViewCertificationServlet");
 
+
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi khi thêm chứng chỉ: " + e.getMessage());
@@ -46,3 +47,4 @@ public class AddCertificationServlet extends HttpServlet {
         }
     }
 }
+

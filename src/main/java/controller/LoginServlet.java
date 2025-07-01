@@ -74,6 +74,7 @@ public class LoginServlet extends HttpServlet {
                 session.setMaxInactiveInterval(3600);
                 session.setAttribute("email", email);
                 session.setAttribute("user", user);
+                session.setAttribute("userId", user.getUserId());
                 switch (role) {
                     case "Customer":
                         CustomerDAO customerDAO = new CustomerDAO();
@@ -89,7 +90,7 @@ public class LoginServlet extends HttpServlet {
                         if (trainer != null) {
                             session.setAttribute("trainer", trainer);
                         }
-                        response.sendRedirect("trainer-dashboard.jsp");
+                        response.sendRedirect("trainer/trainer.jsp");
                         break;
                     case "Admin":
                         response.sendRedirect("index.html");
@@ -117,11 +118,12 @@ public class LoginServlet extends HttpServlet {
             GoogleAccount googleAcc = GoogleLogin.getUserInfo(accessToken);
 
             UserDAO userDao = new UserDAO();
+
             if (!userDao.isEmailExists(googleAcc.getEmail())) {
-                userDao.addUserFromGoogle(googleAcc); // thêm user mới (Customer mặc định)
+                userDao.addUserFromGoogle(googleAcc);
             }
 
-            User user = userDao.getUserByEmail(googleAcc.getEmail()); // lấy thông tin đầy đủ từ DB
+            User user = userDao.getUserByEmail(googleAcc.getEmail());
             if (user == null) {
                 request.setAttribute("error", "Login failed. Try again.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -136,24 +138,32 @@ public class LoginServlet extends HttpServlet {
 
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(3600);
+            session.setAttribute("user", user);
             session.setAttribute("userId", user.getUserId());
-            session.setAttribute("userName", user.getUserName());
-            session.setAttribute("userRole", user.getRole());
-
-            // Redirect theo role
-            switch (user.getRole()) {
-                case "Admin":
-                    response.sendRedirect("index.html");
-                    break;
-                case "Customer":
-                    response.sendRedirect("index.jsp");
-                    break;
-                case "Trainer":
-                    response.sendRedirect("trainer-dashboard.jsp");
-                    break;
-                default:
-                    response.sendRedirect("login.jsp?error=Unknown role");
-                    break;
+            if ("Customer".equalsIgnoreCase(user.getRole())) {
+                CustomerDAO customerDAO = new CustomerDAO();
+                Customer customer = customerDAO.getProfile(user.getUserId());
+                if (customer != null) {
+                    session.setAttribute("customer", customer);
+                }
+                response.sendRedirect("index.jsp");
+            } else {
+                switch (user.getRole()) {
+                    case "Trainer":
+                        TrainerDAO trainerDAO = new TrainerDAO();
+                        Trainer trainer = trainerDAO.getProfile(user.getUserId());
+                        if (trainer != null) {
+                            session.setAttribute("trainer", trainer);
+                        }
+                        response.sendRedirect("trainer/trainer.jsp");
+                        break;
+                    case "Admin":
+                        response.sendRedirect("index.html");
+                        break;
+                    default:
+                        response.sendRedirect("login.jsp?error=Unknown role");
+                        break;
+                }
             }
 
         } catch (Exception e) {
@@ -162,6 +172,5 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
-
 
 }
