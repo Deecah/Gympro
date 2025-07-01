@@ -330,7 +330,7 @@
                         <h2>Get training today</h2>
                         <p>Gimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                             industry’s standard.</p>
-                        <a href="#" class="primary-btn banner-btn">Contact Now</a>
+                        <a href="contact.jsp" class="primary-btn banner-btn">Contact Now</a>
                     </div>
                 </div>
                 <div class="col-lg-5">
