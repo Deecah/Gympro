@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDate;
@@ -72,7 +71,5 @@ public class Workout {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-    
-
 }
 

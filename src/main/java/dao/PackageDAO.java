@@ -360,35 +360,4 @@ public class PackageDAO {
 
         return price;
     }
-    public List<Package> searchByKeyword(String keyword) {
-        List<Package> list = new ArrayList<>();
-        String sql = "SELECT * FROM Package WHERE PackageName LIKE ? OR Description LIKE ?";
-
-        try (Connection con = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-
-            String searchKeyword = "%" + keyword + "%";
-            ps.setString(1, searchKeyword);
-            ps.setString(2, searchKeyword);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Package pkg = new Package();
-                pkg.setPackageID(rs.getInt("PackageID"));
-                pkg.setTrainerID(rs.getInt("TrainerID"));
-                pkg.setName(rs.getString("PackageName"));
-                pkg.setDescription(rs.getString("Description"));
-                pkg.setImageUrl(rs.getString("ImageUrl"));
-                pkg.setPrice(rs.getDouble("Price"));
-                pkg.setDuration(rs.getInt("Duration"));
-                list.add(pkg);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-
-
 }

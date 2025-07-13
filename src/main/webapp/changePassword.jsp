@@ -86,7 +86,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>Reset Password</h1>
+            <h1>Change Password</h1>
             <form action="ChangePasswordServlet" method="post">
                 <input type="hidden" name="action" value="changePassword">
 

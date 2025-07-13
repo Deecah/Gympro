@@ -5,9 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +14,7 @@
         <link rel="stylesheet" href="stylecss/login.css" type="text/css">
         <link rel="stylesheet" href="stylecss/alert.css" type="text/css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <style>
+        <style> 
             .role-select { display: flex; justify-content: center; gap: 20px; margin: 20px 0;}
             .role-option { position: relative; cursor: pointer;}
             .role-option input[type="radio"] { display: none;}
@@ -74,7 +72,6 @@
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/SWP391/LoginServlet&response_type=code&client_id=582791377884-rafqmdbmn059o94eiraoipo1jljsblj7.apps.googleusercontent.com&approval_prompt=force" class="social"><i class="fab fa-google-plus-g"></i></a>
                     </div>
                     <span>or use your account</span>
-
                     <input type="email" name="email" placeholder="Email" />
                     <input type="password" name="password" placeholder="Password" />
                     <a href="requestPassword.jsp">Forgot your password?</a>
@@ -98,10 +95,6 @@
         </div>
         <footer>
             <p>
-                Created with <i class="fa fa-heart"></i> by
-                <a target="_blank" href="https://florin-pop.com">Florin Pop</a>
-                - Read how I created this and how you can join the challenge
-                <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.
                 Created by Group D02-RT01
             </p>
         </footer>

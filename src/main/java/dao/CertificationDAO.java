@@ -84,7 +84,7 @@ public class CertificationDAO {
             stmt.setString(2, cert.getDescription());
             stmt.setTimestamp(3, Timestamp.valueOf(cert.getExpireDate()));
             stmt.setInt(4, cert.getCertificationID());
-stmt.executeUpdate();
+            stmt.executeUpdate();
         }
     }
 
@@ -119,3 +119,5 @@ stmt.executeUpdate();
         }
     }
 }
+
+

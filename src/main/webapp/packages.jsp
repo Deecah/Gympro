@@ -17,6 +17,7 @@
         <!-- Google Font -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap"
               rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Css Styles -->
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
@@ -25,6 +26,7 @@
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/chat.css" type="text/css">
         <style>
             .package-card:hover {
                 transform: scale(1.02);
@@ -102,10 +104,7 @@
                 </div>
             </div>
         </section>
-        <!-- Package Section End -->
-
-        <jsp:include page="footer.jsp" />
-        
+        <!-- Package Section End -->    
         <script>
             function toggleMenu() {
                 const menu = document.getElementById("dropdownMenu");
@@ -128,6 +127,7 @@
         <script src="js/jquery.slicknav.js"></script>
         <script src="js/masonry.pkgd.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/main.js"></script>     
+        <jsp:include page="footer.jsp" />
     </body>
 </html>

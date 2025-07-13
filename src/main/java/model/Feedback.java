@@ -3,10 +3,9 @@ package model;
 public class Feedback {
     private int feedbackID;
     private int customerID;
-    private String feedbackType; // "package" or "trainer"
-    private int referenceID;     // holds packageID or trainerID
+    private int packageID;
     private String feedbackContent;
-    private int star;            // 0–5
+    private int star; // 0–5
 
     public Feedback() {
     }
@@ -27,20 +26,12 @@ public class Feedback {
         this.customerID = customerID;
     }
 
-    public String getFeedbackType() {
-        return feedbackType;
+    public int getPackageID() {
+        return packageID;
     }
 
-    public void setFeedbackType(String feedbackType) {
-        this.feedbackType = feedbackType;
-    }
-
-    public int getReferenceID() {
-        return referenceID;
-    }
-
-    public void setReferenceID(int referenceID) {
-        this.referenceID = referenceID;
+    public void setPackageID(int packageID) {
+        this.packageID = packageID;
     }
 
     public String getFeedbackContent() {
@@ -57,5 +48,7 @@ public class Feedback {
 
     public void setStar(int star) {
         this.star = star;
-    }
+    }    
 }
+
+

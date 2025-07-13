@@ -1,8 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="model.User" %>
-<%
-    User user = (User) session.getAttribute("user");
-%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,8 +11,9 @@
     <title>Gympro</title>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -25,6 +22,9 @@
     <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/notification.css" type="text/css">
+
 </head>
 
 <body>
@@ -33,46 +33,9 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Header Section Begin -->
-    <header class="header-section">
-        <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+    <jsp:include page="header.jsp" />
 
-            <!-- Logo bên trái -->
-            <div class="logo">
-                <a href="./index.html">
-                    <img src="img/logo.png" alt="">
-                </a>
-            </div>
-
-            <!-- Menu chính ở giữa -->
-            <div class="nav-menu" style="flex: 1; text-align: center;">
-                <nav class="mainmenu mobile-menu">
-                    <ul style="display: inline-flex; gap: 20px;">
-                        <li class="active"><a href="./index.jsp">Home</a></li>
-                        <li><a href="./about-us.html">About</a></li>
-                        <li><a href="./classes.html">Classes</a></li>
-                        <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./gallery.html">Gallery</a></li>
-                        <li><a href="./contact.html">Contacts</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="header-avatar" style="position: relative;">
-                <img src="<%= (user != null && user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) ? user.getAvatarUrl() : "images/default-avatar.png" %>" 
-                     onclick="toggleMenu()" 
-                     style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid white; cursor: pointer;">
-                <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background-color: white; border: 1px solid #ccc; border-radius: 5px; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); font-family: sans-serif;">
-                    <a href="profile.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">👤 Profile</a>
-                    <a href="confirmOldPass.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">🔒 Password</a>
-                    <a href="LogOutServlet" style="display: block; padding: 10px; text-decoration: none; color: #333;">🚪 Logout</a>
-                </div>
-            </div>
-
-        </div>
-    </header>
-    <!-- Header End -->
-
+    
     <!-- Hero Section Begin -->
     <section class="hero-section set-bg" data-setbg="img/hero-bg.jpg">
         <div class="container">
@@ -476,49 +439,6 @@
     </section>
     <!-- Membership Section End -->
 
-    <!-- Register Section Begin -->
-    <section class="register-section spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="register-text">
-                        <div class="section-title">
-                            <h2>Register Now</h2>
-                            <p>The First 7 Day Trial Is Completely Free With The Teacher</p>
-                        </div>
-                        <form action="#" class="register-form">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <label for="name">First Name</label>
-                                    <input type="text" id="name">
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="email">Your email address</label>
-                                    <input type="text" id="email">
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="last-name">Last Name</label>
-                                    <input type="text" id="last-name">
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="mobile">Mobile No*</label>
-                                    <input type="text" id="mobile">
-                                </div>
-                            </div>
-                            <button type="submit" class="register-btn">Get Started</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="register-pic">
-                        <img src="img/register-pic.jpg" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Register Section End -->
-
     <!-- Latest Blog Section Begin -->
     <section class="latest-blog-section spad">
         <div class="container">
@@ -564,96 +484,7 @@
         </div>
     </section>
     <!-- Latest Blog Section End -->
-
-    <!-- Footer Banner Section Begin -->
-    <section class="footer-banner">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="footer-banner-item set-bg" data-setbg="img/footer-banner/footer-banner-1.jpg">
-                        <span>New member</span>
-                        <h2>7 days for free</h2>
-                        <p>Complete the training sessions with us, surely you will be happy</p>
-                        <a href="#" class="primary-btn">Get Started</a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="footer-banner-item set-bg" data-setbg="img/footer-banner/footer-banner-2.jpg">
-                        <span>contact us</span>
-                        <h2>09 746 204</h2>
-                        <p>If you trust us on your journey they dark sex does not disappoint you!</p>
-                        <a href="#" class="primary-btn">Get Started</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Footer Banner Section End -->
-
-    <!-- Footer Section Begin -->
-    <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="contact-option">
-                        <span>Phone</span>
-                        <p>(123) 118 9999 - (123) 118 9999</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="contact-option">
-                        <span>Address</span>
-                        <p>72 Kangnam, 45 Opal Point Suite 391</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="contact-option">
-                        <span>Email</span>
-                        <p>contactcompany@Gutim.com</p>
-                    </div>
-                </div>
-            </div>
-            <div class="subscribe-option set-bg" data-setbg="img/footer-signup.jpg">
-                <div class="so-text">
-                    <h4>Subscribe To Our Mailing List</h4>
-                    <p>Sign up to receive the latest information </p>
-                </div>
-                <form action="#" class="subscribe-form">
-                    <input type="text" placeholder="Enter Your Mail">
-                    <button type="submit"><i class="fa fa-send"></i></button>
-                </form>
-            </div>
-            <div class="copyright-text">
-                <ul>
-                    <li><a href="#">Term&Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-                <p>&copy;<p> Copyright &copy;
-                <div class="footer-social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-dribbble"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Footer Section End -->
-
-    <script>
-    function toggleMenu() {
-        const menu = document.getElementById("dropdownMenu");
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-    }
-    window.addEventListener("click", function (e) {
-        const menu = document.getElementById("dropdownMenu");
-        const avatar = document.querySelector(".header-avatar img");
-        if (!menu.contains(e.target) && !avatar.contains(e.target)) {
-            menu.style.display = "none";
-        }
-    });
-    </script>
-    
+ 
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -662,5 +493,7 @@
     <script src="js/jquery.slicknav.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

@@ -64,7 +64,6 @@
                 border-color: #88c0ff;
                 outline: none;
                 box-shadow: 0 0 5px rgba(136, 192, 255, 0.5); 
-
             }
             .reset-btn {
                 width: 100%;

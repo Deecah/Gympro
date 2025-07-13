@@ -56,6 +56,5 @@ public class PackageDetailServlet extends HttpServlet {
     throws ServletException, IOException {
 
     }
-
-
 }
+
