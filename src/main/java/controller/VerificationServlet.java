@@ -1,23 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import Utils.HashUtil;
 import dao.UserDAO;
-import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.Properties;
-import java.util.Random;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import model.User;
+
+import java.io.IOException;
+import java.util.Properties;
+import java.util.Random;
+
+// MailAuthenticator class embedded here
+final class MailAuthenticator extends Authenticator {
+    private final String user;
+    private final String password;
+
+    public MailAuthenticator(String user, String password) {
+        this.user = user;
+        this.password = password;
+    }
+
+    @Override
+    protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(user, password);
+    }
+}
 
 @WebServlet(name = "VerificationServlet", urlPatterns = {"/VerificationServlet"})
 public class VerificationServlet extends HttpServlet {
@@ -25,13 +38,14 @@ public class VerificationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String role = request.getParameter("role");
 
-        int code = new Random().nextInt(900000) + 100000; 
-        
+        int code = new Random().nextInt(900000) + 100000;
+
         HttpSession session = request.getSession();
         session.setAttribute("verificationCode", code);
         session.setAttribute("email", email);
@@ -39,8 +53,8 @@ public class VerificationServlet extends HttpServlet {
         session.setAttribute("password", password);
         session.setAttribute("role", role);
 
-        final String from = "swptest391@gmail.com"; 
-        final String pass = "qnvekkrbltwixoqg";         
+        final String from = "swptest391@gmail.com";
+        final String pass = "qnvekkrbltwixoqg";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -48,11 +62,8 @@ public class VerificationServlet extends HttpServlet {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        Session mailSession = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(from, pass);
-            }
-        });
+        MailAuthenticator authenticator = new MailAuthenticator(from, pass);
+        Session mailSession = Session.getInstance(props, authenticator);
 
         try {
             Message message = new MimeMessage(mailSession);
@@ -62,7 +73,7 @@ public class VerificationServlet extends HttpServlet {
             message.setText("Your verification code is: " + code);
             Transport.send(message);
 
-            response.sendRedirect("verify.jsp"); 
+            response.sendRedirect("verify.jsp");
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -73,6 +84,7 @@ public class VerificationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         int enteredCode;
         try {
             enteredCode = Integer.parseInt(request.getParameter("code"));
@@ -105,5 +117,4 @@ public class VerificationServlet extends HttpServlet {
             response.sendRedirect("login.jsp?msg=fail");
         }
     }
-
 }

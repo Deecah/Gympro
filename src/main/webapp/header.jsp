@@ -11,6 +11,7 @@
         <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 50px; background-color: white; border: 1px solid #ccc; border-radius: 5px; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); font-family: sans-serif;">
             <a href="profile.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">👤 Profile</a>
             <a href="confirmOldPass.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">🔒 Password</a>
+            <a href="packagesPurchased.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;"> Packages Purchased</a>
             <a href="LogOutServlet" style="display: block; padding: 10px; text-decoration: none; color: #333;">🚪 Logout</a>
         </div>
     </div>
