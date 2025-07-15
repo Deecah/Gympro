@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.User" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
+<%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
 <%
     User user = (User) session.getAttribute("user");
 %>
@@ -52,6 +53,17 @@
                                 <a href="./index.jsp"><i class="fa fa-home"></i> Home</a>
                                 <span>Packages</span>
                             </div>
+
+                            <!-- Search Bar tích hợp -->
+                            <form action="SearchServlet" method="get" class="d-flex justify-content-center">
+                                <input type="text" name="keyword"
+                                       class="form-control w-50 me-2 rounded-pill px-4"
+                                       placeholder="Find Trainer or Package..." required />
+                                <button type="submit" class="btn btn-light text-primary rounded-pill px-4 fw-semibold">
+                                    Find
+                                </button>
+                            </form>
+                            <!-- End Search Bar -->
                         </div>
                     </div>
                 </div>
@@ -64,12 +76,13 @@
         <section class="blog-section spad">
             <div class="container">
                 <div class="row">
+                    
                     <c:choose>
                         <c:when test="${not empty packages}">
                             <c:forEach var="p" items="${packages}">
                                 <c:set var="imageUrl" value="${empty p.imageUrl ? 'images/default.jpg' : p.imageUrl}" />
                                 <div class="col-lg-4 col-md-6 mb-4">
-                                    <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p.packageID}" 
+                                    <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p["packageID"]}" 
                                        style="text-decoration: none; color: inherit;">
                                         <div class="single-blog-item card h-100 shadow-sm border-0 package-card"
                                              style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
@@ -105,7 +118,7 @@
         <!-- Package Section End -->
 
         <jsp:include page="footer.jsp" />
-        
+
         <script>
             function toggleMenu() {
                 const menu = document.getElementById("dropdownMenu");
