@@ -185,8 +185,8 @@ public class ResetPasswordServlet extends HttpServlet {
             tokenDAO.updateUserToken(userToken);
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
         } else {
-            request.setAttribute("mess", "Incorrect verification code. Please check again."); // Translated
-            request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
+             request.setAttribute("mess", "Incorrect verification code. Please check again."); // Translated
+             request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
         }
     }
 
@@ -202,6 +202,7 @@ public class ResetPasswordServlet extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
+
         if (password == null || confirmPassword == null || password.isEmpty() || confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
             request.setAttribute("mess", "Passwords do not match or are missing!"); // Translated
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);

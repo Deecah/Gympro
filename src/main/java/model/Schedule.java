@@ -50,6 +50,4 @@ public class Schedule {
     public void setWorkouts(ArrayList<Workout> workouts) {
         this.workouts = workouts;
     }
-
-    
 }
