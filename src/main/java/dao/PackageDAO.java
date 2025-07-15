@@ -374,7 +374,7 @@ public class PackageDAO {
             while (rs.next()) {
                 Package pkg = new Package();
                 pkg.setPackageID(rs.getInt("PackageID"));
-                pkg.setTrainerID(rs.getInt("TrainerID"));
+                pkg.setTrainerID(rs.getInt("Trainer_ID"));
                 pkg.setName(rs.getString("PackageName"));
                 pkg.setDescription(rs.getString("Description"));
                 pkg.setImageUrl(rs.getString("ImageUrl"));
