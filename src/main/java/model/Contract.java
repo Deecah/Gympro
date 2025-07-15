@@ -9,7 +9,7 @@ public class Contract {
     private int packageID;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String status; // 4 trang thai bao gom : pending, active, completed, cancelled
+    private String status; 
 
     public Contract(int id, int trainerID, int customerID, int packageID, LocalDateTime startDate, LocalDateTime endDate, String status) {
         this.id = id;
