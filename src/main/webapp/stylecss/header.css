@@ -1,3 +1,4 @@
+
 /* ====== Tổng thể layout container ====== */
 .header-section .container {
     display: flex;
@@ -58,6 +59,107 @@
 
 .notification-bell:hover {
     transform: scale(1.1);
+/*======================
+=        HEADER        =
+======================*/
+
+/* Header chính */
+.header-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 999;
+}
+
+/* Logo */
+.logo i {
+    float: left;
+    transform: scale(0.2);                                                                                  
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    padding: 24px 0 29px;
+    height: 48px; /* tăng chiều cao logo */
+}
+
+/* Menu điều hướng */
+.nav-menu {
+    float: right;
+}
+
+.nav-menu .mainmenu {
+    display: inline-block;
+}
+
+.nav-menu .mainmenu ul li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 27px;
+}
+
+.nav-menu .mainmenu ul li a {
+    font-size: 18px; /* Tăng từ 16px lên 18px */
+    font-weight: 700; /* Đậm hơn 1 chút */
+    color: #ffffff;
+    padding: 28px 0;
+    position: relative;
+}
+
+.nav-menu .mainmenu ul li a:hover,
+.nav-menu .mainmenu ul li.active a {
+    color: #198754;
+}
+
+.nav-menu .mainmenu ul li a:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 24px;
+    width: 100%;
+    height: 2px;
+    background: #f15d44;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.nav-menu .mainmenu ul li a:hover:after,
+.nav-menu .mainmenu ul li.active a:after {
+    opacity: 1;
+}
+
+.nav-menu .signup-btn {
+    display: inline-block;
+    margin: 16px 0 16px 30px;
+}
+
+/*======================
+=   AVATAR & BELL      =
+======================*/
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-right: 20px;
+    position: relative;
+}
+
+.notification-bell {
+    position: relative;
+    font-size: 22px; /* Tăng kích thước nếu muốn */
+    color: #007bff !important; /* Biểu tượng chuông màu xanh biển */
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: color 0.3s ease;
+}
+
+.notification-bell:hover {
+    color: #0056b3; /* Xanh biển đậm hơn khi hover */
 }
 
 .notification-count {
@@ -128,14 +230,39 @@
 
 
 /* ====== Avatar & Dropdown ====== */
+    top: -2px;            /* gần chuông hơn */
+    right: -2px;          /* gần chuông hơn */
+    transform: translate(0%, 0%);  /* không cần đẩy ra xa */
+    
+    background-color: red;
+    color: white;
+    font-size: 10px;      /* nhỏ hơn */
+    font-weight: bold;
+    
+    padding: 1px 4px;     /* nhỏ gọn hơn */
+    min-width: 14px;
+    height: 14px;
+    line-height: 1;
+    border-radius: 999px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+
+/* Avatar */
 .avatar-img {
     width: 40px;
     height: 40px;
+    aspect-ratio: 1 / 1; /* Giữ tỉ lệ 1:1 tuyệt đối */
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 50%; /* Hình tròn */
     border: 2px solid white;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
 }
 
@@ -143,26 +270,32 @@
     transform: scale(1.05);
 }
 
+.header-avatar {
+    position: relative;
+}
+
+/* Avatar Dropdown */
+
 .avatar-dropdown {
     display: none;
     position: absolute;
     right: 0;
-    top: 50px;
+    top: 58px;
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     min-width: 180px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     padding: 10px 0;
-    z-index: 999;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
 }
 
 .avatar-dropdown a {
     display: block;
     padding: 10px 20px;
     color: #333;
-    text-decoration: none;
     font-weight: 500;
+    text-decoration: none;
     transition: background 0.3s;
 }
 
@@ -173,4 +306,86 @@
 
 .avatar-dropdown a:hover {
     background-color: #f1f1f1;
+}
+
+/*======================
+=   NOTIFICATION BOX   =
+======================*/
+
+.notification-box {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    z-index: 1000;
+    animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.notification-header {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    background-color: #f9f9f9;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+.notification-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: #f5f5f5;
+}
+
+.notification-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #444;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+    display: block;
+}
+
+.no-notifications {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    font-size: 14px;
 }

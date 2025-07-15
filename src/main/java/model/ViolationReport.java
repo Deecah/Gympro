@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ViolationReport {
 
@@ -8,17 +8,19 @@ public class ViolationReport {
     private int fromUserID;
     private int reportedUserID;
     private String reason;
-    private LocalDateTime createdAt;
+    private Date createdAt;
+    private Date lastEdit;
 
     public ViolationReport() {
     }
 
-    public ViolationReport(int violationID, int reportedUserID, int fromUserID, String reason, LocalDateTime createdAt) {
+    public ViolationReport(int violationID, int fromUserID, int reportedUserID, String reason, Date createdAt, Date lastEdit) {
         this.violationID = violationID;
-        this.reportedUserID = reportedUserID;
         this.fromUserID = fromUserID;
+        this.reportedUserID = reportedUserID;
         this.reason = reason;
         this.createdAt = createdAt;
+        this.lastEdit = lastEdit;
     }
 
     public int getViolationID() {
@@ -53,12 +55,18 @@ public class ViolationReport {
         this.reason = reason;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+    public Date getLastEdit() {
+        return lastEdit;
+    }
 
+    public void setLastEdit(Date lastEdit) {
+        this.lastEdit = lastEdit;
+    }
 }

@@ -79,5 +79,6 @@ public class Request {
     public void setReplyAt(LocalDateTime replyAt) {
         this.replyAt = replyAt;
     }
-    
+
 }
+

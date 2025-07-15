@@ -92,7 +92,7 @@
     </servlet>
     <servlet>
         <servlet-name>AdminManagementServlet</servlet-name>
-        <servlet-class>controller.AdminManagementServlet</servlet-class>
+        <servlet-class>controller.admin.AdminManagementServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchServlet</servlet-name>

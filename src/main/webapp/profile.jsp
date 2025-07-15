@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="model.User, model.Customer, model.Trainer" %>
 <%
@@ -80,7 +81,7 @@
                              class="img-thumbnail rounded-circle profile-avatar" alt="Avatar" />
                         <form action="ChangeAvatarServlet" method="post" enctype="multipart/form-data" class="mt-3">
                             <div class="custom-file">
-                                <input type="file" name="avatar" class="custom-file-input" id="avatarInput" required />
+<input type="file" name="avatar" class="custom-file-input" id="avatarInput" required />
                                 <label class="custom-file-label" for="avatarInput">Choose avatar....</label>
                             </div>
                             <button class="btn btn-primary btn-sm btn-block mt-3">Change Avatar</button>
@@ -126,7 +127,7 @@
                         <div class="profile-section">
                             <h4 class="role-header">💪 Trainer Details</h4>
                             <table class="table table-borderless">
-                                <tbody>
+<tbody>
                                     <tr><td class="profile-label">Experience (years):</td><td class="profile-value"><%= trainer.getExperienceYears() %></td></tr>
                                     <tr><td class="profile-label">Specialization:</td><td class="profile-value"><%= trainer.getSpecialization() %></td></tr>
                                     <tr><td class="profile-label">Description:</td><td class="profile-value"><%= trainer.getDescription() %></td></tr>
@@ -150,16 +151,6 @@
             </div>
         </div>
 
-<<<<<<< HEAD
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script>
-    $(".custom-file-input").on("change", function () {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-    });
-</script>
-</body>
-</html> 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script>
             $(".custom-file-input").on("change", function () {
