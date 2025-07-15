@@ -83,6 +83,13 @@
         </div>
     </section>
     <!-- About Section End -->
+    <!-- Content Section Begin -->
+    <section class="content-section spad">
+        <div class="container">
+        <jsp:include page="contentList.jsp" />
+        </div>
+    </section>
+<!-- Content Section End -->
 
     <!-- Services Section Begin -->
     <section class="services-section">
