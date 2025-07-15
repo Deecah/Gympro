@@ -497,21 +497,21 @@
                     <div id="edit-content" class="content-section card card-body shadow-sm mb-4">
                         <h2><i class="fas fa-edit me-2"></i> Edit Content</h2>
                         <p>Edit static content on the website (e.g., blog posts, class information).</p>
-                        <form class="row g-3">
+                        <form class="row g-3" method="post" action="EditContentServlet">
                             <div class="col-md-6">
                                 <label for="contentIdEdit" class="form-label">Content ID:</label>
-                                <input type="text" class="form-control" id="contentIdEdit" name="contentId">
+                                <input type="text" class="form-control" id="contentIdEdit" name="contentId" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="contentTitleEdit" class="form-label">Title:</label>
-                                <input type="text" class="form-control" id="contentTitleEdit" name="contentTitle">
+                                <input type="text" class="form-control" id="contentTitleEdit" name="contentTitle" required>
                             </div>
                             <div class="col-12">
                                 <label for="contentBodyEdit" class="form-label">Content:</label>
-                                <textarea class="form-control" id="contentBodyEdit" name="contentBody" rows="10"></textarea>
+                                <textarea class="form-control" id="contentBodyEdit" name="contentBody" rows="10" required></textarea>
                             </div>
                             <div class="col-12">
-                                <button type="button" class="btn btn-success">Save Changes</button>
+                                <button type="submit" class="btn btn-success">Save Changes</button>
                             </div>
                         </form>
                         <div class="mt-3 p-2 message-area">Status message will display here.</div>
@@ -520,7 +520,7 @@
                     <div id="add-content" class="content-section card card-body shadow-sm mb-4">
                         <h2><i class="fas fa-plus-circle me-2"></i> Add Content</h2>
                         <p>Add new content to the website.</p>
-                        <form class="row g-3">
+                        <form class="row g-3" action="AddContentServlet" method="post">
                             <div class="col-md-12">
                                 <label for="contentTitleAdd" class="form-label">Title:</label>
                                 <input type="text" class="form-control" id="contentTitleAdd" name="contentTitle" required>
@@ -530,7 +530,7 @@
                                 <textarea class="form-control" id="contentBodyAdd" name="contentBody" rows="10" required></textarea>
                             </div>
                             <div class="col-12">
-                                <button type="button" class="btn btn-success">Add New Content</button>
+                                <button type="submit" class="btn btn-success">Add New Content</button>
                             </div>
                         </form>
                         <div class="mt-3 p-2 message-area">Status message will display here.</div>
@@ -539,14 +539,14 @@
                     <div id="delete-content" class="content-section card card-body shadow-sm mb-4">
                         <h2><i class="fas fa-trash-alt me-2"></i> Delete Content</h2>
                         <p>Delete content from the website.</p>
-                        <form class="row g-3">
+                        <form class="row g-3" method="post" action="DeleteContentServlet">
                             <div class="col-md-6">
                                 <label for="contentIdDelete" class="form-label">Content ID to Delete:</label>
                                 <input type="text" class="form-control" id="contentIdDelete" name="contentId" required>
                             </div>
                             <div class="col-12">
-                                <button type="button" class="btn btn-danger">Delete Content</button>
-                            </div>
+                                <button type="submit" class="btn btn-danger">Delete Content</button>
+                            </div>  
                         </form>
                         <div class="mt-3 p-2 message-area">Status message will display here.</div>
                     </div>
@@ -554,17 +554,23 @@
                     <div id="view-revenue-stats" class="content-section card card-body shadow-sm mb-4">
                         <h2><i class="fas fa-chart-line me-2"></i> View Monthly Revenue Statistics</h2>
                         <p>Display charts or tables for monthly revenue statistics.</p>
-                        <div id="revenueStatsContainer" style="width: 100%; height: 400px; border: 1px solid rgba(0,0,0,0.1);" class="d-flex align-items-center justify-content-center bg-light rounded">
-                            <p class="text-muted">Revenue chart will display here (requires backend integration and charting library).</p>
+
+                        <div id="revenueStatsContainer" style="width: 100%; height: 400px; border: 1px solid rgba(0,0,0,0.1);" class="d-flex align-items-center justify-content-center bg-light rounded position-relative">
+                            <p id="placeholderText" class="text-muted position-absolute">Revenue chart will display here (requires backend integration and charting library).</p>
+                            <canvas id="revenueChart" width="400" height="200" style="display: none;"></canvas>
                         </div>
+
+
                         <button type="button" class="btn btn-success mt-3" id="loadRevenueStatsButton">Load Revenue Statistics</button>
                     </div>
+
 
                 </div>
             </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const sidebarItems = document.querySelectorAll('.sidebar-item');
@@ -591,19 +597,19 @@
                     container.innerHTML = '<p class="text-center text-info">Đang tải dữ liệu...</p>'; // Hiển thị trạng thái tải
 
                     fetch('AdminManagementServlet?action=' + actionType) // Gửi yêu cầu AJAX đến Servlet
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.text(); // Đọc phản hồi dưới dạng văn bản (HTML fragment)
-                        })
-                        .then(html => {
-                            container.innerHTML = html; // Chèn HTML nhận được vào container
-                        })
-                        .catch(error => {
-                            console.error('Lỗi khi tải dữ liệu:', error);
-                            container.innerHTML = '<p class="text-center text-danger">Lỗi khi tải dữ liệu. Vui lòng thử lại.</p>';
-                        });
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.text(); // Đọc phản hồi dưới dạng văn bản (HTML fragment)
+                            })
+                            .then(html => {
+                                container.innerHTML = html; // Chèn HTML nhận được vào container
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi tải dữ liệu:', error);
+                                container.innerHTML = '<p class="text-center text-danger">Lỗi khi tải dữ liệu. Vui lòng thử lại.</p>';
+                            });
                 }
 
                 // Xử lý click vào các item sidebar
@@ -639,20 +645,20 @@
                 });
 
                 // Xử lý nút "Load User List"
-                loadUserListButton.addEventListener('click', function() {
+                loadUserListButton.addEventListener('click', function () {
                     loadContent('viewuser', 'userListTableContainer');
                 });
 
                 // Xử lý nút "Load Trainer List"
-                loadTrainerListButton.addEventListener('click', function() {
+                loadTrainerListButton.addEventListener('click', function () {
                     loadContent('viewtrainer', 'trainerListTableContainer');
                 });
 
                 // Xử lý nút "Load Violation Reports"
-                document.getElementById('loadViolationReportButton').addEventListener('click', function() {
-                     loadContent('viewreport', 'violationReportTableContainer');
+                document.getElementById('loadViolationReportButton').addEventListener('click', function () {
+                    loadContent('viewreport', 'violationReportTableContainer');
                 });
-                
+
                 // Khởi tạo trạng thái ban đầu: hiển thị View User List và tải dữ liệu nếu cần
                 const initialActiveSidebarItem = document.querySelector('.sidebar-item[data-target="view-user-list"]');
                 if (initialActiveSidebarItem) {
@@ -671,16 +677,16 @@
                 if (confirm('Bạn có chắc chắn muốn cấm người dùng ID: ' + userId + ' không?')) {
                     // Thực hiện AJAX call đến Servlet để cấm người dùng
                     fetch('AdminManagementServlet?action=banuser&userId=' + userId)
-                        .then(response => response.text())
-                        .then(message => {
-                            alert(message); // Hiển thị thông báo từ server
-                            // Tải lại danh sách người dùng sau khi ban/unban thành công
-                            loadContent('viewuser', 'userListTableContainer');
-                        })
-                        .catch(error => {
-                            console.error('Lỗi khi cấm người dùng:', error);
-                            alert('Không thể cấm người dùng.');
-                        });
+                            .then(response => response.text())
+                            .then(message => {
+                                alert(message); // Hiển thị thông báo từ server
+                                // Tải lại danh sách người dùng sau khi ban/unban thành công
+                                loadContent('viewuser', 'userListTableContainer');
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi cấm người dùng:', error);
+                                alert('Không thể cấm người dùng.');
+                            });
                 }
             }
 
@@ -688,18 +694,78 @@
                 if (confirm('Bạn có chắc chắn muốn bỏ cấm người dùng ID: ' + userId + ' không?')) {
                     // Thực hiện AJAX call đến Servlet để bỏ cấm người dùng
                     fetch('AdminManagementServlet?action=unbanuser&userId=' + userId)
-                        .then(response => response.text())
-                        .then(message => {
-                            alert(message); // Hiển thị thông báo từ server
-                            // Tải lại danh sách người dùng sau khi ban/unban thành công
-                            loadContent('viewuser', 'userListTableContainer');
-                        })
-                        .catch(error => {
-                            console.error('Lỗi khi bỏ cấm người dùng:', error);
-                            alert('Không thể bỏ cấm người dùng.');
-                        });
+                            .then(response => response.text())
+                            .then(message => {
+                                alert(message); // Hiển thị thông báo từ server
+                                // Tải lại danh sách người dùng sau khi ban/unban thành công
+                                loadContent('viewuser', 'userListTableContainer');
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi bỏ cấm người dùng:', error);
+                                alert('Không thể bỏ cấm người dùng.');
+                            });
                 }
             }
+            document.getElementById('loadRevenueStatsButton').addEventListener('click', function () {
+                fetch('RevenueChartServlet') // Gọi đúng tên servlet bạn đã đặt
+                        .then(response => response.json())
+                        .then(data => {
+                            const labels = data.map(item => item.month);
+                            const revenue = data.map(item => item.amount);
+
+                            // Ẩn placeholder nếu có
+                            const placeholderText = document.getElementById('placeholderText');
+                            if (placeholderText) {
+                                placeholderText.style.display = 'none';
+                            }
+
+                            // Hiển thị thẻ canvas
+                            const canvas = document.getElementById('revenueChart');
+                            if (canvas) {
+                                canvas.style.display = 'block';
+                            }
+
+                            // Nếu đã có biểu đồ trước đó thì xóa đi
+                            if (window.revenueChartInstance) {
+                                window.revenueChartInstance.destroy();
+                            }
+
+                            // Vẽ biểu đồ mới
+                            window.revenueChartInstance = new Chart(canvas, {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                            label: 'Monthly Revenue (VND)',
+                                            data: revenue,
+                                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                            borderWidth: 1
+                                        }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            display: true
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Monthly Revenue'
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error loading revenue data:', error);
+                        });
+            });
         </script>
 
     </body>
