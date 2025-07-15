@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Notification;
 import model.User;
+import jakarta.servlet.annotation.WebServlet;
+@WebServlet("/send-test-notification")
 
 public class NotificationServlet extends HttpServlet {
 
@@ -35,7 +37,9 @@ public class NotificationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String msg = request.getParameter("msg");
+        websocket.NotificationEndPoint.broadcast(msg);
+        response.getWriter().write("Đã gửi thông báo.");
     }
 
     @Override
@@ -54,10 +58,6 @@ public class NotificationServlet extends HttpServlet {
             }
 
         }
-    }
-    
-    private void sendNotification(){
-        
     }
     
     @Override
