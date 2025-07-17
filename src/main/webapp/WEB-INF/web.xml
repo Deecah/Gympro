@@ -20,8 +20,6 @@
         <servlet-name>ChangePasswordServlet</servlet-name>
         <servlet-class>controller.ChangePasswordServlet</servlet-class>
     </servlet>
-<<<<<<< HEAD
-=======
     <servlet>
         <servlet-name>ConfirmOldPassServlet</servlet-name>
         <servlet-class>controller.ConfirmOldPassServlet</servlet-class>
@@ -66,8 +64,6 @@
         <servlet-name>AdminManagementServlet</servlet-name>
         <servlet-class>controller.AdminManagementServlet</servlet-class>
     </servlet>
-
->>>>>>> 52416f8a17de951bfc0335b5847b051653b6290d
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -88,8 +84,6 @@
         <servlet-name>ChangePasswordServlet</servlet-name>
         <url-pattern>/ChangePasswordServlet</url-pattern>
     </servlet-mapping>
-<<<<<<< HEAD
-=======
     <servlet-mapping>
         <servlet-name>ConfirmOldPassServlet</servlet-name>
         <url-pattern>/ConfirmOldPassServlet</url-pattern>
@@ -126,7 +120,6 @@
         <servlet-name>AdminManagementServlet</servlet-name>
         <url-pattern>/AdminManagementServlet</url-pattern>
     </servlet-mapping>
->>>>>>> 52416f8a17de951bfc0335b5847b051653b6290d
     <session-config>
         <session-timeout>
             60

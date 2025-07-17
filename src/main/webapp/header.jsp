@@ -4,6 +4,11 @@
 <%@ page import="model.User" %>
 <%@ page import="dao.NotificationDAO" %>
 <%@ page import="dao.UserDAO" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    request.setCharacterEncoding("UTF-8");
+%>
+
 <%
     User user = (User) session.getAttribute("user");
     System.out.println("HEADER user ID = " + (user != null ? user.getUserId() : "null"));
@@ -54,7 +59,7 @@
                 </div>
                 <ul class="notification-list" id="notificationList">
                     <% if (notifications.isEmpty()) { %>
-                    <li class="no-notifications">B?n kh?ng c? th?ng b?o m?i.</li>
+                    <li class="no-notifications">No new notifications!</li>
                     <% } else { %>
                         <% for (Notification noti : notifications) {%>
                     <li class="notification-item">
@@ -76,7 +81,7 @@
 
             <div id="dropdownMenu" class="avatar-dropdown">
                 <a href="profile.jsp"><i class="fa fa-user"></i> Profile</a>
-                <a href="#"><i class="fa fa-cube"></i> Packages Purchased</a>
+                <a href="packagesPurchased"><i class="fa fa-cube"></i> Packages Purchased</a>
                 <a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
         </div>
