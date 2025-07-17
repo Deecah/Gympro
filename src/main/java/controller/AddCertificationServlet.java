@@ -1,3 +1,4 @@
+
 package controller;
 
 import dao.CertificationDAO;
@@ -47,4 +48,3 @@ public class AddCertificationServlet extends HttpServlet {
         }
     }
 }
-

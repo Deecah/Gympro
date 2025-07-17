@@ -1,8 +1,10 @@
 package model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+
 
 public class Slot {
     private int slotId; 
@@ -34,7 +36,6 @@ public class Slot {
     public void setSlotId(int slotId) {
         this.slotId = slotId;
     }
-
     public LocalDate getDay() {
         return day;
     }
@@ -42,7 +43,6 @@ public class Slot {
     public void setDay(LocalDate day) {
         this.day = day;
     }
-
     public LocalTime getStartTime() {
         return startTime;
     }
@@ -76,5 +76,5 @@ public class Slot {
     }
 
     
- 
 }
+

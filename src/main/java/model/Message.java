@@ -1,64 +1,90 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Message {
 
-    private int messageID;
-    private int senderID;
-    private String content;
-    private LocalDateTime sendAt;
-    private boolean isRead;
+    private int messageId;
+    private int chatId;
+    private int senderUserId;
+    private String messageContent;
+    private String imageUrl;
+    private String fileUrl;
+    private LocalDateTime sentAt;
+
 
     public Message() {
     }
 
-    public Message(int messageID, int senderID, String content, LocalDateTime sendAt, boolean isRead) {
-        this.messageID = messageID;
-        this.senderID = senderID;
-        this.content = content;
-        this.sendAt = sendAt;
-        this.isRead = isRead;
+    public Message(int messageId, int chatId, int senderUserId, String messageContent, String imageUrl, String fileUrl, LocalDateTime sentAt) {
+        this.messageId = messageId;
+        this.chatId = chatId;
+        this.senderUserId = senderUserId;
+        this.messageContent = messageContent;
+        this.imageUrl = imageUrl;
+        this.fileUrl = fileUrl;
+        this.sentAt = sentAt;
     }
 
-    public int getMessageID() {
-        return messageID;
+    public int getMessageId() {
+        return messageId;
     }
 
-    public void setMessageID(int messageID) {
-        this.messageID = messageID;
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
     }
 
-    public int getSenderID() {
-        return senderID;
+    public int getChatId() {
+        return chatId;
     }
 
-    public void setSenderID(int senderID) {
-        this.senderID = senderID;
+    public void setChatId(int chatId) {
+        this.chatId = chatId;
     }
 
-    public String getContent() {
-        return content;
+    public int getSenderUserId() {
+        return senderUserId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSenderUserId(int senderUserId) {
+        this.senderUserId = senderUserId;
     }
 
-    public LocalDateTime getSendAt() {
-        return sendAt;
+    public String getMessageContent() {
+        return messageContent;
     }
 
-    public void setSendAt(LocalDateTime sendAt) {
-        this.sendAt = sendAt;
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
     }
 
-    public boolean isIsRead() {
-        return isRead;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setIsRead(boolean isRead) {
-        this.isRead = isRead;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public LocalDateTime getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
+    }
+
+    public Date getSentAtDate() {
+        return Date.from(sentAt.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }

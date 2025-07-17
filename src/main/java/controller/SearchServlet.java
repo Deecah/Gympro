@@ -1,3 +1,4 @@
+
 package controller;
 
 import dao.PackageDAO;
@@ -67,4 +68,6 @@ public class SearchServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
+
 }
+

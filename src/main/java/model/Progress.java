@@ -90,5 +90,4 @@ public class Progress {
     public void setWorkoutID(int workoutID) {
         this.workoutID = workoutID;
     }
-
 }

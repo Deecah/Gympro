@@ -75,7 +75,7 @@ public class ScheduleDAO {
             while (rs.next()) {
                 Exercise ex = new Exercise();
                 ex.setExerciseId(rs.getInt("exercise_id"));
-                ex.setName(rs.getString("name"));
+                ex.setExerciseName(rs.getString("name"));
                 ex.setSets(rs.getInt("sets"));
                 ex.setReps(rs.getInt("reps"));
                 ex.setRestTimeSeconds(rs.getInt("rest_time_seconds"));

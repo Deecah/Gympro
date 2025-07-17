@@ -22,7 +22,9 @@
     <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
-   
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/notification.css" type="text/css">
+
 </head>
 
 <body>

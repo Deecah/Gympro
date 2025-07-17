@@ -100,6 +100,7 @@
     </servlet>
 
     <!-- Servlet Mappings -->
+
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -165,6 +166,10 @@
         <url-pattern>/EditCertificationServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>AddCertificationServlet</servlet-name>
+        <url-pattern>/addCertification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>SearchTrainerServlet</servlet-name>
         <url-pattern>/searchTrainer</url-pattern>
     </servlet-mapping>
@@ -186,6 +191,7 @@
         <url-pattern>/AdminManagementServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+
         <servlet-name>AddContentServlet</servlet-name>
         <url-pattern>/AddContentServlet</url-pattern>
     </servlet-mapping>
@@ -195,6 +201,7 @@
     </servlet-mapping>
 
     <!-- Session Timeout -->
+
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

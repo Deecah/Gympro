@@ -706,66 +706,56 @@
                             });
                 }
             }
-            document.getElementById('loadRevenueStatsButton').addEventListener('click', function () {
-                fetch('RevenueChartServlet') // Gọi đúng tên servlet bạn đã đặt
+            function loadRevenueStats() {
+                fetch("loadRevenueStats")
                         .then(response => response.json())
                         .then(data => {
-                            const labels = data.map(item => item.month);
-                            const revenue = data.map(item => item.amount);
+                            const months = Object.keys(data);
+                            const revenue = Object.values(data);
 
-                            // Ẩn placeholder nếu có
-                            const placeholderText = document.getElementById('placeholderText');
-                            if (placeholderText) {
-                                placeholderText.style.display = 'none';
-                            }
+                            document.getElementById("placeholderText").style.display = "none";
+                            const canvas = document.getElementById("revenueChart");
+                            canvas.style.display = "block";
+                            const ctx = canvas.getContext("2d");
 
-                            // Hiển thị thẻ canvas
-                            const canvas = document.getElementById('revenueChart');
-                            if (canvas) {
-                                canvas.style.display = 'block';
-                            }
-
-                            // Nếu đã có biểu đồ trước đó thì xóa đi
+                            // Hủy biểu đồ cũ nếu có
                             if (window.revenueChartInstance) {
                                 window.revenueChartInstance.destroy();
                             }
 
-                            // Vẽ biểu đồ mới
-                            window.revenueChartInstance = new Chart(canvas, {
+                            // Tạo biểu đồ mới
+                            window.revenueChartInstance = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
-                                    labels: labels,
+                                    labels: months,
                                     datasets: [{
-                                            label: 'Monthly Revenue (VND)',
+                                            label: 'Revenue (VND)',
                                             data: revenue,
-                                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                                            borderColor: 'rgba(75, 192, 192, 1)',
-                                            borderWidth: 1
+                                            backgroundColor: '#28a745'
                                         }]
                                 },
                                 options: {
                                     responsive: true,
                                     plugins: {
-                                        legend: {
-                                            display: true
-                                        },
-                                        title: {
-                                            display: true,
-                                            text: 'Monthly Revenue'
-                                        }
+                                        legend: {display: false}
                                     },
                                     scales: {
                                         y: {
-                                            beginAtZero: true
+                                            beginAtZero: true,
+                                            ticks: {
+                                                callback: function (value) {
+                                                    return value.toLocaleString('vi-VN');
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             });
-                        })
-                        .catch(error => {
-                            console.error('Error loading revenue data:', error);
                         });
-            });
+            }
+
+// Gán sự kiện khi nút được bấm
+            document.getElementById("loadRevenueStatsButton").addEventListener("click", loadRevenueStats);
         </script>
 
     </body>

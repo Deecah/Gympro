@@ -52,6 +52,16 @@
 </footer>
 <!-- Footer Section End -->
 
+<!-- Chat Floating Button -->
+<c:if test="${not empty user}">
+    <a href="ChatServlet?userId=${user.userId}"
+       class="btn btn-primary position-fixed m-4 shadow rounded-circle d-flex align-items-center justify-content-center"
+       style="width: 56px; height: 56px; z-index: 99999; bottom: 20px; right: 20px;"
+       title="Chat">
+        <i class="fa fa-comments" style="font-size: 20px;"></i>
+    </a>
+</c:if>
+
 <script>
     function toggleMenu() {
         const menu = document.getElementById("dropdownMenu");
@@ -92,7 +102,6 @@
             }
         });
     }
-
 
     // ?óng c? h?p thông báo và menu avatar khi click ra ngoài
     window.addEventListener("click", function (e) {

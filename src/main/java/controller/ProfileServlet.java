@@ -103,7 +103,11 @@ public class ProfileServlet extends HttpServlet {
         }
 
         if (success) {
-            response.sendRedirect("profile.jsp");
+            if("Trainer".equalsIgnoreCase(role)) {
+                response.sendRedirect("profile-trainer.jsp");
+            } else if("Customer".equalsIgnoreCase(role)){
+                response.sendRedirect("profile.jsp");
+            }
         } else {
             request.setAttribute("error", "Failed to update profile.");
             request.getRequestDispatcher("editprofile.jsp").forward(request, response);
