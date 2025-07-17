@@ -29,8 +29,8 @@
              style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid white; cursor: pointer;">
         <div id="dropdownMenu" 
              style="display: none; position: absolute; right: 0; bottom: 60px; background-color: white; border: 1px solid #ccc; border-radius: 5px; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); font-family: sans-serif; z-index: 1000;">
-            <a href="profile.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">👤 Profile</a>
-            <a href="LogOutServlet" style="display: block; padding: 10px; text-decoration: none; color: #333;">🚪 Logout</a>
+            <a href="<%= context %>/trainer/profile-trainer.jsp" style="display: block; padding: 10px; text-decoration: none; color: #333;">👤 Profile</a>
+            <a href="<%= context %>/logout" style="display: block; padding: 10px; text-decoration: none; color: #333;">🚪 Logout</a>
         </div>
     </div>
 </div>

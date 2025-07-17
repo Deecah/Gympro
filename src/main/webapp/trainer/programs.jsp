@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Program" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%
     List<Program> programs = (List<Program>) request.getAttribute("programs");
 %>
@@ -38,7 +39,7 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <button class="btn btn-primary">+ Create program</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProgramModal">+ Create program</button>
                         <button class="btn btn-outline-secondary">Manage tags</button>
                     </div>
                 </div>
@@ -94,6 +95,41 @@
                         <% } %>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <!-- Create Program Modal -->
+        <div class="modal fade" id="createProgramModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="<%= request.getContextPath() %>/ProgramServlet" method="post" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create New Program</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="create" />
+                        <div class="mb-3">
+                            <label class="form-label">Program Name</label>
+                            <input type="text" name="name" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Package</label>
+                            <select name="packageId" class="form-select">
+                                <option value="0">None</option>
+                                <c:forEach var="pkg" items="${packageList}">
+                                    <option value="${pkg.packageID}">${pkg.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" type="submit">Create</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

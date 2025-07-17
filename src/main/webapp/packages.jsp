@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.User" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <%
     User user = (User) session.getAttribute("user");
 %>
@@ -17,6 +19,7 @@
         <!-- Google Font -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap"
               rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Css Styles -->
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
@@ -25,6 +28,7 @@
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/chat.css" type="text/css">
         <style>
             .package-card:hover {
                 transform: scale(1.02);
@@ -67,7 +71,7 @@
                     <c:choose>
                         <c:when test="${not empty packages}">
                             <c:forEach var="p" items="${packages}">
-                                <c:set var="imageUrl" value="${empty p.imageUrl ? 'images/default.jpg' : p.imageUrl}" />
+                                <c:set var="imageUrl" value="${empty p.imageUrl ? 'images/default.jpg' : (fn:startsWith(p.imageUrl, 'http') ? p.imageUrl : pageContext.request.contextPath.concat(p.imageUrl))}" />
                                 <div class="col-lg-4 col-md-6 mb-4">
                                     <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p.packageID}" 
                                        style="text-decoration: none; color: inherit;">
@@ -85,7 +89,7 @@
                                                 <p class="card-text text-muted">${p.description}</p>
                                             </div>
                                             <div class="card-footer bg-transparent border-0 text-end">
-                                                <a href="${pageContext.request.contextPath}/purchase.jsp?packageId=${p.packageID}" 
+                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" 
                                                    class="btn btn-outline-success btn-sm">Purchase Package</a>
                                             </div>
                                         </div>
@@ -104,8 +108,7 @@
         </section>
         <!-- Package Section End -->
 
-        <jsp:include page="footer.jsp" />
-        
+
         <script>
             function toggleMenu() {
                 const menu = document.getElementById("dropdownMenu");
@@ -129,5 +132,7 @@
         <script src="js/masonry.pkgd.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
+
+        <jsp:include page="footer.jsp" />
     </body>
 </html>
