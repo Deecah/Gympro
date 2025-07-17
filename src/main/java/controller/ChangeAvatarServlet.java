@@ -65,7 +65,6 @@ public class ChangeAvatarServlet extends HttpServlet {
                 redirectUrl = "home.jsp"; 
                 break;
         }
-
         response.sendRedirect(redirectUrl);
     }
 }

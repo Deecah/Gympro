@@ -14,10 +14,9 @@ public class Message {
     private String fileUrl;
     private LocalDateTime sentAt;
 
-
     public Message() {
     }
-
+    
     public Message(int messageId, int chatId, int senderUserId, String messageContent, String imageUrl, String fileUrl, LocalDateTime sentAt) {
         this.messageId = messageId;
         this.chatId = chatId;
@@ -67,7 +66,6 @@ public class Message {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
     public String getFileUrl() {
         return fileUrl;
     }
@@ -87,5 +85,4 @@ public class Message {
     public Date getSentAtDate() {
         return Date.from(sentAt.atZone(ZoneId.systemDefault()).toInstant());
     }
-
 }

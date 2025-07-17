@@ -47,22 +47,6 @@ public class ResetPasswordServlet extends HttpServlet {
         }
     }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UserServlet</title>"); // This title is generic, not a user-facing message
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UserServlet at " + request.getContextPath() + "</h1>"); // This is a debug/dev message, not user-facing
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -185,8 +169,8 @@ public class ResetPasswordServlet extends HttpServlet {
             tokenDAO.updateUserToken(userToken);
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
         } else {
-            request.setAttribute("mess", "Incorrect verification code. Please check again."); // Translated
-            request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
+             request.setAttribute("mess", "Incorrect verification code. Please check again."); // Translated
+             request.getRequestDispatcher("verifyResetToken.jsp").forward(request, response);
         }
     }
 
@@ -202,6 +186,7 @@ public class ResetPasswordServlet extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
+
         if (password == null || confirmPassword == null || password.isEmpty() || confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
             request.setAttribute("mess", "Passwords do not match or are missing!"); // Translated
             request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
@@ -232,3 +217,4 @@ public class ResetPasswordServlet extends HttpServlet {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }
+

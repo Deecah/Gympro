@@ -72,9 +72,8 @@ public class ExerciseDAO {
 
             while (rs.next()) {
                 Exercise ex = new Exercise();
-                ex.setId(rs.getInt("Id"));
                 ex.setWorkoutID(rs.getInt("WorkoutID"));
-                ex.setExerciseID(rs.getInt("ExerciseID"));
+                ex.setExerciseId(rs.getInt("ExerciseID"));
                 ex.setSets(rs.getInt("Sets"));
                 ex.setReps(rs.getInt("Reps"));
                 ex.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));

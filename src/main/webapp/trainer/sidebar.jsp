@@ -10,7 +10,7 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto text-start">
         <li class="nav-item mb-2"><a href="<%= context %>/trainer/customer.jsp" class="nav-link text-white btn btn-dark w-100 text-start">Customer</a></li>
-        <li class="mb-2"><a href="#" class="nav-link text-white btn btn-dark w-100 text-start">Library</a></li>
+        <li class="mb-2"><a href="<%= context %>/trainer/library.jsp" class="nav-link text-white btn btn-dark w-100 text-start">Library</a></li>
         <li class="mb-2"><a href="<%= context %>/ProgramServlet" class="nav-link text-white btn btn-dark w-100 text-start">Programs</a></li>
         <li class="mb-2"><a href="<%= context %>/TrainerPackageServlet" class="nav-link text-white btn btn-dark w-100 text-start">Packages</a></li>
         <li class="mb-2"><a href="#" class="nav-link text-white btn btn-dark w-100 text-start">Teams</a></li>

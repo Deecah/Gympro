@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
+
 import java.util.ArrayList;
 
 public class UserDAO {
@@ -131,7 +132,6 @@ public class UserDAO {
         }
         return null;
     }
-
     public boolean addUser(User user) {
         if (isEmailExists(user.getEmail())) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.WARNING, "Email already exists!");
@@ -216,7 +216,6 @@ public class UserDAO {
             }
         }
     }
-
     public boolean addUserFromGoogle(GoogleAccount googleAcc) {
         User user = new User();
         user.setUserName(googleAcc.getName());
@@ -225,7 +224,6 @@ public class UserDAO {
         user.setRole("Customer");
         return addUser(user);
     }
-
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -253,7 +251,6 @@ public class UserDAO {
         }
         return false;
     }    
-
     public void deleteUser(String id) {
         String sql = "delete from Users WHERE id=? ;";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -335,7 +332,6 @@ public class UserDAO {
             }
         }
     }
-
     public boolean banUser(int userId){
         String sql = "UPDATE Users SET Status = ? WHERE id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();

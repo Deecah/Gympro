@@ -33,6 +33,25 @@
                 transform: scale(1.02);
                 box-shadow: 0 8px 20px rgba(0, 0, 0.5, 0.5) !important;
             }
+            .search-banner {
+                background-color: #f8f9fa;
+            }
+
+            .search-banner h2 {
+                font-size: 26px;
+                font-weight: 600;
+                color: #1a73e8;
+            }
+
+            .search-banner input::placeholder {
+                color: #888;
+            }
+
+            .search-banner input:focus {
+                border-color: #1a73e8;
+                box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+            }
+
         </style>
     </head>
     <body>
@@ -47,32 +66,46 @@
         <!-- Breadcrumb Section Begin -->
         <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb/classes-breadcrumb.jpg">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 text-center">
                         <div class="breadcrumb-text">
-                            <h2>Package</h2>
-                            <div class="breadcrumb-option">
+                            <h2 class="text-white fw-bold">Package</h2>
+                            <div class="breadcrumb-option mb-3">
                                 <a href="./index.jsp"><i class="fa fa-home"></i> Home</a>
                                 <span>Packages</span>
                             </div>
+
+                            <!-- Search Bar tích hợp -->
+                            <form action="SearchServlet" method="get" class="d-flex justify-content-center">
+                                <input type="text" name="keyword"
+                                       class="form-control w-50 me-2 rounded-pill px-4"
+                                       placeholder="Find Trainer or Package..." required />
+                                <button type="submit" class="btn btn-light text-primary rounded-pill px-4 fw-semibold">
+                                    Find
+                                </button>
+                            </form>
+                            <!-- End Search Bar -->
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
         <!-- Breadcrumb Section End -->
+        
 
 
         <!-- Package Section Begin -->
         <section class="blog-section spad">
             <div class="container">
                 <div class="row">
+                    
                     <c:choose>
                         <c:when test="${not empty packages}">
                             <c:forEach var="p" items="${packages}">
                                 <c:set var="imageUrl" value="${empty p.imageUrl ? 'images/default.jpg' : (fn:startsWith(p.imageUrl, 'http') ? p.imageUrl : pageContext.request.contextPath.concat(p.imageUrl))}" />
                                 <div class="col-lg-4 col-md-6 mb-4">
-                                    <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p.packageID}" 
+                                    <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p["packageID"]}" 
                                        style="text-decoration: none; color: inherit;">
                                         <div class="single-blog-item card h-100 shadow-sm border-0 package-card"
                                              style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
@@ -88,8 +121,7 @@
                                                 <p class="card-text text-muted">${p.description}</p>
                                             </div>
                                             <div class="card-footer bg-transparent border-0 text-end">
-                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" 
-                                                   class="btn btn-outline-success btn-sm">Purchase Package</a>
+                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" class="btn btn-outline-success btn-sm">Purchase Package</a>
                                             </div>
                                         </div>
                                     </a>
@@ -105,9 +137,10 @@
                 </div>
             </div>
         </section>
+        
         <!-- Package Section End -->
 
-
+        <jsp:include page="footer.jsp" />
         <script>
             function toggleMenu() {
                 const menu = document.getElementById("dropdownMenu");
@@ -131,7 +164,6 @@
         <script src="js/masonry.pkgd.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
-
         <jsp:include page="footer.jsp" />
     </body>
 </html>
