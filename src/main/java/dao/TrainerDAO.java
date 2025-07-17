@@ -173,7 +173,6 @@ public class TrainerDAO {
 
         return list;
     }
-    
     public ArrayList<Trainer> getAllTrainers() {
         ArrayList<Trainer> trainerList = new ArrayList<>();
         String sql = "SELECT U.Id, U.Name, U.Gender, U.Email, U.Phone, U.Address, U.AvatarUrl, " +
@@ -232,6 +231,6 @@ public class TrainerDAO {
             }
         }
         return trainerList;
-    }
-    
+    } 
 }
+

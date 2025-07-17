@@ -100,7 +100,6 @@
     </servlet>
 
     <!-- Servlet Mappings -->
-
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -205,5 +204,4 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-
 </web-app>

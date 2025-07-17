@@ -51,7 +51,6 @@
     </div>
 </footer>
 <!-- Footer Section End -->
-
 <!-- Chat Floating Button -->
 <c:if test="${not empty user}">
     <a href="ChatServlet?userId=${user.userId}"
@@ -61,7 +60,6 @@
         <i class="fa fa-comments" style="font-size: 20px;"></i>
     </a>
 </c:if>
-
 <script>
     function toggleMenu() {
         const menu = document.getElementById("dropdownMenu");
@@ -102,7 +100,6 @@
             }
         });
     }
-
     // ?óng c? h?p thông báo và menu avatar khi click ra ngoài
     window.addEventListener("click", function (e) {
         const avatarMenu = document.getElementById("dropdownMenu");

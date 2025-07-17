@@ -122,8 +122,7 @@
                                                 <p class="card-text text-muted">${p.description}</p>
                                             </div>
                                             <div class="card-footer bg-transparent border-0 text-end">
-                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" 
-                                                   class="btn btn-outline-success btn-sm">Purchase Package</a>
+                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" class="btn btn-outline-success btn-sm">Purchase Package</a>
                                             </div>
                                         </div>
                                     </a>
@@ -139,10 +138,10 @@
                 </div>
             </div>
         </section>
+        
         <!-- Package Section End -->
 
         <jsp:include page="footer.jsp" />
-
         <script>
             function toggleMenu() {
                 const menu = document.getElementById("dropdownMenu");
@@ -166,7 +165,6 @@
         <script src="js/masonry.pkgd.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
-
         <jsp:include page="footer.jsp" />
     </body>
 </html>

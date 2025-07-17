@@ -61,7 +61,7 @@ public class Notification {
     public void setCreatedTime(LocalDateTime createdTime) {
         this.createdTime = createdTime;
     }
- 
+
  public String getTimeAgo() {
         if (createdTime == null) {
             return "";

@@ -82,7 +82,6 @@
                 margin-bottom: 10px;
                 min-height: 1.2em;
             }
-            
         </style>
     </head>
     <body>
@@ -109,3 +108,4 @@
         </div>
     </body>
 </html>
+

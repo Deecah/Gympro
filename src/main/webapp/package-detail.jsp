@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.User" %>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <%
     User user = (User) session.getAttribute("user");
 %>
@@ -112,13 +114,55 @@
 
                 <!-- 4. Feedback -->
                 <h4 class="section-heading">Customer Feedback</h4>
-                <c:forEach var="fb" items="${feedbacks}">
-                    <div class="feedback-box">
-                        <strong>${fb.userName}</strong>
-                        <span class="text-warning">★ ${fb.rating}</span>
-                        <p>${fb.comment}</p>
+
+                <c:if test="${empty feedbacks}">
+                    <p>No feedback yet for this package.</p>
+                </c:if>
+
+                <div id="feedback-container">
+                    <c:forEach var="fb" items="${feedbacks}" varStatus="status">
+                        <div class="feedback-box feedback-item"
+                             style="margin-bottom: 20px; display: flex; align-items: flex-start; gap: 15px; <c:if test='${status.index >= 5}'>display: none;</c:if>'">
+                                 <img src="${fb.userAvatar}" alt="User Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+                             <div>
+                                 <strong>${fb.userName}</strong><br>
+                                 <span class="text-warning" style="color: #ffc107;">
+                                     <c:forEach var="i" begin="1" end="${fb.star}">★</c:forEach>
+                                     <c:forEach var="i" begin="${fb.star + 1}" end="5">☆</c:forEach>
+                                     </span>
+                                 <c:if test="${not empty fb.feedbackContent}">
+                                     <p style="margin-top: 5px;">${fb.feedbackContent}</p>
+                                 </c:if>
+                             </div>
+                        </div>
+                    </c:forEach>
+                </div>
+
+                <c:if test="${fn:length(feedbacks) > 5}">
+                    <div class="text-center">
+                        <button id="showMoreBtn" class="btn btn-outline-primary">Show More</button>
                     </div>
-                </c:forEach>
+                </c:if>
+
+                <script>
+                    let feedbackIndex = 5;
+                    const allFeedbacks = document.querySelectorAll('#feedback-container .feedback-box');
+                    const showMoreBtn = document.getElementById('showMoreBtn');
+
+                    if (showMoreBtn) {
+                        showMoreBtn.addEventListener('click', () => {
+                            let count = 0;
+                            for (let i = feedbackIndex; i < allFeedbacks.length && count < 10; i++, count++) {
+                                allFeedbacks[i].style.display = 'flex';
+                            }
+                            feedbackIndex += count;
+
+                            if (feedbackIndex >= allFeedbacks.length) {
+                                showMoreBtn.style.display = 'none';
+                            }
+                        });
+                    }
+                </script>
             </div>
         </section>
 

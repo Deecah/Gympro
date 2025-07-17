@@ -180,7 +180,6 @@
 .avatar-img:hover {
     transform: scale(1.05);
 }
-
 .avatar-dropdown {
     display: none;
     position: absolute;
@@ -194,7 +193,6 @@
     padding: 10px 0;
     z-index: 999;
 }
-
 .avatar-dropdown a {
     display: block;
     padding: 10px 20px;
@@ -203,12 +201,10 @@
     font-weight: 500;
     transition: background 0.3s;
 }
-
 .avatar-dropdown a i {
     margin-right: 8px;
     color: #198754;
 }
-
 .avatar-dropdown a:hover {
     background-color: #f1f1f1;
 }
