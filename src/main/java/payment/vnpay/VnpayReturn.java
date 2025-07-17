@@ -1,4 +1,4 @@
-package vnpay;
+package payment.vnpay;
 
 import dao.ContractDAO;
 import dao.PackageDAO;

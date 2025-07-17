@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+}
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+}
+.week-row {
+    margin-bottom: 10px;
+}
+.week-label {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+.edit-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #6c757d;
+    cursor: pointer;
+}
+.day-cell {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 250px;
+    background-color: #fafafa;
+}
+.day-header {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.workout-card .workout-actions {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .workout-card:hover .workout-actions {
+    display: block;
+    opacity: 1;
+  }
+  
+    .dropdown-menu {
+    min-width: 160px;
+  }

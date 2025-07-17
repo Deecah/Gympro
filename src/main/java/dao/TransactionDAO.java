@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class TransactionDAO {
 
     public int addTransaction(Transaction transaction) {
-        String sql = "INSERT INTO Transactions (CustomerID, Amount, Status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Transactions (CustomerID, Amount, Status, Type, Description) VALUES (?, ?, ?, ?, ?)";
         int transactionId = -1;
 
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -25,6 +25,8 @@ public class TransactionDAO {
             ps.setInt(1, transaction.getCustomerId());
             ps.setBigDecimal(2, transaction.getAmount());
             ps.setString(3, transaction.getStatus()); 
+            ps.setString(4, transaction.getType());
+            ps.setString(5, transaction.getDescription());
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
