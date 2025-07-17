@@ -73,6 +73,5 @@ public class Workout {
         this.duration = duration;
     }
     
-
 }
 

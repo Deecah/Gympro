@@ -17,11 +17,8 @@
         }
     }
 %>
-<head>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
-</head>
-       
-
+        
 <!-- Header Section Begin -->
 <header class="header-section">
     <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
