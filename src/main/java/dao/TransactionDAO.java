@@ -1,8 +1,11 @@
 package dao;
 
 import connectDB.ConnectDatabase;
+import java.math.BigDecimal;
 import model.Transaction;
 import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -103,4 +106,37 @@ public class TransactionDAO {
         }
         return null;
     }
+    
+    public Map<String, BigDecimal> getMonthlyRevenue() {
+    Map<String, BigDecimal> revenueMap = new LinkedHashMap<>();
+    String sql = "SELECT CONCAT(YEAR(createdTime), '-', RIGHT('0' + CAST(MONTH(createdTime) AS VARCHAR), 2)) AS Month, "
+           + "SUM(amount) AS TotalRevenue "
+           + "FROM [Transaction] WHERE status = 'success' "
+           + "GROUP BY YEAR(createdTime), MONTH(createdTime) ORDER BY Month ASC";
+
+
+    try (Connection con = ConnectDatabase.getInstance().openConnection();
+         PreparedStatement stmt = con.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        System.out.println("DEBUG: SQL executed");
+
+        while (rs.next()) {
+            String month = rs.getString("Month");
+            BigDecimal total = rs.getBigDecimal("TotalRevenue");
+
+            System.out.println("DEBUG: Row -> " + month + " = " + total);
+
+            revenueMap.put(month, total);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return revenueMap;
+}
+
+
+
 }
