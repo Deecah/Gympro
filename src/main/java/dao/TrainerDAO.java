@@ -5,6 +5,7 @@ import connectDB.ConnectDatabase;
 import model.Trainer;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -141,6 +142,37 @@ public class TrainerDAO {
             }
         }
     }
+    public List<Trainer> searchByKeyword(String keyword) {
+        List<Trainer> list = new ArrayList<>();
+        String sql = "SELECT t.*, u.Name, u.Email " +
+             "FROM Trainer t " +
+             "JOIN Users u ON t.Id = u.Id " +
+             "WHERE u.Name LIKE ? OR t.Specialization LIKE ?";
+
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Trainer t = new Trainer();
+                t.setUserId(rs.getInt("Id"));
+                t.setUserName(rs.getString("Name"));
+                t.setEmail(rs.getString("Email"));
+                t.setSpecialization(rs.getString("Specialization"));
+                t.setDescription(rs.getString("Description"));
+                t.setExperienceYears(rs.getInt("ExperienceYears"));
+                list.add(t);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
     public ArrayList<Trainer> getAllTrainers() {
         ArrayList<Trainer> trainerList = new ArrayList<>();
         String sql = "SELECT U.Id, U.Name, U.Gender, U.Email, U.Phone, U.Address, U.AvatarUrl, " +
@@ -199,5 +231,6 @@ public class TrainerDAO {
             }
         }
         return trainerList;
-    }
+    } 
 }
+

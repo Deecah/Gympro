@@ -1,15 +1,18 @@
 package dao;
 
 import connectDB.ConnectDatabase;
+import java.math.BigDecimal;
 import model.Transaction;
 import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TransactionDAO {
 
     public int addTransaction(Transaction transaction) {
-        String sql = "INSERT INTO Transactions (CustomerID, Amount, Status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Transactions (CustomerID, Amount, Status, Type, Description) VALUES (?, ?, ?, ?, ?)";
         int transactionId = -1;
 
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -22,6 +25,8 @@ public class TransactionDAO {
             ps.setInt(1, transaction.getCustomerId());
             ps.setBigDecimal(2, transaction.getAmount());
             ps.setString(3, transaction.getStatus()); 
+            ps.setString(4, transaction.getType());
+            ps.setString(5, transaction.getDescription());
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -103,4 +108,37 @@ public class TransactionDAO {
         }
         return null;
     }
+    
+    public Map<String, BigDecimal> getMonthlyRevenue() {
+    Map<String, BigDecimal> revenueMap = new LinkedHashMap<>();
+    String sql = "SELECT CONCAT(YEAR(createdTime), '-', RIGHT('0' + CAST(MONTH(createdTime) AS VARCHAR), 2)) AS Month, "
+           + "SUM(amount) AS TotalRevenue "
+           + "FROM [Transaction] WHERE status = 'success' "
+           + "GROUP BY YEAR(createdTime), MONTH(createdTime) ORDER BY Month ASC";
+
+
+    try (Connection con = ConnectDatabase.getInstance().openConnection();
+         PreparedStatement stmt = con.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        System.out.println("DEBUG: SQL executed");
+
+        while (rs.next()) {
+            String month = rs.getString("Month");
+            BigDecimal total = rs.getBigDecimal("TotalRevenue");
+
+            System.out.println("DEBUG: Row -> " + month + " = " + total);
+
+            revenueMap.put(month, total);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return revenueMap;
+}
+
+
+
 }

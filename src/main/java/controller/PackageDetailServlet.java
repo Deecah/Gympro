@@ -57,4 +57,3 @@ public class PackageDetailServlet extends HttpServlet {
 
     }
 }
-

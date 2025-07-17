@@ -66,7 +66,6 @@ public class Feedback {
 
     public void setStar(int star) {
         this.star = star;
-    }    
+    }   
 }
-
 

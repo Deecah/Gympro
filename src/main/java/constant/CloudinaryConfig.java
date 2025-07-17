@@ -15,3 +15,4 @@ public class CloudinaryConfig {
         return cloudinary;
     }
 }
+

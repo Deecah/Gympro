@@ -8,17 +8,7 @@ public class ExerciseLibrary {
     private String muscleGroup;
     private String equipment;
 
-    public ExerciseLibrary() {
-    }
-
-    public ExerciseLibrary(int exerciseID, String name, String description, String videoURL, String muscleGroup, String equipment) {
-        this.exerciseID = exerciseID;
-        this.name = name;
-        this.description = description;
-        this.videoURL = videoURL;
-        this.muscleGroup = muscleGroup;
-        this.equipment = equipment;
-    }
+    public ExerciseLibrary() {}
 
     public int getExerciseID() {
         return exerciseID;

@@ -82,6 +82,4 @@ public class ChangePasswordServlet extends HttpServlet {
         userDAO.updatePassword(u.getUserId(), newPasswordHashed);
         request.setAttribute("mess", "Change Password Successful!!!");
     }
-
 }
-

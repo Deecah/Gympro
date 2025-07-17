@@ -35,9 +35,15 @@ public class ProgramDayDAO {
             Logger.getLogger(ProgramDayDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (con != null) con.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(ProgramDayDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -45,6 +51,43 @@ public class ProgramDayDAO {
 
         return list;
     }
-    
-    
+
+    public int getProgramIdByDayId(int dayId) {
+        String sql = "SELECT pw.ProgramID "
+                + "FROM ProgramDay pd "
+                + "JOIN ProgramWeek pw ON pd.WeekID = pw.WeekID "
+                + "WHERE pd.DayID = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = ConnectDatabase.getInstance().openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, dayId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("ProgramID");
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ProgramDayDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(ProgramDayDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return -1;
+    }
+
 }

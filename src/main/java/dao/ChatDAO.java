@@ -1,10 +1,10 @@
 package dao;
 
 import connectDB.ConnectDatabase;
+import java.sql.*;
 import model.ChatSummary;
 import model.Message;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
