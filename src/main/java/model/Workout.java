@@ -1,52 +1,58 @@
 
 package model;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 public class Workout {
-    private int workoutId; 
-    private LocalDate day;
+
+    private int workoutID;
+    private int dayID;
+    private String title;
+    private String notes;
+    private Timestamp createdAt;
     private LocalTime startTime;
     private LocalTime endTime;
-    private int duration; // minute
-    private ArrayList<Exercise> exercises;
 
-    public Workout() {
+    // Getters and Setters
+    public int getWorkoutID() {
+        return workoutID;
     }
 
-    public Workout(int workoutId, LocalDate day, LocalTime startTime, LocalTime endTime, int duration, ArrayList<Exercise> exercises) {
-        this.workoutId = workoutId;
-        this.day = day;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.duration = duration;
-        this.exercises = exercises;
+    public void setWorkoutID(int workoutID) {
+        this.workoutID = workoutID;
     }
 
-    public int getWorkoutId() {
-        return workoutId;
+    public int getDayID() {
+        return dayID;
     }
 
-    public void setWorkoutId(int workoutId) {
-        this.workoutId = workoutId;
+    public void setDayID(int dayID) {
+        this.dayID = dayID;
     }
 
-    public ArrayList<Exercise> getExercises() {
-        return exercises;
+    public String getTitle() {
+        return title;
     }
 
-    public void setExercises(ArrayList<Exercise> exercises) {
-        this.exercises = exercises;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LocalDate getDay() {
-        return day;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setDay(LocalDate day) {
-        this.day = day;
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalTime getStartTime() {
@@ -64,15 +70,6 @@ public class Workout {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-    
 
 }
 
