@@ -13,7 +13,7 @@ public class ExerciseDAO {
 
     public int addExerciseToWorkout(int workoutId, int exerciseId, int sets, int reps, int restTime, String notes) {
         String sql = "INSERT INTO Exercise (WorkoutID, ExerciseID, Sets, Reps, RestTimeSeconds, Notes) "
-                   + "VALUES (?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -37,9 +37,15 @@ public class ExerciseDAO {
             Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (con != null) con.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException e) {
                 Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -50,9 +56,9 @@ public class ExerciseDAO {
 
     public List<Exercise> getExercisesByWorkout(int workoutId) {
         String sql = "SELECT e.*, el.Name AS ExerciseName, el.VideoURL, el.Description "
-                   + "FROM Exercise e "
-                   + "JOIN ExerciseLibrary el ON e.ExerciseID = el.ExerciseID "
-                   + "WHERE e.WorkoutID = ?";
+                + "FROM Exercise e "
+                + "JOIN ExerciseLibrary el ON e.ExerciseID = el.ExerciseID "
+                + "WHERE e.WorkoutID = ?";
         List<Exercise> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement ps = null;
@@ -82,9 +88,15 @@ public class ExerciseDAO {
             Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (con != null) con.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException e) {
                 Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -92,4 +104,67 @@ public class ExerciseDAO {
 
         return list;
     }
+
+    public boolean deleteExerciseFromWorkout(int id) {
+        String sql = "DELETE FROM WorkoutExercise WHERE Id = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = ConnectDatabase.getInstance().openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return false;
+    }
+
+    public boolean updateExerciseInWorkout(int id, int sets, int reps, int restTime, String notes) {
+        String sql = "UPDATE WorkoutExercise SET Sets = ?, Reps = ?, RestTimeSeconds = ?, Notes = ? WHERE Id = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = ConnectDatabase.getInstance().openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, sets);
+            ps.setInt(2, reps);
+            ps.setInt(3, restTime);
+            ps.setString(4, notes);
+            ps.setInt(5, id);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return false;
+    }
+
 }

@@ -31,12 +31,12 @@
         <div class="nav-menu" style="flex: 1; text-align: center;">
             <nav class="mainmenu mobile-menu">
                 <ul style="display: inline-flex; gap: 20px;">
-                    <li><a href="./index.jsp">Home</a></li>
-                    <li><a href="./about-us.jsp">About</a></li>
-                    <li><a href="./classes.jsp">Classes</a></li>
-                    <li><a href="./CustomerPackageServlet">Package</a></li>
-                    <li><a href="./gallery.jsp">Gallery</a></li>
-                    <li><a href="./contact.jsp">Contacts</a></li>
+                    <li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+                    <li><a href="${pageContext.request.contextPath}/about-us.jsp">About</a></li>
+                    <li><a href="${pageContext.request.contextPath}/classes.jsp">Classes</a></li>
+                    <li><a href="${pageContext.request.contextPath}/CustomerPackageServlet">Package</a></li>
+                    <li><a href="${pageContext.request.contextPath}/gallery.jsp">Gallery</a></li>
+                    <li><a href="${pageContext.request.contextPath}/contact.jsp">Contacts</a></li>
                 </ul>
             </nav>
         </div>
@@ -76,8 +76,9 @@
                 alt="Avatar">
 
             <div id="dropdownMenu" class="avatar-dropdown">
-                <a href="profile.jsp"><i class="fa fa-user"></i> Profile</a>
+                <a href="${pageContext.request.contextPath}/profile.jsp"><i class="fa fa-user"></i> Profile</a>
                 <a href="#"><i class="fa fa-cube"></i> Packages Purchased</a>
+                <a href="${pageContext.request.contextPath}/timetable"><i class="fa fa-calendar"></i> Schedule</a>
                 <a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
         </div>

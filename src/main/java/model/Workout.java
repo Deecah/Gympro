@@ -1,17 +1,19 @@
 package model;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
 
 public class Workout {
+
     private int workoutID;
     private int dayID;
     private String title;
-    private String rounds;
     private String notes;
     private Timestamp createdAt;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-    public Workout() {}
-
+    // Getters and Setters
     public int getWorkoutID() {
         return workoutID;
     }
@@ -36,14 +38,6 @@ public class Workout {
         this.title = title;
     }
 
-    public String getRounds() {
-        return rounds;
-    }
-
-    public void setRounds(String rounds) {
-        this.rounds = rounds;
-    }
-
     public String getNotes() {
         return notes;
     }
@@ -58,5 +52,21 @@ public class Workout {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }
