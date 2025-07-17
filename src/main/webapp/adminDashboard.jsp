@@ -756,7 +756,6 @@
 
 // Gán sự kiện khi nút được bấm
             document.getElementById("loadRevenueStatsButton").addEventListener("click", loadRevenueStats);
-
         </script>
 
     </body>

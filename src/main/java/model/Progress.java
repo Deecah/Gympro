@@ -1,12 +1,11 @@
-
 package model;
 
 import java.time.LocalDateTime;
 
 public class Progress {
+
     private int progressID;
-    private int customerID;
-    private int trainerID;
+    private int userId;
     private int workoutID;
     private LocalDateTime recordedAt;
     private double weight;
@@ -19,8 +18,7 @@ public class Progress {
 
     public Progress(int progressID, int customerID, int trainerID, int workoutID, LocalDateTime recordedAt, double weight, double bodyFatPercent, double muscleMass, String notes) {
         this.progressID = progressID;
-        this.customerID = customerID;
-        this.trainerID = trainerID;
+        this.userId = userId;
         this.workoutID = workoutID;
         this.recordedAt = recordedAt;
         this.weight = weight;
@@ -77,20 +75,12 @@ public class Progress {
         this.notes = notes;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public int getUserID() {
+        return userId;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public int getTrainerID() {
-        return trainerID;
-    }
-
-    public void setTrainerID(int trainerID) {
-        this.trainerID = trainerID;
+    public void setUserID(int userID) {
+        this.userId = userID;
     }
 
     public int getWorkoutID() {
@@ -101,4 +91,3 @@ public class Progress {
         this.workoutID = workoutID;
     }
 }
-

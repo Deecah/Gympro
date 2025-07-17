@@ -100,12 +100,13 @@
         <section class="blog-section spad">
             <div class="container">
                 <div class="row">
+                    
                     <c:choose>
                         <c:when test="${not empty packages}">
                             <c:forEach var="p" items="${packages}">
                                 <c:set var="imageUrl" value="${empty p.imageUrl ? 'images/default.jpg' : (fn:startsWith(p.imageUrl, 'http') ? p.imageUrl : pageContext.request.contextPath.concat(p.imageUrl))}" />
                                 <div class="col-lg-4 col-md-6 mb-4">
-                                    <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p.packageID}" 
+                                    <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p["packageID"]}" 
                                        style="text-decoration: none; color: inherit;">
                                         <div class="single-blog-item card h-100 shadow-sm border-0 package-card"
                                              style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
@@ -140,6 +141,7 @@
         </section>
         <!-- Package Section End -->
 
+        <jsp:include page="footer.jsp" />
 
         <script>
             function toggleMenu() {

@@ -81,6 +81,13 @@
         </div>
     </section>
     <!-- About Section End -->
+    <!-- Content Section Begin -->
+    <section class="content-section spad">
+        <div class="container">
+        <jsp:include page="contentList.jsp" />
+        </div>
+    </section>
+<!-- Content Section End -->
 
     <!-- Services Section Begin -->
     <section class="services-section">
@@ -328,7 +335,7 @@
                         <h2>Get training today</h2>
                         <p>Gimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                             industry’s standard.</p>
-                        <a href="#" class="primary-btn banner-btn">Contact Now</a>
+                        <a href="contact.jsp" class="primary-btn banner-btn">Contact Now</a>
                     </div>
                 </div>
                 <div class="col-lg-5">

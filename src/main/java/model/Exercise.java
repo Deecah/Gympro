@@ -1,9 +1,8 @@
 package model;
 
 public class Exercise {
-    private int id;
+    private int exerciseId;
     private int workoutID;
-    private int exerciseID;
     private int sets;
     private int reps;
     private int restTimeSeconds;
@@ -16,14 +15,15 @@ public class Exercise {
 
     public Exercise() {}
 
-    public int getId() {
-        return id;
+    public int getExerciseId() {
+        return exerciseId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
     }
 
+   
     public int getWorkoutID() {
         return workoutID;
     }
@@ -32,13 +32,6 @@ public class Exercise {
         this.workoutID = workoutID;
     }
 
-    public int getExerciseID() {
-        return exerciseID;
-    }
-
-    public void setExerciseID(int exerciseID) {
-        this.exerciseID = exerciseID;
-    }
 
     public int getSets() {
         return sets;

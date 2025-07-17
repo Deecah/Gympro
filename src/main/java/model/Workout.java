@@ -71,6 +71,4 @@ public class Workout {
         this.endTime = endTime;
     }
 
-    
-
 }
