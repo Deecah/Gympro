@@ -9,12 +9,13 @@
     System.out.println("HEADER user ID = " + (user != null ? user.getUserId() : "null"));
     pageContext.setAttribute("user", user);
     List<Notification> notifications = new ArrayList<>();
-    if (user != null) {
+
+     if (user != null) {
         NotificationDAO notiDAO = new NotificationDAO();
         notifications = notiDAO.getNotificationsByUserId(user.getUserId());
         if (notifications == null) {
-            notifications = new ArrayList<>();
-        }
+            notifications = new ArrayList<>(); 
+    }
     }
 %>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">

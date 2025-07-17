@@ -226,8 +226,6 @@ ul, ol {
 đã xóa để viết file css riêng, nếu bị conflict hãy xóa phần header css trong file này
 -----------------------*/
 
-<<<<<<< HEAD
-=======
 .header-section {
 	position: absolute;
 	left: 0;
@@ -289,7 +287,7 @@ ul, ol {
 .slicknav_menu {
 	display: none;
 }
->>>>>>> cc214d201e526ae951ae47913ed3d6cc54569618
+
 /*---------------------
   Hero Section
 -----------------------*/
@@ -2152,7 +2150,7 @@ overflow-wrap: break-word;
     font-size: 14px;
 }
 
-//nut 3 cham
+
 .comment-options-wrapper {
     position: relative;
     display: inline-block;
@@ -2218,4 +2216,3 @@ overflow-wrap: break-word;
     border-radius: 4px;
     margin-right: 8px;
 }
-

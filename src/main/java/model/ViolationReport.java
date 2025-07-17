@@ -62,7 +62,6 @@ public class ViolationReport {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-
     public Date getLastEdit() {
         return lastEdit;
     }
@@ -70,5 +69,4 @@ public class ViolationReport {
     public void setLastEdit(Date lastEdit) {
         this.lastEdit = lastEdit;
     }
-    
 }

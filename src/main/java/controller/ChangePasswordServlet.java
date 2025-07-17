@@ -87,4 +87,3 @@ public class ChangePasswordServlet extends HttpServlet {
         request.setAttribute("mess", "Change Password Successful!!!");
     }
 }
-
