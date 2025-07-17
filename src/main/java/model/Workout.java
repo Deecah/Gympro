@@ -1,3 +1,4 @@
+
 package model;
 
 import java.sql.Timestamp;
@@ -69,4 +70,6 @@ public class Workout {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+
 }
+

@@ -78,6 +78,4 @@ public class Package {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-
-
 }

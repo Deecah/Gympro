@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class Transaction {
+
     private int transactionId;
     private int customerId;
     private BigDecimal amount;
     private Timestamp createdTime;
     private String status;
-    private String type;private String description;
+    private String type;
+    private String description;
 
     public Transaction() {
     }
@@ -23,6 +25,7 @@ public class Transaction {
         this.type = type;
         this.description = description;
     }
+
     public int getTransactionId() {
         return transactionId;
     }
@@ -70,14 +73,13 @@ public class Transaction {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public String getDescription() {
-    return description;
-}
+        return description;
+    }
 
-public void setDescription(String description) {
-    this.description = description;
-}
-
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }
