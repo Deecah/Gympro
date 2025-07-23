@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="model.User, model.Customer, model.Trainer" %>
 <%
@@ -138,7 +139,6 @@
                             </a>
                         </div>
                         <% } %>
-
                         <div class="btn-group-custom">
                             <a href="editprofile.jsp" class="btn btn-primary">Edit Profile</a>
                             <a href="confirmOldPass.jsp" class="btn btn-warning ml-2">Change Password</a>

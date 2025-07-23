@@ -42,3 +42,4 @@ public class SearchPackageServlet extends HttpServlet {
         return "Handles search functionality for training packages.";
     }
 }
+

@@ -1,4 +1,3 @@
-
 package controller;
 
 import Utils.HashUtil;
@@ -12,9 +11,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
-
-
-
 
 @WebServlet(name="ChangePasswordServlet", urlPatterns={"/ChangePasswordServlet"})
 public class ChangePasswordServlet extends HttpServlet {
@@ -87,4 +83,3 @@ public class ChangePasswordServlet extends HttpServlet {
         request.setAttribute("mess", "Change Password Successful!!!");
     }
 }
-

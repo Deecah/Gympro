@@ -7,16 +7,16 @@ public class Schedule {
     private int scheduleID;
     private int trainerID;
     private int customerID;
-    private ArrayList<Workout> workouts; //t2 t3 t4
+    private ArrayList<Slot> slots; // t2 t3 t4
 
     public Schedule() {
     }
-    
-     public Schedule(int scheduleID, int trainerID, int customerID, ArrayList<Workout> workouts) {
+
+    public Schedule(int scheduleID, int trainerID, int customerID, ArrayList<Slot> slots) {
         this.scheduleID = scheduleID;
         this.trainerID = trainerID;
         this.customerID = customerID;
-        this.workouts = workouts;
+        this.slots = slots;
     }
 
     public int getScheduleID() {
@@ -43,12 +43,12 @@ public class Schedule {
         this.customerID = customerID;
     }
 
-    public ArrayList<Workout> getWorkouts() {
-        return workouts;
+    public ArrayList<Slot> getSlots() {
+        return slots;
     }
 
-    public void setWorkouts(ArrayList<Workout> workouts) {
-        this.workouts = workouts;
+    public void setSlots(ArrayList<Slot> slots) {
+        this.slots = slots;
     }
+}
 
-    }

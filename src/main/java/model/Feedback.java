@@ -1,4 +1,3 @@
-
 package model;
 
 public class Feedback {
@@ -7,7 +6,25 @@ public class Feedback {
     private int packageID;
     private String feedbackContent;
     private int star; // 0–5
+    private String userName;
+    private String userAvatar;
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
+    }
+    
     public Feedback() {
     }
 
@@ -49,8 +66,6 @@ public class Feedback {
 
     public void setStar(int star) {
         this.star = star;
-    }
-
-    
-    
+    }   
 }
+

@@ -27,3 +27,4 @@ public class CloudinaryUploader {
         return uploadResult.get("secure_url").toString();
     }
 }
+

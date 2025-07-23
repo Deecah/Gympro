@@ -4,17 +4,23 @@
 <%@ page import="model.User" %>
 <%@ page import="dao.NotificationDAO" %>
 <%@ page import="dao.UserDAO" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    request.setCharacterEncoding("UTF-8");
+%>
+
 <%
     User user = (User) session.getAttribute("user");
     System.out.println("HEADER user ID = " + (user != null ? user.getUserId() : "null"));
     pageContext.setAttribute("user", user);
     List<Notification> notifications = new ArrayList<>();
-    if (user != null) {
+
+     if (user != null) {
         NotificationDAO notiDAO = new NotificationDAO();
         notifications = notiDAO.getNotificationsByUserId(user.getUserId());
         if (notifications == null) {
-            notifications = new ArrayList<>();
-        }
+            notifications = new ArrayList<>(); 
+    }
     }
 %>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
@@ -22,7 +28,6 @@
 <!-- Header Section Begin -->
 <header class="header-section">
     <div class="container d-flex align-items-center justify-content-between flex-wrap py-2">
-        
         <div class="logo">
             <a href="./index.jsp">
                 <img src="img/logo-web.png" class="gympro-logo" alt="">
@@ -56,7 +61,7 @@
                 </div>
                 <ul class="notification-list" id="notificationList">
                     <% if (notifications.isEmpty()) { %>
-                    <li class="no-notifications">B?n không có thông báo m?i.</li>
+                    <li class="no-notifications">No new notifications!</li>
                     <% } else { %>
                         <% for (Notification noti : notifications) {%>
                     <li class="notification-item">
@@ -105,11 +110,11 @@
 
             <div id="dropdownMenu" class="avatar-dropdown">
                 <a href="${pageContext.request.contextPath}/profile.jsp"><i class="fa fa-user"></i> Profile</a>
-                <a href="#"><i class="fa fa-cube"></i> Packages Purchased</a>
+                <a href="packagesPurchased"><i class="fa fa-cube"></i> Packages Purchased</a>
                 <a href="${pageContext.request.contextPath}/timetable"><i class="fa fa-calendar"></i> Schedule</a>
                 <a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
         </div>
     </div>
 </header>
-<!-- Header Section End -->
+

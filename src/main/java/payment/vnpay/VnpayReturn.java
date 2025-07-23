@@ -70,7 +70,6 @@ public class VnpayReturn extends HttpServlet {
                 if (chatDAO.isChatAllowed(customerId, trainerId)) {
                     chatDAO.createChatIfNotExists(customerId, trainerId);
                 }
-
                 transSuccess = true;
             } else {
                 transactionDAO.updateTransactionStatus(transactionId, "Fail");
