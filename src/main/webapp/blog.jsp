@@ -56,11 +56,18 @@
    <!-- Blog Section Begin -->
 <section class="blog-section spad">
     <div class="container">
-         <div class="row">
+        <!-- H2 nằm trong container, trước danh sách blog -->
+        <div class="row">
+            <div class="col-lg-12 text-left">
+                <h2>Blogs</h2>
+            </div>
+        </div>
+
+        <!-- Danh sách blog -->
+        <div class="row">
             <c:forEach var="blog" items="${blogs}">
                 <div class="col-lg-4 col-md-6">
                     <div class="single-blog-item">
-                        <!-- Link bọc cả ảnh -->
                         <a href="${pageContext.request.contextPath}/BlogDetailServlet?action=view&id=${blog.id}" class="thumbnail-wrapper">
                             <img src="${blog.thumbnail}" alt="${blog.title}"
                                  onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/img/default-thumbnail.jpg';">
@@ -71,7 +78,6 @@
                             </div>
                             <a href="#" class="tag">#${blog.tag != null ? blog.tag : "General"}</a>
                         </div>
-                        <!-- Link title -->
                         <h4>
                             <a href="${pageContext.request.contextPath}/BlogDetailServlet?action=view&id=${blog.id}">
                                 ${blog.title}
@@ -101,6 +107,7 @@
         </div>
     </div>
 </section>
+
 <!-- Blog Section End -->
 
     <!-- Footer Section Begin -->

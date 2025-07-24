@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     color: #111111;
     font-weight: 400;
-    font-family: "Poppins", sans-serif;
+    font-ckmily: "Poppins", sans-serif;
 }
 h1 {
     font-size: 70px;
@@ -105,8 +105,8 @@ ul, ol {
     background-position: top center;
 }
 .spad {
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 .spad-2 {
     padding-top: 50px;
@@ -227,19 +227,38 @@ ul, ol {
 -----------------------*/
 
 .header-section {
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px; /* hoặc bạn điều chỉnh cao hơn nếu logo to */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+    display: flex;
+    align-items: center;
+    padding: 0 20px; /* cách lề trái/phải một chút */
+    z-index: 99;
 }
+
 .logo {
-	float: left;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
+
 .logo a {
-	display: inline-block;
-	padding: 24px 0 29px;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
+
+.gympro-logo {
+    height: 100%;      /* full chiều cao header */
+    width: auto;       /* tự tính theo tỉ lệ */
+    display: block;
+    max-height: 112px; /* tối đa nếu logo gốc là 56px */
+}
+
 .nav-menu {
 	float: right;
 }
@@ -313,6 +332,50 @@ ul, ol {
     color: #ffffff;
     margin-bottom: 44px;
 }
+.hero-text {
+    margin-top: -100px;   /* đẩy lên trên */
+    margin-left: -150px;  /* lệch trái */
+    position: relative;
+    z-index: 1;
+}
+.bmi-form-container {
+    display: none;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1); /* nền mờ nhẹ */
+    padding: 20px 20px 0 20px; /* bỏ padding-bottom */
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    color: white;
+    max-width: 500px;
+
+    border: 1.5px solid rgba(255, 255, 255, 0.3); /* viền trắng mờ đậm hơn một chút */
+}
+
+
+.bmi-form-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 6px;
+}
+
+.bmi-form-container button {
+    background: linear-gradient(to right, #eb3c5a, #f67831); /* màu giống nút Read More */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 0; /* loại bỏ margin dưới */
+}
+
+.bmi-form-container p {
+    padding-top: 10px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 /*---------------------
   About Section
 -----------------------*/
@@ -493,88 +556,102 @@ ul, ol {
     padding-top: 90px;
     padding-bottom: 190px;
 }
-.trainer-section.about-trainer {
+.trainer-section .about-trainer {
     background: #ffffff;
 }
 .single-trainer-item {
     position: relative;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
 }
+.single-trainer-item:hover {
+    transform: translateY(-5px);
+}
+
+.single-trainer-item img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+/* trainer-text */
+.single-trainer-item .trainer-text {
+    position: absolute;
+    left: 50%;
+    bottom: -45px; /* ↓ chỉnh lại cho nổi lên rõ */
+    transform: translateX(-50%);
+    text-align: center;
+    background: #ffffff;
+    width: 90%;
+    max-width: 300px;
+    padding: 20px 25px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    height: 100px;
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
 .single-trainer-item:hover .trainer-text {
-    height: 250px;
-    bottom: -90px;
-    padding: 26px 30px 30px;
-    -webkit-box-shadow: 0px 10px 49px 0px rgba(0, 0, 0, 0.15);
-    box-shadow: 0px 10px 49px 0px rgba(0, 0, 0, 0.15);
+    height: 220px;
+    bottom: -80px;
+    box-shadow: 0px 10px 49px rgba(0, 0, 0, 0.15);
 }
+
+.single-trainer-item .trainer-text h5 {
+    font-size: 20px;
+    color: #111;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.single-trainer-item .trainer-text span {
+    font-size: 15px;
+    color: #f15d44;
+}
+
+.single-trainer-item .trainer-text p {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
 .single-trainer-item:hover .trainer-text p {
     opacity: 1;
 }
+
+.single-trainer-item .trainer-text .trainer-social {
+    margin-top: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
 .single-trainer-item:hover .trainer-text .trainer-social {
     opacity: 1;
     visibility: visible;
 }
-.single-trainer-item img {
-    min-width: 100%;
-}
-.single-trainer-item .trainer-text {
-    position: absolute;
-    left: 50%;
-    bottom: -55px;
-    text-align: center;
-    background: #ffffff;
-    width: 310px;
-    margin: 0 auto;
-    -webkit-transform: translateX(-155px);
-    -ms-transform: translateX(-155px);
-    transform: translateX(-155px);
-    -webkit-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.15);
-    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.15);
-    padding: 20px 30px 18px;
-    height: 90px;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s;
-    overflow: hidden;
-}
-.single-trainer-item .trainer-text h5 {
-    font-size: 20px;
-    color: #111111;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-.single-trainer-item .trainer-text span {
-    font-size: 16px;
-    color: #f15d44;
-}
-.single-trainer-item .trainer-text p {
-    margin-top: 7px;
-    opacity: 0;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
-.single-trainer-item .trainer-text .trainer-social {
-    opacity: 0;
-    visibility: hidden;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
+
 .single-trainer-item .trainer-text .trainer-social a {
     display: inline-block;
     font-size: 17px;
-    color: #111111;
-    margin-right: 25px;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
+    color: #111;
+    margin-right: 20px;
     transition: all 0.3s;
 }
+
 .single-trainer-item .trainer-text .trainer-social a:hover {
     color: #f15d44;
 }
+
 .single-trainer-item .trainer-text .trainer-social a:last-child {
     margin-right: 0;
 }
+
 /*---------------------
   Testimonial Section
 -----------------------*/
@@ -894,6 +971,33 @@ ul, ol {
     color: #ffffff;
     margin-bottom: 42px;
 }
+/* Nút back-to-top thống nhất */
+#backToTop {
+    position: fixed;
+    right: 20px;
+    bottom: 90px; /* nếu có nút chat, dùng JS thay đổi nếu cần */
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    z-index: 99999;
+    display: none;
+
+    background: linear-gradient(to right, #eb3c5a, #f67831); /* Gradient như ảnh */
+    color: white;
+    font-size: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+#backToTop:hover {
+    opacity: 0.9;
+}
+
 /*---------------------
   Footer
 -----------------------*/
@@ -1257,6 +1361,10 @@ ul, ol {
 /*---------------------
   Blog Section
 -----------------------*/
+.blog-section h2 {
+    padding-bottom: 25px;
+    font-weight: 700; /* hoặc 600 nếu muốn đậm vừa */
+}
 .single-blog-item {
     margin-bottom: 42px;
     transition: transform 0.3s ease;
@@ -1385,8 +1493,8 @@ ul, ol {
     padding-top: 50px;
 }
 .blog-details-hero {
-    height: 633px;
-    padding-top: 280px;
+    height: 800px;
+    padding-top: 200px;
 }
 .bd-hero-text {
     text-align: center;
@@ -1409,15 +1517,12 @@ ul, ol {
     text-transform: uppercase;
     margin-top: 15px;
 }
-.bd-text .bd-title {
-    margin-bottom: 55px;
-}
 .bd-text .bd-title p {
     font-size: 17px;
     line-height: 30px;
 }
 .bd-text .bd-pic {
-    margin-bottom: 35px;
+    margin-bottom: 10px;
 }
 .bd-text .bd-pic img {
     min-width: 100%;
@@ -1606,21 +1711,36 @@ ul, ol {
 /*---------------------
   Map Section
 -----------------------*/
+.centered-map-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 85vh;
+}
 
 .map {
-    height: 612px;
-    position: relative;
-}
-.map iframe {
-    width: 100%;
-}
-.map img {
     position: absolute;
     left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-14px, -21px);
-    -ms-transform: translate(-14px, -21px);
-    transform: translate(-14px, -21px);
+    bottom: 30px;                /* cách đáy 30px (có thể chỉnh 20–40 tùy ý) */
+    transform: translateX(-50%); /* chỉ căn giữa ngang */
+    
+    width: 85vw;
+    height: 45vw;
+    max-width: 1200px;
+    max-height: 720px;
+
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+}
+
+
+
+.map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 /*---------------------
   Contact Section
@@ -1729,6 +1849,7 @@ ul, ol {
     border: none;
     text-transform: uppercase;
 }
+
 /*-------------------------------- Respinsive Media Styles --------------------------------*/
 
 @media only screen and (min-width: 1200px) {
