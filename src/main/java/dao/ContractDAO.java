@@ -34,4 +34,20 @@ public class ContractDAO {
             }
         }
     }
+
+    public boolean isPackageActiveForCustomer(int customerId, int packageId) {
+        String sql = "SELECT * FROM Contracts "
+                + "WHERE CustomerID = ? AND PackageID = ? AND EndDate >= ? AND Status = 'active'";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        try (Connection con = db.openConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ps.setInt(2, packageId);
+            ps.setDate(3, Date.valueOf(LocalDate.now()));
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

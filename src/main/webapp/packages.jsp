@@ -99,7 +99,6 @@
         <section class="blog-section spad">
             <div class="container">
                 <div class="row">
-                    
                     <c:choose>
                         <c:when test="${not empty packages}">
                             <c:forEach var="p" items="${packages}">
@@ -121,7 +120,15 @@
                                                 <p class="card-text text-muted">${p.description}</p>
                                             </div>
                                             <div class="card-footer bg-transparent border-0 text-end">
-                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" class="btn btn-outline-success btn-sm">Purchase Package</a>
+                                                <c:choose>
+                                                    <c:when test="${purchaseStatus[p.packageID]}">
+                                                        <button class="btn btn-secondary btn-sm" disabled>Already Purchased</button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" 
+                                                           class="btn btn-outline-success btn-sm">Purchase Package</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                     </a>

@@ -1,32 +1,43 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 
 package controller;
 
+import dao.ContractDAO;
 import dao.PackageDAO;
-import jakarta.servlet.RequestDispatcher;
-import java.io.IOException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 import model.Package;
 
-@WebServlet(name="CustomerPackageServlet", urlPatterns={"/CustomerPackageServlet"})
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
+
+@WebServlet(name = "CustomerPackageServlet", urlPatterns = {"/CustomerPackageServlet"})
 public class CustomerPackageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         PackageDAO dao = new PackageDAO();
         List<Package> packages = dao.getAllPackages();
-
         request.setAttribute("packages", packages);
+
+        HttpSession session = request.getSession(false);
+        Integer customerId = (session != null) ? (Integer) session.getAttribute("userId") : null;
+
+        Map<Integer, Boolean> purchaseStatus = new HashMap<>();
+        if (customerId != null) {
+            ContractDAO contractDAO = new ContractDAO();
+            for (Package p : packages) {
+                boolean isActive = contractDAO.isPackageActiveForCustomer(customerId, p.getPackageID());
+                purchaseStatus.put(p.getPackageID(), isActive);
+            }
+        }
+
+        request.setAttribute("purchaseStatus", purchaseStatus);
         RequestDispatcher dispatcher = request.getRequestDispatcher("packages.jsp");
         dispatcher.forward(request, response);
     }
@@ -34,6 +45,6 @@ public class CustomerPackageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response); // optional: treat POST same as GET
+        doGet(request, response);
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public class TestSearchPackage {
 
     public static void main(String[] args) {
-        String keyword = "Basic"; // ← Bạn có thể thay đổi từ khóa test tại đây
+        String keyword = "demo 2"; // ← Bạn có thể thay đổi từ khóa test tại đây
 
         PackageDAO dao = new PackageDAO();
         List<Package> packages = dao.searchByKeyword(keyword);

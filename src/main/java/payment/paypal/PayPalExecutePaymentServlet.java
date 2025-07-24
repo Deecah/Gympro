@@ -2,8 +2,11 @@ package payment.paypal;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
+import dao.ChatDAO;
 
 import dao.ContractDAO;
+import dao.CustomerProgramDAO;
+import dao.ProgramDAO;
 import dao.TransactionDAO;
 import model.Transaction;
 
@@ -60,17 +63,38 @@ public class PayPalExecutePaymentServlet extends HttpServlet {
 
             TransactionDAO transactionDAO = new TransactionDAO();
             int transactionId = transactionDAO.addTransaction(transaction);
+            System.out.println("✅ Transaction recorded with ID: " + transactionId);
 
-            // 5. Nếu giao dịch thành công → tạo hợp đồng
             if (transactionId > 0) {
                 LocalDate start = LocalDate.now();
                 LocalDate end = start.plusDays(duration);
 
                 ContractDAO contractDAO = new ContractDAO();
                 contractDAO.createContract(trainerId, customerId, packageId, start, end);
+                System.out.println("✅ Contract created");
+
+                // 6. Gán chương trình (nếu chưa)
+                ProgramDAO programDAO = new ProgramDAO();
+                CustomerProgramDAO cpDAO = new CustomerProgramDAO();
+                int programId = programDAO.getProgramIdByPackageId(packageId);
+                System.out.println("✅ Program ID resolved: " + programId);
+
+                if (programId > 0 && !cpDAO.isProgramAlreadyAssigned(customerId, programId)) {
+                    cpDAO.assignProgramToCustomer(programId, customerId, start);
+                    System.out.println("✅ Program assigned to customer");
+                }
+
+                // 7. Tạo Chat sau khi có Contract (nếu hợp lệ)
+                ChatDAO chatDAO = new ChatDAO();
+                boolean canChat = chatDAO.isChatAllowed(customerId, trainerId);
+                System.out.println("✅ isChatAllowed: " + canChat);
+                if (canChat) {
+                    int chatId = chatDAO.createChatIfNotExists(customerId, trainerId);
+                    System.out.println("✅ Chat created with ID: " + chatId);
+                }
             }
 
-            // 6. Dọn session
+            // 8. Dọn session
             session.removeAttribute("selectedTrainerId");
             session.removeAttribute("selectedPackageId");
             session.removeAttribute("selectedPackageDuration");
@@ -79,6 +103,7 @@ public class PayPalExecutePaymentServlet extends HttpServlet {
             request.getRequestDispatcher("/paymentResult.jsp").forward(request, response);
 
         } catch (Exception ex) {
+            ex.printStackTrace(); 
             Logger.getLogger(PayPalExecutePaymentServlet.class.getName()).log(Level.SEVERE, null, ex);
             request.setAttribute("transResult", false);
             request.getRequestDispatcher("/paymentResult.jsp").forward(request, response);

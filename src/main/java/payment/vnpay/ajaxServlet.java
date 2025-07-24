@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@WebServlet(name = "ajaxServlet", urlPatterns = {"/payment"})
+@WebServlet(name = "ajaxServlet", urlPatterns = {"/vnpay/payment"})
 public class ajaxServlet extends HttpServlet {
 
     @Override
@@ -46,6 +46,8 @@ public class ajaxServlet extends HttpServlet {
         transaction.setCustomerId(customerId);
         transaction.setAmount(amount);
         transaction.setStatus("Processing");
+        transaction.setType("VNPay"); 
+        transaction.setDescription("Thanh toán qua VNPay - Gói tập GymPro");
 
         TransactionDAO transactionDao = new TransactionDAO();
         int transactionId = transactionDao.addTransaction(transaction);
