@@ -211,4 +211,40 @@ public class ProgramDAO {
         return false;
     }
 
+    public int getProgramIdByPackageId(int packageId) {
+        String sql = "SELECT ProgramID FROM Program WHERE PackageID = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = ConnectDatabase.getInstance().openConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, packageId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("ProgramID");
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ProgramDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(ProgramDAO.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return -1; // Không tìm thấy
+    }
+
 }

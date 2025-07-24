@@ -4,6 +4,8 @@ import dao.ContractDAO;
 import dao.PackageDAO;
 import dao.TransactionDAO;
 import dao.ChatDAO;
+import dao.CustomerProgramDAO;
+import dao.ProgramDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import model.Transaction;
 
-@WebServlet(name = "VnpayReturn", urlPatterns = {"/vnpayReturn"})
+@WebServlet(name = "VnpayReturn", urlPatterns = {"/vnpay/vnpayReturn"})
 public class VnpayReturn extends HttpServlet {
 
     TransactionDAO transactionDAO = new TransactionDAO();
@@ -43,42 +45,67 @@ public class VnpayReturn extends HttpServlet {
         fields.remove("vnp_SecureHash");
 
         String signValue = Config.hashAllFields(fields);
+        boolean transSuccess = false;
+
         if (signValue.equals(vnp_SecureHash)) {
-            String vnpTxnRef = request.getParameter("vnp_TxnRef");
-            int transactionId = Integer.parseInt(vnpTxnRef.split("_")[0]);
-            String transactionStatus = request.getParameter("vnp_TransactionStatus");
-            int packageId = Integer.parseInt(request.getParameter("vnp_OrderInfo"));
+            try {
+                String vnpTxnRef = request.getParameter("vnp_TxnRef");
+                int transactionId = Integer.parseInt(vnpTxnRef.split("_")[0]);
+                String transactionStatus = request.getParameter("vnp_TransactionStatus");
+                int packageId = Integer.parseInt(request.getParameter("vnp_OrderInfo"));
 
-            boolean transSuccess = false;
+                System.out.println("✅ VNPay TransactionID: " + transactionId);
+                System.out.println("✅ Transaction Status: " + transactionStatus);
 
-            if ("00".equals(transactionStatus)) {
-                transactionDAO.updateTransactionStatus(transactionId, "Completed");
+                if ("00".equals(transactionStatus)) {
+                    transactionDAO.updateTransactionStatus(transactionId, "Completed");
+                    System.out.println("✅ Transaction marked as Completed");
 
-                Transaction transaction = transactionDAO.getTransactionById(transactionId);
-                int customerId = transaction.getCustomerId();
+                    Transaction transaction = transactionDAO.getTransactionById(transactionId);
+                    int customerId = transaction.getCustomerId();
 
-                int trainerId = packageDAO.getTrainerIdByPackage(packageId);
-                int durationDays = packageDAO.getDurationByPackage(packageId);
+                    int trainerId = packageDAO.getTrainerIdByPackage(packageId);
+                    int durationDays = packageDAO.getDurationByPackage(packageId);
 
-                LocalDate startDate = LocalDate.now();
-                LocalDate endDate = startDate.plusDays(durationDays);
+                    LocalDate startDate = LocalDate.now();
+                    LocalDate endDate = startDate.plusDays(durationDays);
 
-                contractDAO.createContract(trainerId, customerId, packageId, startDate, endDate);
+                    contractDAO.createContract(trainerId, customerId, packageId, startDate, endDate);
+                    System.out.println("✅ Contract created");
 
-                // tạo Chat
-                ChatDAO chatDAO = new ChatDAO();
-                if (chatDAO.isChatAllowed(customerId, trainerId)) {
-                    chatDAO.createChatIfNotExists(customerId, trainerId);
+                    ProgramDAO programDAO = new ProgramDAO();
+                    CustomerProgramDAO cpDAO = new CustomerProgramDAO();
+                    int programId = programDAO.getProgramIdByPackageId(packageId);
+                    System.out.println("✅ Program ID resolved: " + programId);
+
+                    if (programId > 0 && !cpDAO.isProgramAlreadyAssigned(customerId, programId)) {
+                        cpDAO.assignProgramToCustomer(programId, customerId, startDate);
+                        System.out.println("✅ Program assigned to customer");
+                    }
+
+                    ChatDAO chatDAO = new ChatDAO();
+                    boolean canChat = chatDAO.isChatAllowed(customerId, trainerId);
+                    System.out.println("✅ isChatAllowed: " + canChat);
+                    if (canChat) {
+                        int chatId = chatDAO.createChatIfNotExists(customerId, trainerId);
+                        System.out.println("✅ Chat created with ID: " + chatId);
+                    }
+
+                    transSuccess = true;
+                } else {
+                    transactionDAO.updateTransactionStatus(transactionId, "Fail");
+                    System.out.println("❌ Transaction failed with status: " + transactionStatus);
                 }
-                transSuccess = true;
-            } else {
-                transactionDAO.updateTransactionStatus(transactionId, "Fail");
+
+            } catch (Exception e) {
+                e.printStackTrace(); // Hiện lỗi ra console
             }
 
             request.setAttribute("transResult", transSuccess);
             request.getRequestDispatcher("paymentResult.jsp").forward(request, response);
+
         } else {
-            System.out.println("Giao dịch không hợp lệ (Invalid signature)");
+            System.out.println("❌ Giao dịch không hợp lệ (Invalid signature)");
         }
     }
 

@@ -1,10 +1,11 @@
 package controller;
 
 import dao.WorkoutDAO;
+import model.WorkoutSlotDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import model.Workout;
+import model.User;
 
 import java.io.IOException;
 import java.time.*;
@@ -13,18 +14,27 @@ import java.util.*;
 
 @WebServlet("/timetable")
 public class TimetableServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        int customerId = ((model.User) req.getSession().getAttribute("user")).getUserId();
-        WorkoutDAO dao = new WorkoutDAO();
+        HttpSession session = req.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
 
+        if (user == null) {
+            resp.sendRedirect("login.jsp");
+            return;
+        }
+
+        int customerId = user.getUserId();
+        String role = user.getRole();
+        ZoneId zone = ZoneId.systemDefault();
         DateTimeFormatter fullFmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate today = LocalDate.now();
-        LocalDate startOfWeek;
 
-        // Parse from weekRange if exists
+        // Xác định tuần đang chọn hoặc mặc định là tuần hiện tại
+        LocalDate startOfWeek;
         String selectedRange = req.getParameter("weekRange");
         if (selectedRange != null && selectedRange.contains(" - ")) {
             try {
@@ -40,29 +50,27 @@ public class TimetableServlet extends HttpServlet {
         LocalDate endOfWeek = startOfWeek.plusDays(6);
         String currentWeekRange = fullFmt.format(startOfWeek) + " - " + fullFmt.format(endOfWeek);
 
-        // Week dates (as java.util.Date for JSP fmt:formatDate)
-        List<Date> weekDates = new ArrayList<>();
-        ZoneId zone = ZoneId.systemDefault();
-        for (int i = 0; i < 7; i++) {
-            LocalDate d = startOfWeek.plusDays(i);
-            Instant instant = d.atStartOfDay(zone).toInstant();
-            weekDates.add(Date.from(instant));
-        }
-
-        // Generate next 4 weeks' full-range options
+        // Tạo danh sách tuần trong năm
         List<String> weekOptions = new ArrayList<>();
-        for (int i = -5; i < 5; i++) {
-            LocalDate s = today.with(DayOfWeek.MONDAY).plusWeeks(i);
+        LocalDate firstMonday = LocalDate.of(today.getYear(), 1, 4).with(DayOfWeek.MONDAY);
+        for (int i = 0; i < 52; i++) {
+            LocalDate s = firstMonday.plusWeeks(i);
             LocalDate e = s.plusDays(6);
             weekOptions.add(fullFmt.format(s) + " - " + fullFmt.format(e));
         }
+        if (!weekOptions.contains(currentWeekRange)) {
+            weekOptions.add(0, currentWeekRange);
+        }
 
-        Map<LocalDate, List<Workout>> scheduleMap = dao.getScheduleMap(customerId);
+        // Lấy dữ liệu lịch theo slotId
+        WorkoutDAO dao = new WorkoutDAO();
+        Map<Integer, List<WorkoutSlotDTO>> slotMap =
+                dao.getSlotSchedule(customerId, startOfWeek, endOfWeek, role);
 
-        req.setAttribute("weekDates", weekDates);
-        req.setAttribute("scheduleMap", scheduleMap);
-        req.setAttribute("currentWeekRange", currentWeekRange);
+        // Gửi dữ liệu sang JSP
+        req.setAttribute("slotMap", slotMap);
         req.setAttribute("weekOptions", weekOptions);
+        req.setAttribute("currentWeekRange", currentWeekRange);
 
         req.getRequestDispatcher("timetable.jsp").forward(req, resp);
     }

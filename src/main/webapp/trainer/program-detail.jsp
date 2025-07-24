@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List, java.util.Map" %>
+<%@ page import="model.Exercise" %>
 <%@ page import="model.Program, model.ProgramWeek, model.ProgramDay, model.ExerciseLibrary, model.Workout" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%
@@ -7,6 +8,7 @@
     List<ProgramWeek> weeks = (List<ProgramWeek>) request.getAttribute("weeks");
     Map<Integer, List<ProgramDay>> daysMap = (Map<Integer, List<ProgramDay>>) request.getAttribute("daysMap");
     Map<Integer, List<Workout>> dayWorkouts = (Map<Integer, List<Workout>>) request.getAttribute("dayWorkouts");
+    Map<Integer, List<Exercise>> workoutExercises =(Map<Integer, List<Exercise>>) request.getAttribute("workoutExercises");
     List<ExerciseLibrary> exerciseList = (List<ExerciseLibrary>) request.getAttribute("exerciseList");
 %>
 <!DOCTYPE html>
@@ -65,8 +67,6 @@
                                         <!-- Title + 3 dots -->
                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                             <span class="fw-bold">🏋️ <%= w.getTitle() %></span>
-
-                                            <!-- Dropdown -->
                                             <div class="dropdown">
                                                 <button class="btn btn-sm btn-light"
                                                         type="button"
@@ -108,7 +108,36 @@
                                         <div class="small text-body text-center">📝 <%= w.getNotes() %></div>
                                         <% } %>
 
-                                        <!-- Optional: Bottom actions on hover -->
+                                        <!-- Exercises Section -->
+                                        <hr class="my-2" />
+                                        <%
+                                            List<Exercise> exercises = workoutExercises.get(w.getWorkoutID());
+                                            if (exercises != null && !exercises.isEmpty()) {
+                                        %>
+                                        <ul class="list-group list-group-flush small">
+                                            <% for (Exercise ex : exercises) { %>
+                                            <li class="list-group-item">
+                                                <div class="fw-semibold">
+                                                    <a href="#" class="text-decoration-none" onclick="event.stopPropagation(); openVideoModal('<%= ex.getVideoURL() %>', '<%= ex.getExerciseName() %>')">
+                                                        📺 <%= ex.getExerciseName() %>
+                                                    </a>
+                                                </div>
+                                                <div class="text-muted">
+                                                    Sets: <%= ex.getSets() %>,
+                                                    Reps: <%= ex.getReps() %>,
+                                                    Rest: <%= ex.getRestTimeSeconds() %>s
+                                                    <% if (ex.getNotes() != null && !ex.getNotes().isBlank()) { %>
+                                                    <br>📝 <%= ex.getNotes() %>
+                                                    <% } %>
+                                                </div>
+                                            </li>
+                                            <% } %>
+                                        </ul>
+                                        <% } else { %>
+                                        <div class="text-muted fst-italic small text-center">No exercises added yet</div>
+                                        <% } %>
+
+                                        <!-- Bottom action buttons -->
                                         <div class="workout-actions text-center mt-3">
                                             <button class="btn btn-sm btn-outline-success me-1"
                                                     title="Add Exercise"
@@ -131,10 +160,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <% 
-                                    }
-                                  } else {
-                                %>
+                                <% } // end for workout %>
+                                <% } else { %>
                                 <div class="text-muted fst-italic">Click to add workout</div>
                                 <% } %>
                             </div>
@@ -280,6 +307,21 @@
                 </form>
             </div>
         </div>
+        <!-- Video Modal -->
+        <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="videoTitle">Exercise Video</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <iframe id="videoFrame" width="100%" height="400" frameborder="0"
+                                allowfullscreen style="border-radius: 10px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
             let selectedDayId = null;
@@ -392,6 +434,22 @@
                     el.addEventListener('click', e => e.stopPropagation());
                 });
             });
+            
+            function openVideoModal(videoUrl, title) {
+        const frame = document.getElementById("videoFrame");
+        const modalTitle = document.getElementById("videoTitle");
+
+        frame.src = videoUrl;
+        modalTitle.textContent = title;
+
+        const modal = new bootstrap.Modal(document.getElementById("videoModal"));
+        modal.show();
+    }
+
+    // Dọn video khi đóng modal
+    document.getElementById("videoModal").addEventListener("hidden.bs.modal", function () {
+        document.getElementById("videoFrame").src = "";
+    });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

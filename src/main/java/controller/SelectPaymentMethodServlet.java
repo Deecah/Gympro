@@ -36,10 +36,10 @@ public class SelectPaymentMethodServlet extends HttpServlet {
                     request.getRequestDispatcher("paypal/create-payment").forward(request, response);
                     return;
                 case "vnpay":
-                    request.getRequestDispatcher("vnpay/create-payment").forward(request, response);
+                    request.getRequestDispatcher("vnpay/payment").forward(request, response);
                     return;
                 case "payos":
-                    request.getRequestDispatcher("payos/create-payment").forward(request, response);
+                    request.getRequestDispatcher("payos/checkout").forward(request, response);
                     return;
                 default:
                     response.sendRedirect("payment-fail.jsp");

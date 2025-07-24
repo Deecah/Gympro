@@ -74,25 +74,25 @@
         }
     });
 
-    // JavaScript cho Nút chuông thông báo
+    // JavaScript cho Nï¿½t chuï¿½ng thï¿½ng bï¿½o
     const notificationBell = document.getElementById('notificationBell');
     const notificationBox = document.getElementById('notificationBox');
     const notificationCount = document.getElementById('notificationCount');
     const notificationList = document.getElementById('notificationList');
 
-    if (notificationBell && notificationBox) { // ??m b?o các ph?n t? t?n t?i tr??c khi thêm listener
+    if (notificationBell && notificationBox) { // ??m b?o cï¿½c ph?n t? t?n t?i tr??c khi thï¿½m listener
         notificationBell.addEventListener('click', function (event) {
-            event.stopPropagation(); // Ng?n ch?n s? ki?n click lan ra ngoài
+            event.stopPropagation(); // Ng?n ch?n s? ki?n click lan ra ngoï¿½i
             if (notificationBox.style.display === 'block') {
                 notificationBox.style.display = 'none';
             } else {
                 notificationBox.style.display = 'block';
-                // ?óng menu avatar n?u nó ?ang m?
+                // ?ï¿½ng menu avatar n?u nï¿½ ?ang m?
                 const avatarMenu = document.getElementById("dropdownMenu");
                 if (avatarMenu) {
                     avatarMenu.style.display = 'none';
                 }
-                // Khi m? h?p thông báo, có th? reset s? l??ng thông báo v? 0
+                // Khi m? h?p thï¿½ng bï¿½o, cï¿½ th? reset s? l??ng thï¿½ng bï¿½o v? 0
                 if (notificationCount) {
                     notificationCount.style.display = 'none';
                     notificationCount.textContent = '0'; // C?p nh?t s? l??ng hi?n th?
@@ -100,30 +100,30 @@
             }
         });
     }
-    // ?óng c? h?p thông báo và menu avatar khi click ra ngoài
+    // ?ï¿½ng c? h?p thï¿½ng bï¿½o vï¿½ menu avatar khi click ra ngoï¿½i
     window.addEventListener("click", function (e) {
         const avatarMenu = document.getElementById("dropdownMenu");
         const avatar = document.querySelector(".header-avatar img");
 
-        // ?óng menu avatar
+        // ?ï¿½ng menu avatar
         if (avatarMenu && !avatarMenu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
             avatarMenu.style.display = "none";
         }
 
-        // ?óng h?p thông báo
+        // ?ï¿½ng h?p thï¿½ng bï¿½o
         if (notificationBox && notificationBell && !notificationBox.contains(e.target) && !notificationBell.contains(e.target)) {
             notificationBox.style.display = 'none';
         }
     });
 
-    // C?p nh?t hi?n th? badge thông báo khi t?i trang
+    // C?p nh?t hi?n th? badge thï¿½ng bï¿½o khi t?i trang
     document.addEventListener('DOMContentLoaded', function () {
         if (notificationCount) {
             const initialCount = parseInt(notificationCount.textContent);
             if (initialCount > 0) {
-                notificationCount.style.display = 'flex'; // Hi?n th? n?u có thông báo
+                notificationCount.style.display = 'flex'; // Hi?n th? n?u cï¿½ thï¿½ng bï¿½o
             } else {
-                notificationCount.style.display = 'none'; // ?n n?u không có
+                notificationCount.style.display = 'none'; // ?n n?u khï¿½ng cï¿½
             }
         }
     });
