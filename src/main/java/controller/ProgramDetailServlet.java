@@ -86,6 +86,11 @@ public class ProgramDetailServlet extends HttpServlet {
             }
 
             List<ExerciseLibrary> exerciseList = exerciseLibraryDAO.getAllExercises();
+            if (exerciseList == null) {
+                exerciseList = new ArrayList<>();
+                System.err.println("Warning: exerciseList is null, creating empty list");
+            }
+            
             List<Package> packageList = packageDAO.getAllPackagesByTrainer(trainerId);
 
             // Load danh sách khách hàng có contract với trainer cho modal gán chương trình

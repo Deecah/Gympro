@@ -57,12 +57,20 @@
     <!-- Breadcrumb Section End -->
 
     <!-- Map Section Begin -->
+   <div class="centered-map-wrapper">
     <div class="map">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d822.0671874415343!2d108.2605117144098!3d15.968652753826596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142116949840599%3A0x365b35580f52e8d5!2sFPT%20University%20Danang!5e0!3m2!1sen!2s!4v1751449225294!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <img src="img/icon/location.png" alt="">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d16571.872938118217!2d108.25342291305496!3d15.968187895124984!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142116949840599%3A0x365b35580f52e8d5!2sFPT%20University%20Danang!5e0!3m2!1sen!2sus!4v1753287524961!5m2!1sen!2sus"
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
     </div>
-    <!-- Map Section End -->
+</div>
+        <!-- Map Section End -->
 
+    
+    
     <!-- Contact Section Begin -->
     <section class="contact-section spad">
         <div class="container">
@@ -77,7 +85,7 @@
                                 </div>
                                 <div class="cw-text">
                                     <h5>Our Location</h5>
-                                    <p>60-49 Road 11378 New York</p>
+                                    <p>FPT City, Ngu Hanh Son, Da Nang, Vietnam</p>
                                 </div>
                             </div>
                             <div class="ca-widget">
@@ -86,7 +94,7 @@
                                 </div>
                                 <div class="cw-text">
                                     <h5>Phone:</h5>
-                                    <p>+65 11.188.888</p>
+                                    <p>02888888888</p>
                                 </div>
                             </div>
                             <div class="ca-widget">
@@ -95,7 +103,7 @@
                                 </div>
                                 <div class="cw-text">
                                     <h5>Mail</h5>
-                                    <p>hellocolorlib@ gmail.com</p>
+                                    <p>pchanhdn@gmail.com</p>
                                 </div>
                             </div>
                         </div>

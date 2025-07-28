@@ -21,16 +21,6 @@
                 </div>
             </div>
         </div>
-        <div class="subscribe-option set-bg" data-setbg="img/footer-signup.jpg">
-            <div class="so-text">
-                <h4>Subscribe To Our Mailing List</h4>
-                <p>Sign up to receive the latest information </p>
-            </div>
-            <form action="#" class="subscribe-form">
-                <input type="text" placeholder="Enter Your Mail">
-                <button type="submit"><i class="fa fa-send"></i></button>
-            </form>
-        </div>
         <div class="copyright-text">
             <ul>
                 <li><a href="#">Term&Use</a></li>
@@ -38,8 +28,7 @@
             </ul>
             <p>
                 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved |
-                This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by 
-                <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                This is made with <i class="fa fa-heart" aria-hidden="true"></i> by D02-RT01
             </p>
             <div class="footer-social">
                 <a href="#"><i class="fa fa-facebook"></i></a>
@@ -52,14 +41,35 @@
 </footer>
 <!-- Footer Section End -->
 <!-- Chat Floating Button -->
-<c:if test="${not empty user}">
-    <a href="ChatServlet?userId=${user.userId}"
-       class="btn btn-primary position-fixed m-4 shadow rounded-circle d-flex align-items-center justify-content-center"
-       style="width: 56px; height: 56px; z-index: 99999; bottom: 20px; right: 20px;"
-       title="Chat">
-        <i class="fa fa-comments" style="font-size: 20px;"></i>
-    </a>
-</c:if>
+<c:choose>
+    <c:when test="${not empty user}">
+        <!-- Nút Chat -->
+        <a href="ChatServlet?userId=${user.userId}"
+           class="btn btn-primary position-fixed shadow rounded-circle d-flex align-items-center justify-content-center"
+           style="width: 56px; height: 56px; z-index: 99999; bottom: 20px; right: 20px;"
+           title="Chat">
+            <i class="fa fa-comments" style="font-size: 20px;"></i>
+        </a>
+
+        <!-- Nút Lên ??u (n?m phía trên nút Chat) -->
+        <button id="backToTop" title="Go to top"
+                class="floating-btn back-to-top-btn"
+                style="bottom: 90px; display: none;">
+            <i class="fa fa-arrow-up" style="font-size: 20px; color: white;"></i>
+        </button>
+    </c:when>
+
+    <c:otherwise>
+        <!-- Ch? có nút Lên ??u n?m ? góc -->
+        <button id="backToTop" title="Go to top"
+                class="floating-btn back-to-top-btn"
+                style="bottom: 20px; right: 20px; display: none;">
+            <i class="fa fa-arrow-up" style="font-size: 20px; color: white;"></i>
+        </button>
+    </c:otherwise>
+</c:choose>
+
+
 <script>
     // Function cho user Ä‘Ã£ Ä‘Äƒng nháº­p
     function toggleMenu() {
@@ -164,5 +174,21 @@
             }
         }
     });
+
+
+    const backToTopBtn = document.getElementById("backToTop");
+
+    window.onscroll = function () {
+        if (window.scrollY > 200) {
+            backToTopBtn.style.display = "flex";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    };
+
+    backToTopBtn.onclick = function () {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
 
 </script>

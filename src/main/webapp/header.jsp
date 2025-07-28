@@ -15,14 +15,15 @@
     pageContext.setAttribute("user", user);
     List<Notification> notifications = new ArrayList<>();
 
-     if (user != null) {
+    if (user != null) {
         NotificationDAO notiDAO = new NotificationDAO();
         notifications = notiDAO.getNotificationsByUserId(user.getUserId());
         if (notifications == null) {
-            notifications = new ArrayList<>(); 
-    }
+            notifications = new ArrayList<>();
+        }
     }
 %>
+
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
         
         <script>
@@ -35,6 +36,10 @@
         </script>
         <script src="${pageContext.request.contextPath}/js/notification.js"></script>
         
+
+<!-- Font Awesome 5 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 <!-- Header Section Begin -->
 <header class="header-section">
     <div class="container d-flex align-items-center justify-content-between flex-wrap py-2">
@@ -48,15 +53,13 @@
             <nav class="mainmenu mobile-menu">
                 <ul style="display: inline-flex; gap: 20px;">
                     <li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
-                    <li><a href="${pageContext.request.contextPath}/about-us.jsp">About</a></li>
-                    <li><a href="${pageContext.request.contextPath}/classes.jsp">Classes</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ExpertTrainerServlet">Trainers</a></li>
+                    <li><a href="${pageContext.request.contextPath}/BlogServlet">Blog</a></li>
                     <li><a href="${pageContext.request.contextPath}/CustomerPackageServlet">Package</a></li>
-                    <li><a href="${pageContext.request.contextPath}/gallery.jsp">Gallery</a></li>
                     <li><a href="${pageContext.request.contextPath}/contact.jsp">Contacts</a></li>
                 </ul>
             </nav>
         </div>
-        
 
         <div class="header-controls">
             <% if (user != null) {%>
@@ -72,7 +75,7 @@
                 </div>
                 <ul class="notification-list" id="notificationList">
                     <% if (notifications.isEmpty()) { %>
-                    <li class="no-notifications">No Notification.</li>
+                    <li class="no-notifications">No new notifications!</li>
                         <% } else { %>
                         <% for (Notification noti : notifications) {%>
                     <li class="notification-item">
@@ -92,7 +95,6 @@
                      onclick="toggleMenu()" 
                      class="avatar-img" 
                      alt="Avatar">
-
                 <div id="dropdownMenu" class="avatar-dropdown">
                     <a href="${pageContext.request.contextPath}/profile.jsp"><i class="fa fa-user"></i> Profile</a>
                     <a href="packagesPurchased"><i class="fa fa-cube"></i> Packages Purchased</a>

@@ -283,7 +283,7 @@
                 if (event.target === notesModal) {
                     notesModal.style.display = 'none';
                 }
-            }
+            };
         </script>
     </body>
 </html>

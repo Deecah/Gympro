@@ -5,10 +5,18 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
 
 public class ContractDAO {
 
     public void createContract(int trainerId, int customerId, int packageId, LocalDate startDate, LocalDate endDate) {
+        // First validate that customer exists
+        if (!customerExists(customerId)) {
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, 
+                "Customer with ID " + customerId + " does not exist");
+            return;
+        }
+        
         String sql = "INSERT INTO Contracts (TrainerID, CustomerID, PackageID, StartDate, EndDate, Status, ContractType) " +
                      "VALUES (?, ?, ?, ?, ?, 'active', 'package')";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -24,7 +32,8 @@ public class ContractDAO {
             ps.setDate(5, Date.valueOf(endDate));
             ps.executeUpdate();
         } catch (Exception e) {
-            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, 
+                "Error creating contract: " + e.getMessage(), e);
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -33,6 +42,23 @@ public class ContractDAO {
                 Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    private boolean customerExists(int customerId) {
+        String sql = "SELECT COUNT(*) FROM Customer WHERE Id = ?";
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        try (Connection con = db.openConnection(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, 
+                "Error checking customer existence: " + e.getMessage(), e);
+        }
+        return false;
     }
 
     public boolean isPackageActiveForCustomer(int customerId, int packageId) {
@@ -54,8 +80,8 @@ public class ContractDAO {
     /**
      * Lấy danh sách khách hàng có contract với trainer
      */
-    public java.util.ArrayList<model.User> getCustomersByTrainer(int trainerId) {
-        java.util.ArrayList<model.User> customerList = new java.util.ArrayList<>();
+    public ArrayList<model.User> getCustomersByTrainer(int trainerId) {
+        ArrayList<model.User> customerList = new ArrayList<>();
         String sql = "SELECT DISTINCT u.Id, u.Name, u.Gender, u.Email, u.Phone, u.Address, u.AvatarUrl, u.Role, u.Status " +
                      "FROM Users u " +
                      "INNER JOIN Contracts c ON u.Id = c.CustomerID " +

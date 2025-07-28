@@ -2,7 +2,6 @@ package controller;
 
 import dao.NotificationDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,11 +38,25 @@ public class NotificationServlet extends HttpServlet {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(NotificationServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }
-    public void sendNotification(String msg, HttpServletResponse response) throws IOException{
+    public void sendPopupNotification(String msg) throws IOException{
         websocket.NotificationEndPoint.broadcast(msg);
-        response.getWriter().write("Đã gửi thông báo.");
+        System.out.println("sent popup");
     }
+    
+    public void sendNotification(int userId ,String title, String content, String msg, HttpServletResponse response ) throws ClassNotFoundException, ClassNotFoundException, IOException{
+        NotificationDAO notiDAO = new NotificationDAO();
+        if(notiDAO.addNotification(userId, title, content)){
+            sendPopupNotification(msg);
+        }else{
+            sendPopupNotification("Something wrong happened. Try again later!!!");
+        }
+    }
+    
+    public void sendNotificationAllUser(String title, String content) throws ClassNotFoundException{
+    NotificationDAO notiDAO = new NotificationDAO();
+    notiDAO.addNotificationToAllUsers(title, content);
+    
+}
 }
