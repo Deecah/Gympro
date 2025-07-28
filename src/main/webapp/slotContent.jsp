@@ -66,7 +66,7 @@
                     for (Exercise ex : exercises) {
             %>
             <div class="exercise-item">
-                <strong><%= ex.getName() %></strong><br>
+                <strong><%= ex.getExerciseName() %></strong><br>
                 <span>Số sets: <%= ex.getSets() %> | Reps: <%= ex.getReps() %> | Nghỉ: <%= ex.getRestTimeSeconds() %>s</span><br>
                 <i>Ghi chú: <%= ex.getNotes() != null ? ex.getNotes() : "Không có" %></i>
             </div>
