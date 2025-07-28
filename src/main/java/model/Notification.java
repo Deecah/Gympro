@@ -21,6 +21,8 @@ public class Notification {
         this.content = content;
         this.createdTime = createdTime;
     }
+    
+    
 
     public int getNotificationID() {
         return notificationID;

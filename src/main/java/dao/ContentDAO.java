@@ -25,7 +25,9 @@ public class ContentDAO {
     public static List<Content> getAll() {
         List<Content> list = new ArrayList<>();
         String sql = "SELECT * FROM Content ORDER BY id DESC";
-        try (Connection conn = ConnectDatabase.getInstance().openConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = ConnectDatabase.getInstance().openConnection(); 
+             Statement stmt = conn.createStatement(); 
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 Content c = new Content(
@@ -36,7 +38,9 @@ public class ContentDAO {
                 list.add(c);
             }
         } catch (Exception e) {
+            System.err.println("Error in ContentDAO.getAll(): " + e.getMessage());
             e.printStackTrace();
+            // Return empty list instead of null to prevent further errors
         }
         return list;
     }

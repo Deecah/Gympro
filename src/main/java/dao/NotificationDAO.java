@@ -1,17 +1,19 @@
 package dao;
 
 import connectDB.ConnectDatabase;
+import controller.NotificationServlet;
 import model.Notification;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.User;
+import org.apache.http.HttpRequest;
 
 public class NotificationDAO {
 
@@ -62,11 +64,11 @@ public class NotificationDAO {
         return notifications;
     }
 
-    public boolean addNotification(Notification notification) throws ClassNotFoundException {
-        // SQL INSERT bao gồm UserID, Title, Content và CreatedTime
-        // Lưu ý: Nếu cột CreatedTime trong DB có DEFAULT (getdate()), bạn có thể bỏ qua nó trong câu SQL và setTimestamp
-        String sql = "INSERT INTO [dbo].[Notification] (UserID, NotificationTitle, NotificationContent, CreatedTime) " +
-                     "VALUES (?, ?, ?, ?)";
+    public boolean addNotification(int userId, String title, String content) throws ClassNotFoundException {
+        // SQL INSERT chỉ bao gồm UserID, Title, Content
+        // CreatedTime sẽ được set tự động bởi DEFAULT GETDATE() trong database
+        String sql = "INSERT INTO [dbo].[Notification] (UserID, NotificationTitle, NotificationContent) " +
+                     "VALUES (?, ?, ?)";
 
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
@@ -77,17 +79,16 @@ public class NotificationDAO {
             ps = con.prepareStatement(sql); // Chuẩn bị câu lệnh SQL
 
             // Đặt giá trị cho các tham số
-            ps.setInt(1, notification.getUserID());
-            ps.setString(2, notification.getTitle());
-            ps.setString(3, notification.getContent());
+            ps.setInt(1, userId);
+            ps.setString(2, title);
+            ps.setString(3, content);
             
-            // Chuyển đổi LocalDateTime sang Timestamp để lưu vào DB
-            ps.setTimestamp(4, Timestamp.valueOf(notification.getCreatedTime()));
+            // Không cần set CreatedTime vì database sẽ tự động set GETDATE()
 
-            int rowsAffected = ps.executeUpdate(); // Thực thi câu lệnh UPDATE/INSERT/DELETE
-            return rowsAffected > 0; // Trả về true nếu có hàng nào bị ảnh hưởng
+            int rowsAffected = ps.executeUpdate(); // Thực thi câu lệnh INSERT
+            return rowsAffected > 0; // Trả về true nếu có hàng nào được thêm
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Lỗi khi thêm thông báo: " + notification.getTitle(), e);
+            LOGGER.log(Level.SEVERE, "Lỗi khi thêm thông báo: " + title, e);
             return false;
         } finally {
             // Đảm bảo đóng tất cả tài nguyên trong khối finally
@@ -99,37 +100,26 @@ public class NotificationDAO {
             }
         }
     }
+    
+ 
+    public void addNotificationToAllUsers(String title, String content) throws ClassNotFoundException {
+        UserDAO userDAO = new UserDAO();
+        ArrayList<User> allUsers = userDAO.getAllUsers();  
+        for (User user : allUsers) {
+            try {
+                boolean success = addNotification(user.getUserId(), title, content);
+                if (success) {
+                    NotificationServlet sendPopUp = new NotificationServlet();
+                    sendPopUp.sendPopupNotification("🔔 New Notification");
+                    LOGGER.info("Đã gửi thông báo thành công cho user ID: " + user.getUserId());
+                } else {
+                    LOGGER.warning("Không thể gửi thông báo cho user ID: " + user.getUserId());
+                }
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Lỗi khi gửi thông báo cho user ID: " + user.getUserId(), e);
+            }
+        }
+        LOGGER.info("Hoàn thành gửi thông báo. Tổng: " + allUsers.size() + " users, Thành công: ");
+    }
+ 
 }
-//
-//    // Phương thức main để kiểm tra DAO (Tùy chọn)
-//    public static void main(String[] args) throws ClassNotFoundException {
-//        NotificationDAO notificationDAO = new NotificationDAO();
-//
-//        // Thử thêm một thông báo mới (ví dụ với UserID = 1)
-//        Notification newNoti = new Notification();
-//        newNoti.setUserID(1); // Thay bằng ID người dùng thực tế
-//        newNoti.setTitle("Thông báo mới từ hệ thống");
-//        newNoti.setContent("Bạn có một sự kiện sắp tới vào 10h sáng ngày mai.");
-//        newNoti.setCreatedTime(LocalDateTime.now());
-//
-//        if (notificationDAO.addNotification(newNoti)) {
-//            System.out.println("Thêm thông báo thành công.");
-//        } else {
-//            System.out.println("Thêm thông báo thất bại.");
-//        }
-//
-//        // Thử lấy và hiển thị thông báo cho UserID = 1
-//        System.out.println("\n--- Danh sách thông báo của User ID 1 ---");
-//        List<Notification> userNotifications = notificationDAO.getNotificationsByUserId(1);
-//        if (userNotifications.isEmpty()) {
-//            System.out.println("Không có thông báo nào cho người dùng này.");
-//        } else {
-//            for (Notification noti : userNotifications) {
-//                System.out.println("ID: " + noti.getNotificationID() +
-//                                   ", Tiêu đề: " + noti.getTitle() +
-//                                   ", Nội dung: " + noti.getContent() +
-//                                   ", Thời gian: " + noti.getTimeAgo());
-//            }
-//        }
-//    }
-//}

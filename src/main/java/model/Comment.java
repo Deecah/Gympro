@@ -71,6 +71,6 @@ public class Comment {
         this.parentId = parentId;
     }
     
-    
+
     
 }

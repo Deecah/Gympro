@@ -48,8 +48,10 @@ public class ExerciseLibraryDAO {
                 ex.setEquipment(rs.getString("Equipment"));
                 list.add(ex);
             }
+            System.out.println("Successfully retrieved " + list.size() + " exercises from database");
 
         } catch (Exception e) {
+            System.err.println("Error in getAllExercises: " + e.getMessage());
             e.printStackTrace();
         }
 

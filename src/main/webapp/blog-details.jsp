@@ -39,7 +39,7 @@
         <jsp:include page="header.jsp" />
 
         <!-- Blog Details Hero Section Begin -->
-        <section class="blog-details-hero set-bg" data-setbg="https://tse1.mm.bing.net/th/id/OIP.NZAQ_AZjXcUI4nFRQoE3DwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3">
+        <section class="blog-details-hero set-bg" data-setbg="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
