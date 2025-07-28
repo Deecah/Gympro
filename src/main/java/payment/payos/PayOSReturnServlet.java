@@ -13,6 +13,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import model.Transaction;
+import Utils.NotificationUtil;
 
 @WebServlet("/payos/return")
 public class PayOSReturnServlet extends HttpServlet {
@@ -72,6 +73,16 @@ public class PayOSReturnServlet extends HttpServlet {
                     int chatId = chatDAO.createChatIfNotExists(customerId, trainerId);
                     System.out.println("Chat created with ID: " + chatId);
                 }
+                
+                // Gửi notification thành công cho customer
+                NotificationUtil.sendSuccessNotification(customerId, 
+                    "Payment Successful!", 
+                    "Your package purchase has been completed successfully via PayOS!");
+                
+                // Gửi notification cho trainer về khách hàng mới
+                NotificationUtil.sendInfoNotification(trainerId, 
+                    "New Customer Purchase", 
+                    "A new customer has purchased your package!");
 
                 // Dọn session
                 session.removeAttribute("selectedTrainerId");

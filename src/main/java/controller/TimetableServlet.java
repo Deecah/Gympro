@@ -1,6 +1,7 @@
 package controller;
 
 import dao.WorkoutDAO;
+import dao.ProgressDAO;
 import model.WorkoutSlotDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -67,10 +68,27 @@ public class TimetableServlet extends HttpServlet {
         Map<Integer, List<WorkoutSlotDTO>> slotMap =
                 dao.getSlotSchedule(customerId, startOfWeek, endOfWeek, role);
 
+        // Bổ sung trạng thái completed cho từng slot
+        ProgressDAO progressDAO = new ProgressDAO();
+        for (List<WorkoutSlotDTO> slots : slotMap.values()) {
+            for (WorkoutSlotDTO slot : slots) {
+                if (slot.getWorkoutId() > 0) {
+                    boolean completed = progressDAO.isWorkoutCompleted(customerId, slot.getWorkoutId());
+                    slot.setCompleted(completed);
+                }
+            }
+        }
+
         // Gửi dữ liệu sang JSP
         req.setAttribute("slotMap", slotMap);
         req.setAttribute("weekOptions", weekOptions);
         req.setAttribute("currentWeekRange", currentWeekRange);
+        
+        // Xử lý thông báo từ MarkCompletedServlet
+        String msg = req.getParameter("msg");
+        if (msg != null) {
+            req.setAttribute("message", msg);
+        }
 
         req.getRequestDispatcher("timetable.jsp").forward(req, resp);
     }

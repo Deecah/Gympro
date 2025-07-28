@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 
+@WebServlet(name = "AddCertificationServlet", urlPatterns = {"/AddCertificationServlet"})
 public class AddCertificationServlet extends HttpServlet {
 
     // Format tương ứng với input type="datetime-local"

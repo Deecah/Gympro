@@ -14,6 +14,16 @@
     <title>Edit Certification</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<%= request.getContextPath() %>/stylecss/profile-trainer.css" />
+    
+    <script>
+        // Set current user ID for notification.js
+        <% if (session.getAttribute("user") != null) { %>
+        var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+        <% } else { %>
+        var currentUserId = null;
+        <% } %>
+    </script>
+    <script src="../js/notification.js"></script>
 </head>
 <body>
 <div class="profile-card mt-5">

@@ -22,21 +22,27 @@ public class ProgramDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("=== ProgramDetailServlet START ===");
         try {
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("user") == null) {
+                System.out.println("No session or user found");
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
 
             User user = (User) session.getAttribute("user");
             int trainerId = user.getUserId();
+            System.out.println("User ID: " + trainerId + ", Role: " + user.getRole());
 
             String programIdStr = request.getParameter("programId");
+            System.out.println("Program ID from parameter: " + programIdStr);
             int programId;
             try {
                 programId = Integer.parseInt(programIdStr);
+                System.out.println("Parsed Program ID: " + programId);
             } catch (NumberFormatException e) {
+                System.out.println("Invalid programId: " + programIdStr);
                 response.sendError(400, "Invalid programId");
                 return;
             }
@@ -50,11 +56,14 @@ public class ProgramDetailServlet extends HttpServlet {
             ExerciseLibraryDAO exerciseLibraryDAO = new ExerciseLibraryDAO();
             PackageDAO packageDAO = new PackageDAO();
 
+            System.out.println("Calling programDAO.getProgramById(" + programId + ", " + trainerId + ")");
             Program program = programDAO.getProgramById(programId, trainerId);
             if (program == null) {
+                System.out.println("Program not found!");
                 response.sendError(404, "Program not found");
                 return;
             }
+            System.out.println("Program found: " + program.getName());
 
             List<ProgramWeek> weeks = weekDAO.getWeeksByProgramId(programId);
             Map<Integer, List<ProgramDay>> daysMap = new HashMap<>();
@@ -79,6 +88,22 @@ public class ProgramDetailServlet extends HttpServlet {
             List<ExerciseLibrary> exerciseList = exerciseLibraryDAO.getAllExercises();
             List<Package> packageList = packageDAO.getAllPackagesByTrainer(trainerId);
 
+            // Load danh sách khách hàng có contract với trainer cho modal gán chương trình
+            dao.ContractDAO contractDAO = new dao.ContractDAO();
+            
+            java.util.ArrayList<User> customers = contractDAO.getCustomersByTrainer(trainerId);
+            
+            // Debug: In ra thông tin để kiểm tra
+            System.out.println("=== DEBUG ProgramDetailServlet ===");
+            System.out.println("Trainer ID: " + trainerId);
+            System.out.println("Number of customers found: " + (customers != null ? customers.size() : 0));
+            if (customers != null && !customers.isEmpty()) {
+                for (User customer : customers) {
+                    System.out.println("Customer: " + customer.getUserName() + " (ID: " + customer.getUserId() + ")");
+                }
+            }
+            System.out.println("=== END DEBUG ===");
+
             // Đưa dữ liệu sang JSP
             request.setAttribute("program", program);
             request.setAttribute("weeks", weeks);
@@ -87,14 +112,17 @@ public class ProgramDetailServlet extends HttpServlet {
             request.setAttribute("exerciseList", exerciseList);
             request.setAttribute("packageList", packageList);
             request.setAttribute("workoutExercises", workoutExercises);
+            request.setAttribute("customers", customers);
 
             request.getRequestDispatcher("trainer/program-detail.jsp").forward(request, response);
 
         } catch (Exception e) {
+            System.out.println("ERROR in ProgramDetailServlet: " + e.getMessage());
             e.printStackTrace();
             response.setContentType("text/plain");
             response.getWriter().write("Lỗi trong ProgramDetailServlet: " + e.getMessage());
         }
+        System.out.println("=== ProgramDetailServlet END ===");
     }
 
     @Override

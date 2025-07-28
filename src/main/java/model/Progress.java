@@ -7,6 +7,8 @@ public class Progress {
     private int progressID;
     private int userId;
     private int workoutID;
+    private boolean completed;
+    private LocalDateTime completedAt;
     private LocalDateTime recordedAt;
     private double weight;
     private double bodyFatPercent;
@@ -16,10 +18,12 @@ public class Progress {
     public Progress() {
     }
 
-    public Progress(int progressID, int customerID, int trainerID, int workoutID, LocalDateTime recordedAt, double weight, double bodyFatPercent, double muscleMass, String notes) {
+    public Progress(int progressID, int userId, int workoutID, boolean completed, LocalDateTime completedAt, LocalDateTime recordedAt, double weight, double bodyFatPercent, double muscleMass, String notes) {
         this.progressID = progressID;
         this.userId = userId;
         this.workoutID = workoutID;
+        this.completed = completed;
+        this.completedAt = completedAt;
         this.recordedAt = recordedAt;
         this.weight = weight;
         this.bodyFatPercent = bodyFatPercent;
@@ -89,5 +93,21 @@ public class Progress {
 
     public void setWorkoutID(int workoutID) {
         this.workoutID = workoutID;
+    }
+    
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
     }
 }

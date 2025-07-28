@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
+import Utils.NotificationUtil;
 
 @WebServlet(name="ChangePasswordServlet", urlPatterns={"/ChangePasswordServlet"})
 public class ChangePasswordServlet extends HttpServlet {
@@ -79,7 +80,20 @@ public class ChangePasswordServlet extends HttpServlet {
         
         byte[] newPasswordHashed = HashUtil.hashPassword(password1);
         UserDAO userDAO = new UserDAO();
-        userDAO.updatePassword(u.getUserId(), newPasswordHashed);
-        request.setAttribute("mess", "Change Password Successful!!!");
+        boolean success = userDAO.updatePassword(u.getUserId(), newPasswordHashed);
+        
+        if (success) {
+            // Gửi notification thành công
+            NotificationUtil.sendSuccessNotification(u.getUserId(), 
+                "Password Changed Successfully", 
+                "Your password has been updated successfully. Please keep it secure!");
+            request.setAttribute("mess", "Change Password Successful!!!");
+        } else {
+            // Gửi notification lỗi
+            NotificationUtil.sendErrorNotification(u.getUserId(), 
+                "Password Change Failed", 
+                "Failed to update your password. Please try again.");
+            request.setAttribute("mess", "Password change failed. Please try again.");
+        }
     }
 }

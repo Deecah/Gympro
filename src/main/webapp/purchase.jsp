@@ -22,6 +22,17 @@
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/chat.css" type="text/css">
+        
+        <script>
+            // Set current user ID for notification.js
+            <% if (session.getAttribute("user") != null) { %>
+            var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+            <% } else { %>
+            var currentUserId = null;
+            <% } %>
+        </script>
+        <script src="js/notification.js"></script>
+        
         <style>
     body {
          background: linear-gradient(to right, #e0f7fa, #80deea);

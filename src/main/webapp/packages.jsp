@@ -144,6 +144,36 @@
                 </div>
             </div>
         </section>
+
+        <%-- Đảm bảo các biến phân trang luôn có giá trị mặc định --%>
+        <c:set var="currentPage" value="${currentPage != null ? currentPage : 1}" />
+        <c:set var="totalPages" value="${totalPages != null ? totalPages : 1}" />
+
+        <!-- Pagination Begin -->
+        <c:if test="${totalPages > 1}">
+            <div class="d-flex justify-content-center mt-4">
+                <nav>
+                    <ul class="pagination">
+                        <c:if test="${currentPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="CustomerPackageServlet?page=${currentPage - 1}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                <a class="page-link" href="CustomerPackageServlet?page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="CustomerPackageServlet?page=${currentPage + 1}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </div>
+        </c:if>
+        <!-- Pagination End -->
         
         <!-- Package Section End -->
 

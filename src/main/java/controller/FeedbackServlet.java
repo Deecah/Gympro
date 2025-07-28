@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import Utils.NotificationUtil;
 
 @WebServlet("/feedback")
 public class FeedbackServlet extends HttpServlet {
@@ -21,8 +22,16 @@ public class FeedbackServlet extends HttpServlet {
         boolean success = dao.insertFeedback(userId, type, referenceId, point, content);
 
         if (success) {
+            // Gửi notification thành công
+            NotificationUtil.sendSuccessNotification(userId, 
+                "Feedback Submitted Successfully", 
+                "Thank you for your feedback! Your review has been submitted successfully.");
             response.sendRedirect("PackagesPurchasedServlet?feedback=success");
         } else {
+            // Gửi notification lỗi
+            NotificationUtil.sendErrorNotification(userId, 
+                "Feedback Submission Failed", 
+                "Failed to submit your feedback. Please try again.");
             response.sendRedirect("packagesPurchased.jsp?feedback=fail");
         }
     }

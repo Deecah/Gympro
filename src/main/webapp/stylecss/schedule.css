@@ -1,6 +1,28 @@
 /* stylecss/schedule.css - UPDATED WITH INNER SHADOW BORDER AROUND TABLE, CENTERED & BALANCED */
 
 /* RESET & BASE */
+td {
+  min-height: 90px;
+  vertical-align: top;
+  padding: 6px;
+}
+.workout-box {
+  background: #e9f9e9;
+  border-left: 4px solid #28a745;
+  padding: 4px 8px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+}
+.workout-box strong {
+  display: block;
+  font-weight: bold;
+}
+.program-name {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -218,4 +240,168 @@ html, body {
 
 .context-menu li:hover {
   background-color: #f0f0f0;
+}
+
+/* WORKOUT MODAL STYLES */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.exercise-item {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.exercise-name {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.exercise-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.exercise-detail {
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.exercise-detail strong {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.video-container {
+  margin-top: 15px;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 5px;
+}
+
+.workout-info {
+  background: #e3f2fd;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.workout-info h2 {
+  margin-top: 0;
+  color: #1976d2;
+}
+
+.workout-info p {
+  margin: 5px 0;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-large {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 200px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Real-time Notification Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
