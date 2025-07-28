@@ -9,6 +9,7 @@ import connectDB.ConnectDatabase;
 import dao.*;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.sql.*;
 import model.Customer;
@@ -16,7 +17,9 @@ import model.GoogleAccount;
 import model.Trainer;
 import model.User;
 import controller.GoogleLogin;
+import Utils.NotificationUtil;
 
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
 
     @Override
@@ -83,6 +86,10 @@ public class LoginServlet extends HttpServlet {
                             session.setAttribute("customer", customer);
                         }
                         session.setAttribute("user", user);
+                        // Gửi notification chào mừng
+                        NotificationUtil.sendInfoNotification(userId, 
+                            "Welcome Back!", 
+                            "You have successfully logged in to your account.");
                         response.sendRedirect("index.jsp");
                         break;
                     case "Trainer":
@@ -92,6 +99,10 @@ public class LoginServlet extends HttpServlet {
                             session.setAttribute("trainer", trainer);
                         }
                         session.setAttribute("user", user);
+                        // Gửi notification chào mừng trainer
+                        NotificationUtil.sendInfoNotification(userId, 
+                            "Welcome Back, Trainer!", 
+                            "You have successfully logged in to your trainer dashboard.");
                         response.sendRedirect("trainer/trainer.jsp");
                         break;
                     case "Admin":

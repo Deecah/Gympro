@@ -1,4 +1,3 @@
-
 package model;
 
 import java.sql.Timestamp;
@@ -71,6 +70,6 @@ public class Comment {
         this.parentId = parentId;
     }
     
-    
+
     
 }

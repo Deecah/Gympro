@@ -1,51 +1,43 @@
-body {
-            background-color: #f2fcfa;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .section-wrapper {
-            max-width: 1300px;
-            margin: 60px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-        }
-        .timetable {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        th {
-            background-color: #e3f2fd;
-            color: #0277bd;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid #cfd8dc;
-            padding: 14px;
-            height: 100px;
-        }
-        .time-col {
-            background-color: #f0f4c3;
-            color: #33691e;
-            font-weight: bold;
-            width: 130px;
-        }
-        td {
-            border: 1px solid #e0e0e0;
-            height: 100px;
-            width: 130px;
-            vertical-align: top;
-            text-align: center;
-            padding: 4px;
-        }
-        .workout {
-            background-color: #fff8e1;
-            border-left: 4px solid #ff9800;
-            padding: 8px;
-            border-radius: 5px;
-            font-size: 13px;
-            color: #5d4037;
-            text-align: left;
-        }
+.timetable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.timetable th,
+.timetable td {
+    border: 1px solid #ccc;
+    text-align: left;
+    padding: 10px;
+    min-height: 80px;
+    vertical-align: top;
+}
+
+.timetable .time-col {
+    background-color: #f4f4c4;
+    font-weight: bold;
+    text-align: center;
+    width: 120px;
+}
+
+.timetable th {
+    background-color: #e8f6ff;
+    text-align: center;
+}
+
+.workout {
+    background-color: #d7f0da;
+    border-left: 4px solid #28a745;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.workout strong {
+    display: block;
+    font-size: 15px;
+}
+
+.workout span.badge {
+    margin-top: 4px;
+}

@@ -9,6 +9,8 @@ import jakarta.servlet.http.*;
 import java.io.File;
 import java.nio.file.Paths;
 import model.User;
+import Utils.CloudinaryUploader;
+import Utils.NotificationUtil;
 
 @WebServlet(name = "ChangeAvatarServlet", urlPatterns = {"/ChangeAvatarServlet"})
 @MultipartConfig(
@@ -34,22 +36,39 @@ public class ChangeAvatarServlet extends HttpServlet {
         Part filePart = request.getPart("avatar");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
-        String appPath = request.getServletContext().getRealPath("");
-        String uploadPath = appPath + File.separator + UPLOAD_DIR;
-
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
+        String avatarUrl = null;
+        try {
+            String folder = "avatars/user_" + user.getUserId();
+            avatarUrl = CloudinaryUploader.upload(filePart.getInputStream(), filePart.getContentType(), folder);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi upload ảnh lên Cloudinary.");
+            String role = user.getRole();
+            String redirectUrl;
+            switch (role.toLowerCase()) {
+                case "trainer":
+                    redirectUrl = "trainer/profile-trainer.jsp";
+                    break;
+                case "customer":
+                    redirectUrl = "profile.jsp";
+                    break;
+                default:
+                    redirectUrl = "home.jsp";
+                    break;
+            }
+            response.sendRedirect(redirectUrl);
+            return;
         }
-
-        String filePath = uploadPath + File.separator + fileName;
-        filePart.write(filePath);
-
-        String avatarUrl = UPLOAD_DIR + "/" + fileName;
 
         UserDAO userDAO = new UserDAO();
         user.setAvatarUrl(avatarUrl);
-        userDAO.updateAvatar(user.getUserId(), avatarUrl);
+        boolean success = userDAO.updateAvatar(user.getUserId(), avatarUrl);
+        
+        if (success) {
+            NotificationUtil.sendSuccessNotification(user.getUserId(), 
+                "Avatar Updated Successfully", 
+                "Your profile picture has been updated successfully!");
+        }
 
         session.setAttribute("user", user);
         String role = user.getRole(); 

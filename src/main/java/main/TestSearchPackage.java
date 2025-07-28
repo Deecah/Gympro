@@ -8,23 +8,18 @@ package main;
  *
  * @author Admin
  */
+import controller.NotificationServlet;
 import dao.PackageDAO;
+import java.io.IOException;
 import model.Package;
 
 import java.util.List;
 
 public class TestSearchPackage {
 
-    public static void main(String[] args) {
-        String keyword = "Basic"; // ← Bạn có thể thay đổi từ khóa test tại đây
-
-        PackageDAO dao = new PackageDAO();
-        List<Package> packages = dao.searchByKeyword(keyword);
-
-        System.out.println("Keyword: " + keyword);
-        System.out.println("Found packages: " + packages.size());
-        for (Package p : packages) {
-            System.out.println(p.getPackageID() + " - " + p.getName());
-        }
+    public static void main(String[] args) throws IOException {
+String hello = "hello";
+NotificationServlet noti = new NotificationServlet();
+noti.sendPopupNotification(hello);
     }
 }

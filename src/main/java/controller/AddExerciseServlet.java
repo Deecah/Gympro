@@ -13,7 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-@WebServlet(name="AddExerciseServlet", urlPatterns={"/AddExerciseServlet"})
+@WebServlet(name="AddExerciseServlet", urlPatterns={"/add-exercise"})
 public class AddExerciseServlet extends HttpServlet {
 
       @Override
@@ -27,7 +27,6 @@ public class AddExerciseServlet extends HttpServlet {
             int restTime = Integer.parseInt(request.getParameter("restTime"));
             String notes = request.getParameter("notes");
 
-            // Thêm bài tập vào workout
             ExerciseDAO dao = new ExerciseDAO();
             dao.addExerciseToWorkout(workoutId, exerciseId, sets, reps, restTime, notes);
 

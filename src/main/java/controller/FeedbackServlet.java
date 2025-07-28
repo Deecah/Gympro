@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import Utils.NotificationUtil;
 
 @WebServlet("/feedback")
 public class FeedbackServlet extends HttpServlet {
@@ -25,6 +26,10 @@ public class FeedbackServlet extends HttpServlet {
             session.setAttribute("feedbackSuccess", true);
             response.sendRedirect("packagesPurchased");
         } else {
+            // Gửi notification lỗi
+            NotificationUtil.sendErrorNotification(userId, 
+                "Feedback Submission Failed", 
+                "Failed to submit your feedback. Please try again.");
             response.sendRedirect("packagesPurchased.jsp?feedback=fail");
         }
     }

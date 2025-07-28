@@ -4,6 +4,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import Utils.NotificationUtil;
+import model.User;
 
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/logout"})
 public class LogoutServlet extends HttpServlet {
@@ -13,6 +15,13 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false); 
         if (session != null) {
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                // Gửi notification logout
+                NotificationUtil.sendInfoNotification(user.getUserId(), 
+                    "Logged Out Successfully", 
+                    "You have been logged out successfully. Thank you for using GymPro!");
+            }
             session.invalidate();
         }
 

@@ -26,6 +26,11 @@ public class ExchangeRateUtil {
 
             JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
             JsonObject rates = jsonObject.getAsJsonObject("rates");
+            
+            if (rates == null) {
+                System.err.println("Rates object is null in API response");
+                return DEFAULT_EXCHANGE_RATE;
+            }
 
             double usdRate = rates.get("USD").getAsDouble();
 
