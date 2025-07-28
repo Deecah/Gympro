@@ -50,7 +50,11 @@ public class PackagesPurchasedServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        Boolean feedbackSuccess = (Boolean) request.getSession().getAttribute("feedbackSuccess");
+        if (feedbackSuccess != null && feedbackSuccess) {
+            request.setAttribute("feedbackSuccess", true);
+            request.getSession().removeAttribute("feedbackSuccess"); // prevent showing again on refresh
+        }
         request.setAttribute("purchasedList", purchasedList);
         request.getRequestDispatcher("packagesPurchased.jsp").forward(request, response);
     }

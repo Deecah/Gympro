@@ -45,7 +45,7 @@
 
             <form action="<%= request.getContextPath() %>/EditExerciseServlet" method="post" enctype="multipart/form-data">
                 <!-- Hidden ID -->
-                <input type="hidden" name="exerciseId" value="<%= exercise.getExerciseID() %>" />
+                <input type="hidden" name="exerciseID" value="<%= exercise.getExerciseID() %>" />
 
                 <div class="mb-3">
                     <label>Exercise Name</label>
@@ -57,13 +57,24 @@
                     <textarea name="description" class="form-control" rows="3"><%= exercise.getDescription() %></textarea>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Video URL</label><br/>
-                    <% if (exercise.getVideoURL() != null && !exercise.getVideoURL().isEmpty()) { %>
-                        <div class="mb-2">Current video: <strong><%= exercise.getVideoURL() %></strong></div>
-                    <% } %>
-                    <input type="file" name="videoFile" accept="video/*" class="form-control"/>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload New Video</label><br/>
+
+                        <% if (exercise.getVideoURL() != null && !exercise.getVideoURL().isEmpty()) { %>
+                        <div class="mb-2">Current video:</div>
+                        <video width="480" height="300" controls>
+                            <source src="<%= exercise.getVideoURL() %>" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <% } %>
+
+                        <input type="file" id="editVideoUpload" name="videoFile" accept="video/*" class="form-control mt-2" onchange="previewEditVideo(event)"/>
+
+                        <!-- New Preview Area -->
+                        <video id="editVideoPreview" width="480" height="300" controls style="margin-top: 15px; display: none;">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
 
                 <div class="mb-3">
                     <label>Muscle Group</label>
@@ -80,5 +91,20 @@
             </form>
         </div>
     </div>
+            <script>
+                function previewEditVideo(event) {
+                    const file = event.target.files[0];
+                    const video = document.getElementById('editVideoPreview');
+
+                    if (file) {
+                        const url = URL.createObjectURL(file);
+                        video.src = url;
+                        video.style.display = 'block';
+                    } else {
+                        video.src = '';
+                        video.style.display = 'none';
+                    }
+                }
+            </script>
 </body>
 </html>

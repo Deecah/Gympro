@@ -22,11 +22,9 @@ public class FeedbackServlet extends HttpServlet {
         boolean success = dao.insertFeedback(userId, type, referenceId, point, content);
 
         if (success) {
-            // Gửi notification thành công
-            NotificationUtil.sendSuccessNotification(userId, 
-                "Feedback Submitted Successfully", 
-                "Thank you for your feedback! Your review has been submitted successfully.");
-            response.sendRedirect("PackagesPurchasedServlet?feedback=success");
+            HttpSession session = request.getSession();
+            session.setAttribute("feedbackSuccess", true);
+            response.sendRedirect("packagesPurchased");
         } else {
             // Gửi notification lỗi
             NotificationUtil.sendErrorNotification(userId, 

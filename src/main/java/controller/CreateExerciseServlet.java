@@ -57,7 +57,7 @@ public class CreateExerciseServlet extends HttpServlet {
                 || description == null || description.trim().isEmpty()
                 || muscleGroup == null || muscleGroup.trim().isEmpty()) {
 
-            request.setAttribute("error", "Vui lòng điền đầy đủ các trường bắt buộc.");
+            request.setAttribute("error", "Please fill in the required information!");
             request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
             return;
         }
@@ -79,7 +79,7 @@ public class CreateExerciseServlet extends HttpServlet {
                 videoURL = CloudinaryUploader.upload(videoStream, videoPart.getContentType(), folder);
             } catch (Exception e) {
                 e.printStackTrace();
-                request.setAttribute("error", "Lỗi khi upload video.");
+                request.setAttribute("error", "Error uploading video!");
                 request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
                 return;
             }
@@ -95,17 +95,9 @@ public class CreateExerciseServlet extends HttpServlet {
 
         boolean success = exerciseDAO.insertExercise(exercise);
         if (success) {
-            // Gửi notification thành công
-            NotificationUtil.sendSuccessNotification(user.getUserId(), 
-                "Exercise Created Successfully", 
-                "Your new exercise '" + name + "' has been added to the library successfully!");
-            response.sendRedirect("TrainerExerciseServlet?action=list");
+            response.sendRedirect(request.getContextPath() + "/trainer/library.jsp?action=list");
         } else {
-            // Gửi notification lỗi
-            NotificationUtil.sendErrorNotification(user.getUserId(), 
-                "Exercise Creation Failed", 
-                "Failed to create exercise '" + name + "'. Please try again.");
-            request.setAttribute("error", "Không thể tạo bài tập.");
+            request.setAttribute("error", "Can't save exercise!");
             request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
         }
     }
