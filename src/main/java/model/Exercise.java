@@ -48,7 +48,7 @@ public class Exercise {
     public void setReps(int reps) {
         this.reps = reps;
     }
-
+    
     public int getRestTimeSeconds() {
         return restTimeSeconds;
     }

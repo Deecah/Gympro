@@ -57,6 +57,16 @@
                 margin-top: 20px;
             }
         </style>
+        
+        <script>
+            // Set current user ID for notification.js
+            <% if (session.getAttribute("user") != null) { %>
+            var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+            <% } else { %>
+            var currentUserId = null;
+            <% } %>
+        </script>
+        <script src="js/notification.js"></script>
     </head>
     <body>
         <div class="container profile-card mt-5">
@@ -139,7 +149,6 @@
                             </a>
                         </div>
                         <% } %>
-
                         <div class="btn-group-custom">
                             <a href="editprofile.jsp" class="btn btn-primary">Edit Profile</a>
                             <a href="confirmOldPass.jsp" class="btn btn-warning ml-2">Change Password</a>

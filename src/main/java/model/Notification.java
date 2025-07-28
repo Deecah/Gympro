@@ -21,6 +21,8 @@ public class Notification {
         this.content = content;
         this.createdTime = createdTime;
     }
+    
+    
 
     public int getNotificationID() {
         return notificationID;
@@ -61,7 +63,7 @@ public class Notification {
     public void setCreatedTime(LocalDateTime createdTime) {
         this.createdTime = createdTime;
     }
- 
+
  public String getTimeAgo() {
         if (createdTime == null) {
             return "";

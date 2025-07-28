@@ -63,7 +63,7 @@ public class CertificationDAO {
         return list;
     }
      // Thêm chứng chỉ mới
-    public void addCertification(Certification cert) throws SQLException, ClassNotFoundException {
+    public boolean addCertification(Certification cert) throws SQLException, ClassNotFoundException {
         String sql = "INSERT INTO Certification (Name, Description, ExpireDate) VALUES (?, ?, ?)";
         try (Connection conn = ConnectDatabase.getInstance().openConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -72,6 +72,7 @@ public class CertificationDAO {
             stmt.setString(2, cert.getDescription());
             stmt.setTimestamp(3, Timestamp.valueOf(cert.getExpireDate()));
             stmt.executeUpdate();
+            return true;
         }
     }
     // Cập nhật chứng chỉ
@@ -119,3 +120,4 @@ stmt.executeUpdate();
         }
     }
 }
+

@@ -4,7 +4,6 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import constant.CloudinaryConfig;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -27,3 +26,4 @@ public class CloudinaryUploader {
         return uploadResult.get("secure_url").toString();
     }
 }
+

@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 
+@WebServlet(name = "AddCertificationServlet", urlPatterns = {"/AddCertificationServlet"})
 public class AddCertificationServlet extends HttpServlet {
 
     // Format tương ứng với input type="datetime-local"
@@ -39,8 +41,6 @@ public class AddCertificationServlet extends HttpServlet {
 
             // Chuyển hướng đến trang xem danh sách (bạn có thể đổi URL nếu cần)
             response.sendRedirect("ViewCertificationServlet");
-
-
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi khi thêm chứng chỉ: " + e.getMessage());
@@ -48,3 +48,4 @@ public class AddCertificationServlet extends HttpServlet {
         }
     }
 }
+

@@ -28,7 +28,7 @@ public class PackageDetailServlet extends HttpServlet {
         PackageDAO packageDAO = new PackageDAO();
         TrainerDAO trainerDAO = new TrainerDAO();
         ProgramDAO programDAO = new ProgramDAO();
-//        FeedbackDAO feedbackDAO = new FeedbackDAO();
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
 
         // 1. Gói tập
         Package p = packageDAO.getPackageById(packageId);
@@ -40,13 +40,13 @@ public class PackageDetailServlet extends HttpServlet {
 //        List<Program> programs = programDAO.getProgramsByPackageId(packageId);
 
         // 4. Danh sách feedback của gói
-//        List<Feedback> feedbacks = feedbackDAO.getFeedbacksByPackageId(packageId);
+        List<Feedback> feedbacks = feedbackDAO.getFeedbacksByPackageId(packageId);
 
         // Set dữ liệu
         request.setAttribute("pkg", p);
         request.setAttribute("trainer", trainer);
 //        request.setAttribute("programs", programs);
-//        request.setAttribute("feedbacks", feedbacks);
+        request.setAttribute("feedbacks", feedbacks);
 
         // Forward sang JSP
         request.getRequestDispatcher("package-detail.jsp").forward(request, response);
@@ -56,6 +56,4 @@ public class PackageDetailServlet extends HttpServlet {
     throws ServletException, IOException {
 
     }
-
-
 }

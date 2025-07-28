@@ -81,5 +81,4 @@ public class Transaction {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }

@@ -50,6 +50,5 @@ public class Schedule {
     public void setSlots(ArrayList<Slot> slots) {
         this.slots = slots;
     }
-    
-
 }
+

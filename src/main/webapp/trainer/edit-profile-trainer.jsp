@@ -16,6 +16,16 @@
     <title>Edit Trainer Profile</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<%= request.getContextPath() %>/stylecss/profile-trainer.css" />
+    
+    <script>
+        // Set current user ID for notification.js
+        <% if (session.getAttribute("user") != null) { %>
+        var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+        <% } else { %>
+        var currentUserId = null;
+        <% } %>
+    </script>
+    <script src="../js/notification.js"></script>
 </head>
 <body>
 <div class="profile-card mt-5">
@@ -30,7 +40,7 @@
             <!-- Right section -->
             <div class="col-md-8 right-section">
                 <h3 class="role-header">Edit Profile</h3>
-                <form action="../UpdateTrainerProfileServlet" method="post">
+                <form action="../TrainerProfileServlet" method="post">
                     <div class="form-group">
                         <label>Name:</label>
                         <input type="text" name="name" value="<%= user.getUserName() %>" class="form-control" required />

@@ -7,8 +7,8 @@ import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -18,7 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
 import model.UserToken;
+import Utils.NotificationUtil;
 
+@WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/ResetPasswordServlet"})
 public class ResetPasswordServlet extends HttpServlet {
 
     private final int EXPIRY_TIME = 10;
@@ -211,9 +213,17 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         byte[] newPasswordHashed = HashUtil.hashPassword(password);
-        userDAO.updatePassword(u.getUserId(), newPasswordHashed);
+        boolean success = userDAO.updatePassword(u.getUserId(), newPasswordHashed);
+        
+        if (success) {
+            // Gửi notification thành công
+            NotificationUtil.sendSuccessNotification(u.getUserId(), 
+                "Password Reset Successful", 
+                "Your password has been reset successfully. You can now log in with your new password.");
+        }
 
         request.setAttribute("mess", "Password reset successful!"); // Translated
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }
+

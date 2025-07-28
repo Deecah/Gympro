@@ -1,4 +1,3 @@
-
 package model;
 
 import java.sql.Timestamp;
@@ -13,6 +12,10 @@ public class Workout {
     private Timestamp createdAt;
     private LocalTime startTime;
     private LocalTime endTime;
+    private int startHour;
+    private String startStr;
+    private String endStr;
+    private String programName;
 
     // Getters and Setters
     public int getWorkoutID() {
@@ -69,6 +72,38 @@ public class Workout {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public void setStartHour(int startHour) {
+        this.startHour = startHour;
+    }
+
+    public int getStartHour() {
+        return startHour;
+    }
+
+    public void setStartStr(String startStr) {
+        this.startStr = startStr;
+    }
+
+    public String getStartStr() {
+        return startStr;
+    }
+
+    public void setEndStr(String endStr) {
+        this.endStr = endStr;
+    }
+
+    public String getEndStr() {
+        return endStr;
+    }
+
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
     }
 
 }

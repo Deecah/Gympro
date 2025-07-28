@@ -12,9 +12,6 @@ public class User {
     private String role;         
     private String status;      
 
-    public User() {
-    }
-
     public User(String userName, String email, byte[] password, String role) {
         this.userName = userName;
         this.email = email;
@@ -22,6 +19,8 @@ public class User {
         this.role = role;
     }
 
+    public User() {
+    }
     public int getUserId() {
         return userId;
     }
@@ -106,6 +105,4 @@ public class User {
     public String toString() {
         return "User{" + "userId=" + userId + ", userName=" + userName + ", gender=" + gender + ", email=" + email + ", phone=" + phone + ", address=" + address + ", avatarUrl=" + avatarUrl + ", password=" + password + ", role=" + role + ", status=" + status + '}';
     }
-
-    
 }

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
+
 import java.util.ArrayList;
 
 public class UserDAO {
@@ -80,27 +81,21 @@ public class UserDAO {
         }
         return userList;
     }
-    
+     
     public User getUserById(int userId) {
         User user = null;
         try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "SELECT * FROM Users WHERE id = ?";
+            String sql = "SELECT Id, Name, Email, AvatarUrl FROM Users WHERE Id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, userId);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User();
-                user.setUserId(rs.getInt("id"));
-                user.setUserName(rs.getString("name"));
-                user.setGender(rs.getString("gender"));
-                user.setEmail(rs.getString("email"));
-                user.setPhone(rs.getString("phone"));
-                user.setAddress(rs.getString("address"));
+                user.setUserId(rs.getInt("Id"));
+                user.setUserName(rs.getString("Name"));
+                user.setEmail(rs.getString("Email"));
                 user.setAvatarUrl(rs.getString("AvatarUrl"));
-                user.setPassword(rs.getBytes("password"));
-                user.setRole(rs.getString("role"));
-                user.setStatus(rs.getString("status"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +126,6 @@ public class UserDAO {
         }
         return null;
     }
-
     public boolean addUser(User user) {
         if (isEmailExists(user.getEmail())) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.WARNING, "Email already exists!");
@@ -216,7 +210,6 @@ public class UserDAO {
             }
         }
     }
-
     public boolean addUserFromGoogle(GoogleAccount googleAcc) {
         User user = new User();
         user.setUserName(googleAcc.getName());
@@ -225,7 +218,6 @@ public class UserDAO {
         user.setRole("Customer");
         return addUser(user);
     }
-
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -253,7 +245,6 @@ public class UserDAO {
         }
         return false;
     }    
-
     public void deleteUser(String id) {
         String sql = "delete from Users WHERE id=? ;";
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -311,8 +302,8 @@ public class UserDAO {
         return false;
     }
 
-    public void updateAvatar(int userId, String avatarUrl) {
-        String sql = "UPDATE Users SET Avatarurl = ? WHERE id = ?";
+    public boolean updateAvatar(int userId, String avatarUrl) {
+        String sql = "UPDATE Users SET AvatarUrl = ? WHERE Id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -321,19 +312,25 @@ public class UserDAO {
             statement = con.prepareStatement(sql);
             statement.setString(1, avatarUrl);
             statement.setInt(2, userId);
-            statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();  
+            return rowsAffected > 0;  
         } catch (ClassNotFoundException e) {
             Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                statement.close();
-                con.close();
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return false;  
     }
 
     public boolean banUser(int userId){

@@ -70,3 +70,4 @@ public class ViolationReport {
         this.lastEdit = lastEdit;
     }
 }
+
