@@ -163,98 +163,98 @@
         <!-- Banner Section End -->
 
         <!-- Trainer Section Begin -->
-      <section class="trainer-section about-trainer spad">
-    <div class="container">
-        <!-- Title -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title">
-                    <h2>EXPERT TRAINERS</h2>
-                </div>
-            </div>
-        </div>
-
-        <!-- Grid trainers -->
-        <div class="row">
-            <c:forEach var="trainer" items="${trainers}" varStatus="loop">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="single-trainer-item">
-                        <img src="${trainer.avatarUrl}" alt="${trainer.userName}"
-                             style="width:100%; height:300px; object-fit:cover;">
-                        <div class="trainer-text">
-                            <h5>${trainer.userName}</h5>
-                            <span>${trainer.specialization}</span>
+        <section class="trainer-section about-trainer spad">
+            <div class="container">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title">
+                            <h2>EXPERT TRAINERS</h2>
                         </div>
                     </div>
                 </div>
-                <c:if test="${loop.index % 4 == 3}">
-                    </div><div class="row">
-                </c:if>
-            </c:forEach>
-        </div>
 
-     <!-- Pagination -->
-<div class="row justify-content-center mt-4">
-    <div class="col-auto">
-        <ul class="pagination justify-content-center">
-            <%-- Ensure currentPage and totalPages exist --%>
-            <c:set var="currentPage" value="${currentPage}" />
-            <c:set var="totalPages" value="${totalPages}" />
+                <!-- Grid trainers -->
+                <div class="row">
+                    <c:forEach var="trainer" items="${trainers}" varStatus="loop">
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="single-trainer-item">
+                                <img src="${trainer.avatarUrl}" alt="${trainer.userName}"
+                                     style="width:100%; height:300px; object-fit:cover;">
+                                <div class="trainer-text">
+                                    <h5>${trainer.userName}</h5>
+                                    <span>${trainer.specialization}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <c:if test="${loop.index % 4 == 3}">
+                        </div><div class="row">
+                        </c:if>
+                    </c:forEach>
+                </div>
 
-            <%-- Tính start & end an toàn --%>
-            <c:set var="start" value="${currentPage - 2}" />
-            <c:if test="${start < 1}">
-                <c:set var="start" value="1" />
-            </c:if>
+                <!-- Pagination -->
+                <div class="row justify-content-center mt-4">
+                    <div class="col-auto">
+                        <ul class="pagination justify-content-center">
+                            <%-- Ensure currentPage and totalPages exist --%>
+                            <c:set var="currentPage" value="${currentPage}" />
+                            <c:set var="totalPages" value="${totalPages}" />
 
-            <c:set var="end" value="${currentPage + 2}" />
-            <c:if test="${end > totalPages}">
-                <c:set var="end" value="${totalPages}" />
-            </c:if>
+                            <%-- Tính start & end an toàn --%>
+                            <c:set var="start" value="${currentPage - 2}" />
+                            <c:if test="${start < 1}">
+                                <c:set var="start" value="1" />
+                            </c:if>
 
-            <%-- Nút Previous --%>
-            <c:if test="${currentPage > 1}">
-                <li class="page-item">
-                    <a class="page-link" href="ExpertTrainerServlet?page=${currentPage - 1}">&laquo;</a>
-                </li>
-            </c:if>
+                            <c:set var="end" value="${currentPage + 2}" />
+                            <c:if test="${end > totalPages}">
+                                <c:set var="end" value="${totalPages}" />
+                            </c:if>
 
-            <%-- Trang đầu & dấu ... đầu --%>
-            <c:if test="${start > 1}">
-                <li class="page-item"><a class="page-link" href="ExpertTrainerServlet?page=1">1</a></li>
-            </c:if>
-            <c:if test="${start > 2}">
-                <li class="page-item disabled"><a class="page-link">...</a></li>
-            </c:if>
+                            <%-- Nút Previous --%>
+                            <c:if test="${currentPage > 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="ExpertTrainerServlet?page=${currentPage - 1}">&laquo;</a>
+                                </li>
+                            </c:if>
 
-            <%-- Hiển thị các trang gần currentPage --%>
-            <c:forEach var="i" begin="${start}" end="${end}">
-                <li class="page-item ${i == currentPage ? 'active' : ''}">
-                    <a class="page-link" href="ExpertTrainerServlet?page=${i}">${i}</a>
-                </li>
-            </c:forEach>
+                            <%-- Trang đầu & dấu ... đầu --%>
+                            <c:if test="${start > 1}">
+                                <li class="page-item"><a class="page-link" href="ExpertTrainerServlet?page=1">1</a></li>
+                                </c:if>
+                                <c:if test="${start > 2}">
+                                <li class="page-item disabled"><a class="page-link">...</a></li>
+                                </c:if>
 
-            <%-- Dấu ... cuối & trang cuối --%>
-            <c:if test="${end < totalPages - 1}">
-                <li class="page-item disabled"><a class="page-link">...</a></li>
-            </c:if>
-            <c:if test="${end < totalPages}">
-                <li class="page-item"><a class="page-link" href="ExpertTrainerServlet?page=${totalPages}">${totalPages}</a></li>
-            </c:if>
+                            <%-- Hiển thị các trang gần currentPage --%>
+                            <c:forEach var="i" begin="${start}" end="${end}">
+                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="ExpertTrainerServlet?page=${i}">${i}</a>
+                                </li>
+                            </c:forEach>
 
-            <%-- Nút Next --%>
-            <c:if test="${currentPage < totalPages}">
-                <li class="page-item">
-                    <a class="page-link" href="ExpertTrainerServlet?page=${currentPage + 1}">&raquo;</a>
-                </li>
-            </c:if>
-        </ul>
-    </div>
-</div>
+                            <%-- Dấu ... cuối & trang cuối --%>
+                            <c:if test="${end < totalPages - 1}">
+                                <li class="page-item disabled"><a class="page-link">...</a></li>
+                                </c:if>
+                                <c:if test="${end < totalPages}">
+                                <li class="page-item"><a class="page-link" href="ExpertTrainerServlet?page=${totalPages}">${totalPages}</a></li>
+                                </c:if>
+
+                            <%-- Nút Next --%>
+                            <c:if test="${currentPage < totalPages}">
+                                <li class="page-item">
+                                    <a class="page-link" href="ExpertTrainerServlet?page=${currentPage + 1}">&raquo;</a>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </div>
+                </div>
 
 
-    </div>
-</section>
+            </div>
+        </section>
 
 
         <!-- Trainer Section End -->
