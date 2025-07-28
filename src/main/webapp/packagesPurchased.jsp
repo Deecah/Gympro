@@ -30,10 +30,25 @@
         .modal-content {
             border-radius: 12px;
         }
+        .star {
+            font-size: 2rem;
+            color: lightgray;
+            cursor: pointer;
+        }
+        .star.hovered,
+        .star.selected {
+            color: gold;
+        }
     </style>
 </head>
 <body>
     <div class="container table-container text-center">
+        <div class="mb-3 text-start">
+            <a href="index.jsp" class="btn btn-outline-primary">
+                &larr; Back to Home
+            </a>
+        </div>
+
         <h2>📦 Packages You've Purchased</h2>
 
         <table class="table table-striped">
@@ -100,12 +115,37 @@
                         <input type="hidden" name="referenceId" id="referenceId" />
 
                         <label>Rating:</label><br/>
-                        <select name="point" class="form-select mb-3">
-                            <c:forEach begin="1" end="5" var="i">
-                                <option value="${i}">${i} Star(s)</option>
-                            </c:forEach>
-                        </select>
+                        <div class="star-rating mb-3">
+                            <input type="hidden" name="point" id="starRatingValue" value="0">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
+                        </div>
 
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const stars = document.querySelectorAll(".star-rating .star");
+                                const ratingInput = document.getElementById("starRatingValue");
+
+                                stars.forEach((star, index) => {
+                                    star.addEventListener("mouseover", () => {
+                                        stars.forEach((s, i) => s.classList.toggle("hovered", i <= index));
+                                    });
+
+                                    star.addEventListener("mouseout", () => {
+                                        stars.forEach(s => s.classList.remove("hovered"));
+                                    });
+
+                                    star.addEventListener("click", () => {
+                                        ratingInput.value = index + 1;
+                                        stars.forEach((s, i) => s.classList.toggle("selected", i <= index));
+                                    });
+                                });
+                            });
+                        </script>
+                       
                         <label>Comment (optional):</label>
                         <textarea name="content" class="form-control" rows="3"></textarea>
                     </div>
@@ -122,11 +162,44 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function openFeedbackModal(type, referenceId) {
-            document.getElementById("feedbackType").value = type;
-            document.getElementById("referenceId").value = referenceId;
-            let modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-            modal.show();
+    document.getElementById("feedbackType").value = type;
+    document.getElementById("referenceId").value = referenceId;
+
+    // Reset star rating value
+    document.getElementById("starRatingValue").value = 0;
+    document.querySelectorAll(".star-rating .star").forEach(star => {
+        star.classList.remove("selected", "hovered");
+    });
+
+    // Also reset comment textarea (optional)
+    document.querySelector("textarea[name='content']").value = "";
+
+    let modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+    modal.show();
+}
+    </script>
+    
+    <c:if test="${not empty feedbackSuccess}">
+        <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100;">
+            <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        🎉 Your feedback has been submitted successfully!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const toastEl = document.getElementById('feedbackToast');
+        if (toastEl) {
+          const toast = new bootstrap.Toast(toastEl);
+          toast.show();
         }
+      });
     </script>
 </body>
 </html>

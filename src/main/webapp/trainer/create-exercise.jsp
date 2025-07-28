@@ -41,8 +41,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="videoUrl" class="form-label">Video URL</label>
-                        <input type="file" name="videoFile" accept="video/*" class="form-control" required/>
+                        <label for="videoUpload" class="form-label">Upload Exercise Video</label>
+                        <input type="file" id="videoUpload" name="videoFile" accept="video/*" class="form-control" onchange="previewVideo(event)" required/>
+
+                        <!-- Video Preview -->
+                        <video id="videoPreview" width="480" height="300" controls style="margin-top: 15px; display: none;">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
 
                     <div class="mb-3">
@@ -60,5 +65,20 @@
                 </form>
             </div>
         </div>
+                <script>
+                    function previewVideo(event) {
+                        const file = event.target.files[0];
+                        const video = document.getElementById('videoPreview');
+
+                        if (file) {
+                            const url = URL.createObjectURL(file);
+                            video.src = url;
+                            video.style.display = 'block';
+                        } else {
+                            video.src = '';
+                            video.style.display = 'none';
+                        }
+                    }
+                </script>
     </body>
 </html>

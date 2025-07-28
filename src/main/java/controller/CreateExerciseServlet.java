@@ -56,7 +56,7 @@ public class CreateExerciseServlet extends HttpServlet {
                 || description == null || description.trim().isEmpty()
                 || muscleGroup == null || muscleGroup.trim().isEmpty()) {
 
-            request.setAttribute("error", "Vui lòng điền đầy đủ các trường bắt buộc.");
+            request.setAttribute("error", "Please fill in the required information!");
             request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
             return;
         }
@@ -94,9 +94,9 @@ public class CreateExerciseServlet extends HttpServlet {
 
         boolean success = exerciseDAO.insertExercise(exercise);
         if (success) {
-            response.sendRedirect("TrainerExerciseServlet?action=list");
+            response.sendRedirect(request.getContextPath() + "/trainer/library.jsp?action=list");
         } else {
-            request.setAttribute("error", "Không thể tạo bài tập.");
+            request.setAttribute("error", "Can't save exercise!");
             request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
         }
     }

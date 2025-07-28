@@ -21,7 +21,9 @@ public class FeedbackServlet extends HttpServlet {
         boolean success = dao.insertFeedback(userId, type, referenceId, point, content);
 
         if (success) {
-            response.sendRedirect("PackagesPurchasedServlet?feedback=success");
+            HttpSession session = request.getSession();
+            session.setAttribute("feedbackSuccess", true);
+            response.sendRedirect("packagesPurchased");
         } else {
             response.sendRedirect("packagesPurchased.jsp?feedback=fail");
         }
