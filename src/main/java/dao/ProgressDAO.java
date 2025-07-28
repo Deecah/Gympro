@@ -41,4 +41,49 @@ public class ProgressDAO {
         return list;
     }
 
+    public static Progress getProgressById(int progressId) {
+        Progress progress = null;
+        String sql = "SELECT * FROM Progress WHERE progressID = ?";
+
+        try (Connection conn = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, progressId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                progress = new Progress();
+                progress.setProgressID(rs.getInt("progressID"));
+                progress.setUserID(rs.getInt("userID"));
+                progress.setWorkoutID(rs.getInt("workoutID"));
+                progress.setRecordedAt(rs.getTimestamp("recordedAt").toLocalDateTime());
+                progress.setWeight(rs.getDouble("weight"));
+                progress.setBodyFatPercent(rs.getDouble("bodyFatPercent"));
+                progress.setMuscleMass(rs.getDouble("muscleMass"));
+                progress.setNotes(rs.getString("notes"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return progress;
+    }
+
+    public static void updateProgress(Progress p) {
+        String sql = "UPDATE Progress SET recordedAt = ?, weight = ?, bodyFatPercent = ?, muscleMass = ?, notes = ? WHERE progressID = ?";
+
+        try (Connection conn = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(p.getRecordedAt()));
+            ps.setDouble(2, p.getWeight());
+            ps.setDouble(3, p.getBodyFatPercent());
+            ps.setDouble(4, p.getMuscleMass());
+            ps.setString(5, p.getNotes());
+            ps.setInt(6, p.getProgressID());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

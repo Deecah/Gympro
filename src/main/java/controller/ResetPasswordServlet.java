@@ -1,4 +1,4 @@
-package controller;
+    package controller;
 
 import Utils.HashUtil;
 import dao.UserDAO;

@@ -18,21 +18,20 @@ public class ProgressServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");
-        String role = (String) session.getAttribute("role");
+        User user = (User) session.getAttribute("user"); // ✅ lấy đúng object
 
-        if (userId != null && role != null) {
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.getUserById(userId);
+        if (user != null) {
+            int userId = user.getUserId();
+            String role = user.getRole();
+            System.out.println(">>> userId from session: " + userId);
+            System.out.println(">>> role from session: " + role);
+            List<Progress> progressList = ProgressDAO.getProgressByUserID(userId);
 
-            if (user != null) {
-                List<Progress> progressList = ProgressDAO.getProgressByUserID(userId);
-                request.setAttribute("progressList", progressList);
-                request.setAttribute("user", user); // ✅ Gửi user sang view
-            }
+            request.setAttribute("progressList", progressList);
+            request.setAttribute("user", user); // Gửi sang JSP nếu cần hiển thị tên
         }
 
         request.getRequestDispatcher("viewProgress.jsp").forward(request, response);
     }
-
+    
 }
