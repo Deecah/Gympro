@@ -8,16 +8,12 @@ import dao.CertificationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;    
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 import java.util.List;
 import model.Certification;
 
-/**
- *
- * @author Admin
- */
+@WebServlet(name = "ViewCertificationServlet", urlPatterns = {"/ViewCertificationServlet"})
 public class ViewCertificationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

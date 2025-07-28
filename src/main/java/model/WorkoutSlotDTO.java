@@ -7,6 +7,8 @@ public class WorkoutSlotDTO {
     private String displayName;
     private String startStr;
     private String endStr;
+    private boolean completed;
+    private int workoutId;
 
     // Getters & Setters
     public int getSlotId() {
@@ -56,4 +58,10 @@ public class WorkoutSlotDTO {
     public void setEndStr(String endStr) {
         this.endStr = endStr;
     }
+
+    public boolean isCompleted() { return completed; }
+    public void setCompleted(boolean completed) { this.completed = completed; }
+
+    public int getWorkoutId() { return workoutId; }
+    public void setWorkoutId(int workoutId) { this.workoutId = workoutId; }
 }

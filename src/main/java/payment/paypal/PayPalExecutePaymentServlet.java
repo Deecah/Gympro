@@ -9,6 +9,7 @@ import dao.CustomerProgramDAO;
 import dao.ProgramDAO;
 import dao.TransactionDAO;
 import model.Transaction;
+import Utils.NotificationUtil;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
@@ -92,6 +93,16 @@ public class PayPalExecutePaymentServlet extends HttpServlet {
                     int chatId = chatDAO.createChatIfNotExists(customerId, trainerId);
                     System.out.println("✅ Chat created with ID: " + chatId);
                 }
+                
+                // Gửi notification thành công cho customer
+                NotificationUtil.sendSuccessNotification(customerId, 
+                    "Payment Successful!", 
+                    "Your package purchase has been completed successfully via PayPal!");
+                
+                // Gửi notification cho trainer về khách hàng mới
+                NotificationUtil.sendInfoNotification(trainerId, 
+                    "New Customer Purchase", 
+                    "A new customer has purchased your package!");
             }
 
             // 8. Dọn session

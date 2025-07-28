@@ -14,6 +14,16 @@
             .sidebar { width: 240px; min-height: 100vh; }
             .package-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
         </style>
+        
+        <script>
+            // Set current user ID for notification.js
+            <% if (session.getAttribute("user") != null) { %>
+            var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+            <% } else { %>
+            var currentUserId = null;
+            <% } %>
+        </script>
+        <script src="../js/notification.js"></script>
     </head>
     <body>
         <div class="d-flex">

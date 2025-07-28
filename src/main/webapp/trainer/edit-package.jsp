@@ -12,6 +12,16 @@
         body { margin: 0; }
         .sidebar { width: 240px; min-height: 100vh; }
     </style>
+    
+    <script>
+        // Set current user ID for notification.js
+        <% if (session.getAttribute("user") != null) { %>
+        var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+        <% } else { %>
+        var currentUserId = null;
+        <% } %>
+    </script>
+    <script src="../js/notification.js"></script>
 </head>
 <body>
 <div class="d-flex">

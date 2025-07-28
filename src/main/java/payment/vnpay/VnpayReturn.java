@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import model.Transaction;
+import Utils.NotificationUtil;
 
 @WebServlet(name = "VnpayReturn", urlPatterns = {"/vnpay/vnpayReturn"})
 public class VnpayReturn extends HttpServlet {
@@ -90,6 +91,16 @@ public class VnpayReturn extends HttpServlet {
                         int chatId = chatDAO.createChatIfNotExists(customerId, trainerId);
                         System.out.println("✅ Chat created with ID: " + chatId);
                     }
+                    
+                    // Gửi notification thành công cho customer
+                    NotificationUtil.sendSuccessNotification(customerId, 
+                        "Payment Successful!", 
+                        "Your package purchase has been completed successfully via VNPay!");
+                    
+                    // Gửi notification cho trainer về khách hàng mới
+                    NotificationUtil.sendInfoNotification(trainerId, 
+                        "New Customer Purchase", 
+                        "A new customer has purchased your package!");
 
                     transSuccess = true;
                 } else {

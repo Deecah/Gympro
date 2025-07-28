@@ -12,6 +12,7 @@ import java.util.List;
 import model.Package;
 import model.Program;
 import model.User;
+import Utils.NotificationUtil;
 
 @WebServlet(name = "ProgramServlet", urlPatterns = {"/ProgramServlet"})
 public class ProgramServlet extends HttpServlet {
@@ -38,6 +39,49 @@ public class ProgramServlet extends HttpServlet {
 
         request.setAttribute("programs", programs);
         request.setAttribute("packageList", packageList);
+
+        // Load danh sách khách hàng có contract với trainer cho modal gán chương trình
+        dao.ContractDAO contractDAO = new dao.ContractDAO();
+        java.util.ArrayList<User> customers = contractDAO.getCustomersByTrainer(user.getUserId());
+        request.setAttribute("customers", customers);
+
+        // Xử lý các thông báo từ AssignProgramServlet
+        String error = request.getParameter("error");
+        String success = request.getParameter("success");
+        
+        if (error != null) {
+            switch (error) {
+                case "invalid_date":
+                    request.setAttribute("error", "Start date cannot be in the past!");
+                    break;
+                case "already_assigned":
+                    request.setAttribute("error", "This program is already assigned to this customer!");
+                    break;
+                case "assignment_failed":
+                    request.setAttribute("error", "Failed to assign program!");
+                    break;
+                case "invalid_input":
+                    request.setAttribute("error", "Invalid input data!");
+                    break;
+                case "system_error":
+                    request.setAttribute("error", "An error occurred while processing your request!");
+                    break;
+                default:
+                    request.setAttribute("error", "An error occurred!");
+                    break;
+            }
+        }
+        
+        if (success != null) {
+            switch (success) {
+                case "assigned":
+                    request.setAttribute("success", "Program has been successfully assigned to the customer!");
+                    break;
+                default:
+                    request.setAttribute("success", "Operation completed successfully!");
+                    break;
+            }
+        }
 
         request.getRequestDispatcher("trainer/programs.jsp").forward(request, response);
     }
@@ -74,7 +118,20 @@ public class ProgramServlet extends HttpServlet {
         }
 
         ProgramDAO dao = new ProgramDAO();
-        dao.addProgram(program, user.getUserId());
+        int result = dao.addProgram(program, user.getUserId());
+        boolean success = result > 0;
+
+        if (success) {
+            // Gửi notification thành công
+            NotificationUtil.sendSuccessNotification(user.getUserId(), 
+                "Program Created Successfully", 
+                "Your new program '" + name + "' has been created successfully!");
+        } else {
+            // Gửi notification lỗi
+            NotificationUtil.sendErrorNotification(user.getUserId(), 
+                "Program Creation Failed", 
+                "Failed to create program '" + name + "'. Please try again.");
+        }
 
         response.sendRedirect(request.getContextPath() + "/ProgramServlet");
     }

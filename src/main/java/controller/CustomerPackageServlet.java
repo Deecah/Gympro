@@ -21,9 +21,25 @@ public class CustomerPackageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        int page = 1;
+        int pageSize = 6;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
         PackageDAO dao = new PackageDAO();
-        List<Package> packages = dao.getAllPackages();
+        int totalItems = dao.countAllPackages();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        int offset = (page - 1) * pageSize;
+        List<Package> packages = dao.getPackagesByPage(pageSize, offset);
         request.setAttribute("packages", packages);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
 
         HttpSession session = request.getSession(false);
         Integer customerId = (session != null) ? (Integer) session.getAttribute("userId") : null;

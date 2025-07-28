@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.CustomerProgram;
 import model.WorkoutSlotDTO;
 
 public class WorkoutDAO {
@@ -69,40 +68,6 @@ public class WorkoutDAO {
             Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return -1;
-    }
-
-    public Map<LocalDate, List<Workout>> getScheduleMap(List<CustomerProgram> programs, LocalDate startOfWeek, LocalDate endOfWeek) {
-        Map<LocalDate, List<Workout>> map = new TreeMap<>();
-        String sql = "SELECT DATEADD(DAY, ((pw.WeekNumber - 1) * 7 + (pd.DayNumber - 1)), ?) AS WorkoutDate, "
-                + "w.WorkoutID, w.DayID, w.Title, w.Notes, w.StartTime, w.EndTime, w.CreatedAt, p.Name AS ProgramName "
-                + "FROM Program p "
-                + "JOIN ProgramWeek pw ON p.ProgramID = pw.ProgramID "
-                + "JOIN ProgramDay pd ON pw.WeekID = pd.WeekID "
-                + "JOIN Workout w ON pd.DayID = w.DayID "
-                + "WHERE p.ProgramID = ?";
-
-        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
-            for (CustomerProgram cp : programs) {
-                try (PreparedStatement ps = con.prepareStatement(sql)) {
-                    ps.setDate(1, java.sql.Date.valueOf(cp.getStartDate()));
-                    ps.setInt(2, cp.getProgramId());
-
-                    try (ResultSet rs = ps.executeQuery()) {
-                        while (rs.next()) {
-                            LocalDate date = rs.getDate("WorkoutDate").toLocalDate();
-                            if (!date.isBefore(startOfWeek) && !date.isAfter(endOfWeek)) {
-                                Workout w = extractWorkout(rs);
-                                w.setProgramName(rs.getString("ProgramName"));
-                                map.computeIfAbsent(date, k -> new ArrayList<>()).add(w);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return map;
     }
 
     // ✅ Optional: lấy danh sách buổi tập của 1 ngày cụ thể
@@ -173,7 +138,7 @@ public class WorkoutDAO {
     Map<Integer, List<WorkoutSlotDTO>> map = new HashMap<>();
 
     String sql = "SELECT DATEADD(DAY, ((pw.WeekNumber - 1) * 7 + (pd.DayNumber - 1)), cp.StartDate) AS WorkoutDate, "
-            + "w.Title, w.StartTime, w.EndTime, "
+            + "w.WorkoutID, w.Title, w.StartTime, w.EndTime, "
             + "p.Name AS ProgramName, u.Name AS TrainerName "
             + "FROM CustomerProgram cp "
             + "JOIN Program p ON cp.ProgramID = p.ProgramID "
@@ -187,13 +152,12 @@ public class WorkoutDAO {
     try (Connection con = ConnectDatabase.getInstance().openConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
 
-        ps.setInt(1, customerId);  // ✅ đúng duy nhất 1 tham số
+        ps.setInt(1, customerId); 
 
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 LocalDate date = rs.getDate("WorkoutDate").toLocalDate();
 
-                // ❗ Bỏ qua nếu không nằm trong tuần đã chọn
                 if (date.isBefore(startOfWeek) || date.isAfter(endOfWeek)) {
                     continue;
                 }
@@ -226,6 +190,7 @@ public class WorkoutDAO {
 
                 WorkoutSlotDTO dto = new WorkoutSlotDTO();
                 dto.setSlotId(slotId);
+                dto.setWorkoutId(rs.getInt("WorkoutID"));
                 dto.setTitle(rs.getString("Title"));
                 dto.setProgramName(rs.getString("ProgramName"));
                 dto.setStartStr(start.format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -244,5 +209,127 @@ public class WorkoutDAO {
     return map;
 }
 
+    public List<Workout> getWorkoutsUpToToday(int userId) {
+        List<Workout> list = new ArrayList<>();
+        String sql = "SELECT * FROM Workout WHERE UserID = ? AND Date <= ? ORDER BY Date DESC";
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractWorkout(rs));
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return list;
+    }
+
+    public Workout getWorkoutById(int workoutId) {
+        String sql = "SELECT w.*, p.Name AS ProgramName FROM Workout w " +
+                    "LEFT JOIN ProgramDay pd ON w.DayID = pd.DayID " +
+                    "LEFT JOIN ProgramWeek pw ON pd.WeekID = pw.WeekID " +
+                    "LEFT JOIN Program p ON pw.ProgramID = p.ProgramID " +
+                    "WHERE w.WorkoutID = ?";
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, workoutId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Workout workout = extractWorkout(rs);
+                    workout.setProgramName(rs.getString("ProgramName"));
+                    return workout;
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+
+    public boolean updateWorkout(int workoutId, String title, String notes, LocalTime startTime, LocalTime endTime) {
+        String sql = "UPDATE Workout SET Title = ?, Notes = ?, StartTime = ?, EndTime = ? WHERE WorkoutID = ?";
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, title);
+            ps.setString(2, notes);
+            ps.setTime(3, startTime != null ? Time.valueOf(startTime) : null);
+            ps.setTime(4, endTime != null ? Time.valueOf(endTime) : null);
+            ps.setInt(5, workoutId);
+            
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    public boolean deleteWorkout(int workoutId) {
+        // First delete all exercises in this workout
+        String deleteExercisesSql = "DELETE FROM Exercise WHERE WorkoutID = ?";
+        String deleteWorkoutSql = "DELETE FROM Workout WHERE WorkoutID = ?";
+        
+        try (Connection con = ConnectDatabase.getInstance().openConnection()) {
+            con.setAutoCommit(false);
+            try {
+                // Delete exercises first (cascade delete)
+                try (PreparedStatement ps = con.prepareStatement(deleteExercisesSql)) {
+                    ps.setInt(1, workoutId);
+                    ps.executeUpdate();
+                }
+                
+                // Then delete the workout
+                try (PreparedStatement ps = con.prepareStatement(deleteWorkoutSql)) {
+                    ps.setInt(1, workoutId);
+                    int rows = ps.executeUpdate();
+                    con.commit();
+                    return rows > 0;
+                }
+            } catch (Exception e) {
+                con.rollback();
+                throw e;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+//    public List<Workout> getWorkoutsByCustomerId(int customerId) {
+//        List<Workout> list = new ArrayList<>();
+//
+//        String sql
+//                = "SELECT w.*, p.Name AS ProgramName "
+//                + "FROM CustomerProgram cp "
+//                + "JOIN Program p ON cp.ProgramID = p.ProgramID "
+//                + "JOIN ProgramWeek pw ON p.ProgramID = pw.ProgramID "
+//                + "JOIN ProgramDay pd ON pw.WeekID = pd.WeekID "
+//                + "JOIN Workout w ON pd.DayID = w.DayID "
+//                + "WHERE cp.CustomerID = ? "
+//                + "ORDER BY w.CreatedAt DESC";
+//
+//        try (Connection con = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+//
+//            ps.setInt(1, customerId);
+//
+//            try (ResultSet rs = ps.executeQuery()) {
+//                while (rs.next()) {
+//                    Workout w = extractWorkout(rs);
+//                    w.setProgramName(rs.getString("ProgramName"));
+//                    list.add(w);
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            Logger.getLogger(WorkoutDAO.class.getName()).log(Level.SEVERE, null, e);
+//        }
+//
+//        return list;
+//    }
 
 }

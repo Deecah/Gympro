@@ -1,78 +1,67 @@
 package controller;
 
-import dao.ExerciseLibraryDAO;
-import model.ExerciseLibrary;
+import dao.ExerciseDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
 
-@WebServlet("/EditExerciseServlet")
+@WebServlet(name = "EditExerciseServlet", urlPatterns = {"/EditExerciseServlet"})
 public class EditExerciseServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         try {
             int exerciseId = Integer.parseInt(request.getParameter("exerciseId"));
-            String name = request.getParameter("name");
-            String description = request.getParameter("description");
-            String videoURL = request.getParameter("videoURL");
-            String muscleGroup = request.getParameter("muscleGroup");
-            String equipment = request.getParameter("equipment");
+            int exerciseLibraryId = Integer.parseInt(request.getParameter("exerciseLibraryId"));
+            int sets = Integer.parseInt(request.getParameter("sets"));
+            int reps = Integer.parseInt(request.getParameter("reps"));
+            String restTimeStr = request.getParameter("restTime");
+            String notes = request.getParameter("notes");
 
-            ExerciseLibrary exercise = new ExerciseLibrary();
-            exercise.setExerciseID(exerciseId);
-            exercise.setName(name);
-            exercise.setDescription(description);
-            exercise.setVideoURL(videoURL);
-            exercise.setMuscleGroup(muscleGroup);
-            exercise.setEquipment(equipment);
+            // Validation
+            if (sets <= 0 || reps <= 0) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Sets and reps must be greater than 0.");
+                return;
+            }
 
-            ExerciseLibraryDAO dao = new ExerciseLibraryDAO();
-            dao.updateExercise(exercise);
+            Integer restTime = null;
+            if (restTimeStr != null && !restTimeStr.trim().isEmpty()) {
+                restTime = Integer.parseInt(restTimeStr);
+                if (restTime < 0) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Rest time cannot be negative.");
+                    return;
+                }
+            }
 
-            response.sendRedirect("trainer/library.jsp"); // redirect after successful edit
+            ExerciseDAO exerciseDAO = new ExerciseDAO();
+            boolean success = exerciseDAO.updateExercise(exerciseId, exerciseLibraryId, sets, reps, restTime, notes);
+            
+            if (success) {
+                // Redirect back to program detail page
+                String referer = request.getHeader("Referer");
+                if (referer != null && !referer.isEmpty()) {
+                    response.sendRedirect(referer);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/ProgramServlet");
+                }
+            } else {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                    "Failed to update exercise.");
+            }
 
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid input data.");
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Failed to update exercise.");
-            request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "An error occurred while updating the exercise.");
         }
-        // Get video file part
-        Part videoPart = request.getPart("videoFile");
-
-// Check if a new video is uploaded
-        boolean isNewVideoUploaded = videoPart != null && videoPart.getSize() > 0;
-
-// Also get the existing videoURL from hidden input or DB
-        String existingVideoURL = request.getParameter("existingVideoURL"); // Or get from DB
-
-// Validate video presence:
-        if (!isNewVideoUploaded && (existingVideoURL == null || existingVideoURL.trim().isEmpty())) {
-            // No video present after edit - reject
-            request.setAttribute("error", "Please upload a video or keep the existing one.");
-            // Re-populate exercise and forward back to edit page
-            // ...
-            return;
-        }
-
-// Proceed with update logic:
-// - if new video uploaded: upload and update videoURL
-// - else: keep existing videoURL
-
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        int id = Integer.parseInt(request.getParameter("id"));
-        ExerciseLibraryDAO dao = new ExerciseLibraryDAO();
-        ExerciseLibrary exercise = dao.getExerciseById(id);
-
-        request.setAttribute("exercise", exercise); 
-        request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
+        doPost(request, response);
     }
 }
