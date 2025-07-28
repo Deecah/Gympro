@@ -13,7 +13,7 @@ public class FeedbackServlet extends HttpServlet {
 
         int userId = Integer.parseInt(request.getParameter("userId"));
         String type = request.getParameter("type"); // 'package' or 'trainer'
-        int referenceId = Integer.parseInt(request.getParameter("referenceId"));
+        int referenceId = Integer.parseInt(request.getParameter("referenceId")); // e.g. packageId or trainerId
         int point = Integer.parseInt(request.getParameter("point"));
         String content = request.getParameter("content");
 
@@ -23,7 +23,7 @@ public class FeedbackServlet extends HttpServlet {
         if (success) {
             HttpSession session = request.getSession();
             session.setAttribute("feedbackSuccess", true);
-            response.sendRedirect("packagesPurchased");
+            response.sendRedirect("PackageDetailServlet?packageId=" + referenceId);
         } else {
             response.sendRedirect("packagesPurchased.jsp?feedback=fail");
         }

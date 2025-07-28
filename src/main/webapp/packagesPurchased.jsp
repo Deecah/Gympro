@@ -177,9 +177,9 @@
     let modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
     modal.show();
 }
-    </script>
+    </script>    
     
-    <c:if test="${not empty feedbackSuccess}">
+    <c:if test="${not empty sessionScope.feedbackSuccess}">
         <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100;">
             <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
                 <div class="d-flex">
@@ -190,7 +190,8 @@
                 </div>
             </div>
         </div>
-    </c:if>
+        <c:remove var="feedbackSuccess" scope="session" />
+    </c:if>    
     
     <script>
       window.addEventListener('DOMContentLoaded', () => {

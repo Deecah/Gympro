@@ -78,7 +78,7 @@ public class CreateExerciseServlet extends HttpServlet {
                 videoURL = CloudinaryUploader.upload(videoStream, videoPart.getContentType(), folder);
             } catch (Exception e) {
                 e.printStackTrace();
-                request.setAttribute("error", "Lỗi khi upload video.");
+                request.setAttribute("error", "Error uploading video!");
                 request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
                 return;
             }
