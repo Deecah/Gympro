@@ -17,8 +17,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Gympro</title>
         <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap"
-              rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Css Styles -->
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -100,7 +99,6 @@
         <section class="blog-section spad">
             <div class="container">
                 <div class="row">
-                    
                     <c:choose>
                         <c:when test="${not empty packages}">
                             <c:forEach var="p" items="${packages}">
@@ -122,7 +120,15 @@
                                                 <p class="card-text text-muted">${p.description}</p>
                                             </div>
                                             <div class="card-footer bg-transparent border-0 text-end">
-                                                <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" class="btn btn-outline-success btn-sm">Purchase Package</a>
+                                                <c:choose>
+                                                    <c:when test="${purchaseStatus[p.packageID]}">
+                                                        <button class="btn btn-secondary btn-sm" disabled>Already Purchased</button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" 
+                                                           class="btn btn-outline-success btn-sm">Purchase Package</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                     </a>
@@ -138,6 +144,36 @@
                 </div>
             </div>
         </section>
+
+        <%-- Đảm bảo các biến phân trang luôn có giá trị mặc định --%>
+        <c:set var="currentPage" value="${currentPage != null ? currentPage : 1}" />
+        <c:set var="totalPages" value="${totalPages != null ? totalPages : 1}" />
+
+        <!-- Pagination Begin -->
+        <c:if test="${totalPages > 1}">
+            <div class="d-flex justify-content-center mt-4">
+                <nav>
+                    <ul class="pagination">
+                        <c:if test="${currentPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="CustomerPackageServlet?page=${currentPage - 1}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                <a class="page-link" href="CustomerPackageServlet?page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="CustomerPackageServlet?page=${currentPage + 1}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </div>
+        </c:if>
+        <!-- Pagination End -->
         
         <!-- Package Section End -->
 
@@ -165,6 +201,5 @@
         <script src="js/masonry.pkgd.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
-        <jsp:include page="footer.jsp" />
     </body>
 </html>

@@ -12,6 +12,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import Utils.NotificationUtil;
 
 @WebServlet(name = "CreateExerciseServlet", urlPatterns = {"/CreateExerciseServlet"})
 @MultipartConfig

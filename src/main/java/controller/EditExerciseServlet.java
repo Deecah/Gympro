@@ -3,11 +3,11 @@ package controller;
 import Utils.CloudinaryUploader;
 import dao.ExerciseLibraryDAO;
 import model.ExerciseLibrary;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -145,7 +145,6 @@ public class EditExerciseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         int id = Integer.parseInt(request.getParameter("id"));
         ExerciseLibrary exercise = exerciseDAO.getExerciseById(id);
 

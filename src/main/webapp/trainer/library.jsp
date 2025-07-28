@@ -12,19 +12,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Exercise Library</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-        }
-        .sidebar {
-            width: 240px;
-            min-height: 100vh;
-        }
-        td {
-            word-wrap: break-word;
-            max-width: 300px;
-        }
-    </style>
+            <style>
+            body {
+                margin: 0;
+            }
+            .sidebar {
+                width: 240px;
+                min-height: 100vh;
+            }
+            td {
+                word-wrap: break-word;
+                max-width: 300px;
+            }
+        </style>
+        
+        <script>
+            // Set current user ID for notification.js
+            <% if (session.getAttribute("user") != null) { %>
+            var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+            <% } else { %>
+            var currentUserId = null;
+            <% } %>
+        </script>
+        <script src="../js/notification.js"></script>
 </head>
 <body>
 

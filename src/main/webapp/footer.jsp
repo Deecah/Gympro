@@ -21,16 +21,6 @@
                 </div>
             </div>
         </div>
-        <div class="subscribe-option set-bg" data-setbg="img/footer-signup.jpg">
-            <div class="so-text">
-                <h4>Subscribe To Our Mailing List</h4>
-                <p>Sign up to receive the latest information </p>
-            </div>
-            <form action="#" class="subscribe-form">
-                <input type="text" placeholder="Enter Your Mail">
-                <button type="submit"><i class="fa fa-send"></i></button>
-            </form>
-        </div>
         <div class="copyright-text">
             <ul>
                 <li><a href="#">Term&Use</a></li>
@@ -38,8 +28,7 @@
             </ul>
             <p>
                 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved |
-                This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by 
-                <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                This is made with <i class="fa fa-heart" aria-hidden="true"></i> by D02-RT01
             </p>
             <div class="footer-social">
                 <a href="#"><i class="fa fa-facebook"></i></a>
@@ -52,47 +41,113 @@
 </footer>
 <!-- Footer Section End -->
 <!-- Chat Floating Button -->
-<c:if test="${not empty user}">
-    <a href="ChatServlet?userId=${user.userId}"
-       class="btn btn-primary position-fixed m-4 shadow rounded-circle d-flex align-items-center justify-content-center"
-       style="width: 56px; height: 56px; z-index: 99999; bottom: 20px; right: 20px;"
-       title="Chat">
-        <i class="fa fa-comments" style="font-size: 20px;"></i>
-    </a>
-</c:if>
+<c:choose>
+    <c:when test="${not empty user}">
+        <!-- Nút Chat -->
+        <a href="ChatServlet?userId=${user.userId}"
+           class="btn btn-primary position-fixed shadow rounded-circle d-flex align-items-center justify-content-center"
+           style="width: 56px; height: 56px; z-index: 99999; bottom: 20px; right: 20px;"
+           title="Chat">
+            <i class="fa fa-comments" style="font-size: 20px;"></i>
+        </a>
+
+        <!-- Nút Lên ??u (n?m phía trên nút Chat) -->
+        <button id="backToTop" title="Go to top"
+                class="floating-btn back-to-top-btn"
+                style="bottom: 90px; display: none;">
+            <i class="fa fa-arrow-up" style="font-size: 20px; color: white;"></i>
+        </button>
+    </c:when>
+
+    <c:otherwise>
+        <!-- Ch? có nút Lên ??u n?m ? góc -->
+        <button id="backToTop" title="Go to top"
+                class="floating-btn back-to-top-btn"
+                style="bottom: 20px; right: 20px; display: none;">
+            <i class="fa fa-arrow-up" style="font-size: 20px; color: white;"></i>
+        </button>
+    </c:otherwise>
+</c:choose>
+
+
 <script>
+    // Function cho user Ä‘Ã£ Ä‘Äƒng nháº­p
     function toggleMenu() {
         const menu = document.getElementById("dropdownMenu");
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        const guestMenu = document.getElementById("guestDropdownMenu");
+        
+        // ÄÃ³ng guest menu náº¿u Ä‘ang má»Ÿ
+        if (guestMenu) {
+            guestMenu.style.display = "none";
+        }
+        
+        // Toggle user menu
+        if (menu) {
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
     }
 
+    // Function cho guest (chÆ°a Ä‘Äƒng nháº­p)
+    function toggleGuestMenu() {
+        const guestMenu = document.getElementById("guestDropdownMenu");
+        const menu = document.getElementById("dropdownMenu");
+        
+        // ÄÃ³ng user menu náº¿u Ä‘ang má»Ÿ
+        if (menu) {
+            menu.style.display = "none";
+        }
+        
+        // Toggle guest menu
+        if (guestMenu) {
+            guestMenu.style.display = (guestMenu.style.display === "block") ? "none" : "block";
+        }
+    }
+
+    // Event listener Ä‘á»ƒ Ä‘Ã³ng menu vÃ  notification khi click ra ngoÃ i
     window.addEventListener("click", function (e) {
         const menu = document.getElementById("dropdownMenu");
+        const guestMenu = document.getElementById("guestDropdownMenu");
         const avatar = document.querySelector(".header-avatar img");
-        if (!menu.contains(e.target) && !avatar.contains(e.target)) {
+        
+        // ÄÃ³ng user menu
+        if (menu && !menu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
             menu.style.display = "none";
+        }
+        
+        // ÄÃ³ng guest menu
+        if (guestMenu && !guestMenu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
+            guestMenu.style.display = "none";
+        }
+        
+        // ÄÃ³ng há»™p thÃ´ng bÃ¡o
+        if (notificationBox && notificationBell && !notificationBox.contains(e.target) && !notificationBell.contains(e.target)) {
+            notificationBox.style.display = 'none';
         }
     });
 
-    // JavaScript cho Nút chuông thông báo
+    // JavaScript cho Nï¿½t chuï¿½ng thï¿½ng bï¿½o
     const notificationBell = document.getElementById('notificationBell');
     const notificationBox = document.getElementById('notificationBox');
     const notificationCount = document.getElementById('notificationCount');
     const notificationList = document.getElementById('notificationList');
 
-    if (notificationBell && notificationBox) { // ??m b?o các ph?n t? t?n t?i tr??c khi thêm listener
+    if (notificationBell && notificationBox) { // ??m b?o cï¿½c ph?n t? t?n t?i tr??c khi thï¿½m listener
         notificationBell.addEventListener('click', function (event) {
-            event.stopPropagation(); // Ng?n ch?n s? ki?n click lan ra ngoài
+            event.stopPropagation(); // Ng?n ch?n s? ki?n click lan ra ngoï¿½i
             if (notificationBox.style.display === 'block') {
                 notificationBox.style.display = 'none';
             } else {
                 notificationBox.style.display = 'block';
-                // ?óng menu avatar n?u nó ?ang m?
+                // ?ï¿½ng menu avatar n?u nï¿½ ?ang m?
                 const avatarMenu = document.getElementById("dropdownMenu");
+                const guestMenu = document.getElementById("guestDropdownMenu");
                 if (avatarMenu) {
                     avatarMenu.style.display = 'none';
                 }
-                // Khi m? h?p thông báo, có th? reset s? l??ng thông báo v? 0
+                if (guestMenu) {
+                    guestMenu.style.display = 'none';
+                }
+                // Khi m? h?p thï¿½ng bï¿½o, cï¿½ th? reset s? l??ng thï¿½ng bï¿½o v? 0
                 if (notificationCount) {
                     notificationCount.style.display = 'none';
                     notificationCount.textContent = '0'; // C?p nh?t s? l??ng hi?n th?
@@ -100,32 +155,40 @@
             }
         });
     }
-    // ?óng c? h?p thông báo và menu avatar khi click ra ngoài
-    window.addEventListener("click", function (e) {
-        const avatarMenu = document.getElementById("dropdownMenu");
-        const avatar = document.querySelector(".header-avatar img");
-
-        // ?óng menu avatar
-        if (avatarMenu && !avatarMenu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
-            avatarMenu.style.display = "none";
-        }
-
-        // ?óng h?p thông báo
-        if (notificationBox && notificationBell && !notificationBox.contains(e.target) && !notificationBell.contains(e.target)) {
-            notificationBox.style.display = 'none';
-        }
-    });
-
-    // C?p nh?t hi?n th? badge thông báo khi t?i trang
+    // Cáº­p nháº­t hiá»ƒn thá»‹ badge thÃ´ng bÃ¡o khi táº£i trang
     document.addEventListener('DOMContentLoaded', function () {
         if (notificationCount) {
             const initialCount = parseInt(notificationCount.textContent);
             if (initialCount > 0) {
-                notificationCount.style.display = 'flex'; // Hi?n th? n?u có thông báo
+                notificationCount.style.display = 'flex'; // Hiá»ƒn thá»‹ náº¿u cÃ³ thÃ´ng bÃ¡o
             } else {
-                notificationCount.style.display = 'none'; // ?n n?u không có
+                notificationCount.style.display = 'none'; // áº¨n náº¿u khÃ´ng cÃ³
+            }
+        }
+        
+        // Xá»­ lÃ½ chuyá»ƒn Ä‘áº¿n form Ä‘Äƒng kÃ½ khi cÃ³ hash #signup
+        if (window.location.hash === '#signup') {
+            const signUpButton = document.getElementById('signUp');
+            if (signUpButton) {
+                signUpButton.click();
             }
         }
     });
+
+
+    const backToTopBtn = document.getElementById("backToTop");
+
+    window.onscroll = function () {
+        if (window.scrollY > 200) {
+            backToTopBtn.style.display = "flex";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    };
+
+    backToTopBtn.onclick = function () {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
 
 </script>

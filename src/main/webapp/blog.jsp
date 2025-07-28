@@ -1,9 +1,13 @@
+<%@page import="model.User"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Blog" %>
 <%@ page import="dao.BlogDAO" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
 <!DOCTYPE html>
 <html lang="zxx">
  
@@ -25,6 +29,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" type="text/css">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
 </head>
 
 <body>
@@ -56,11 +61,23 @@
    <!-- Blog Section Begin -->
 <section class="blog-section spad">
     <div class="container">
-         <div class="row">
+        <div class="row align-items-center">
+    <div class="col-lg-6 text-left">
+        <h2>Blogs</h2>
+    </div>
+    <div class="col-lg-6 text-right">
+        <c:if test="${user != null && (user.role == 'Admin' || user.role == 'Trainer')}">
+            <button class="btn btn-primary mr-2" onclick="showAddForm()">Add</button>
+            <button class="btn btn-secondary" onclick="showEditForm()">Edit</button>
+        </c:if>
+    </div>
+</div>
+
+        <!-- Danh sách blog -->
+        <div class="row">
             <c:forEach var="blog" items="${blogs}">
                 <div class="col-lg-4 col-md-6">
                     <div class="single-blog-item">
-                        <!-- Link bọc cả ảnh -->
                         <a href="${pageContext.request.contextPath}/BlogDetailServlet?action=view&id=${blog.id}" class="thumbnail-wrapper">
                             <img src="${blog.thumbnail}" alt="${blog.title}"
                                  onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/img/default-thumbnail.jpg';">
@@ -71,7 +88,6 @@
                             </div>
                             <a href="#" class="tag">#${blog.tag != null ? blog.tag : "General"}</a>
                         </div>
-                        <!-- Link title -->
                         <h4>
                             <a href="${pageContext.request.contextPath}/BlogDetailServlet?action=view&id=${blog.id}">
                                 ${blog.title}
@@ -101,45 +117,63 @@
         </div>
     </div>
 </section>
+
 <!-- Blog Section End -->
 
-    <!-- Footer Section Begin -->
-    <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="contact-option">
-                        <span>Phone</span>
-                        <p>(0905) 000 666 - (0905) 666 000</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="contact-option">
-                        <span>Address</span>
-                        <p>Khu do thi FPT City, Ngu Hanh Son, Da Nang</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="contact-option">
-                        <span>Email</span>
-                        <p>swptest391@gmail.com</p>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="copyright-text">
-                <p>&copy;<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by D02-RT01
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></p>
-                <div class="footer-social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Footer Section End -->
 
+    <!-- Popup Add Form -->
+<div id="addForm" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+    width:50%; background:#fff; border:1px solid #ccc; padding:20px; z-index:9999; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+    <h4>Add New Blog</h4>
+    <form action="AddBlogServlet" method="post">
+        <div class="form-group">
+            <label>Title:</label>
+            <input type="text" name="title" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Thumbnail URL:</label>
+            <input type="text" name="thumbnail" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Tag:</label>
+            <input type="text" name="tag" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-danger" onclick="hideAddForm()">Cancel</button>
+    </form>
+</div>
+
+<!-- Popup Edit Form -->
+<div id="editForm" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+    width:50%; background:#fff; border:1px solid #ccc; padding:20px; z-index:9999; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+    <h4>Edit Blog</h4>
+    <form action="EditBlogServlet" method="get">
+        <div class="form-group">
+            <label>Enter Blog ID to Edit:</label>
+            <input type="number" name="id" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-warning">Edit</button>
+        <button type="button" class="btn btn-danger" onclick="hideEditForm()">Cancel</button>
+    </form>
+</div>
+
+<script>
+    function showAddForm() {
+        document.getElementById("addForm").style.display = "block";
+    }
+    function hideAddForm() {
+        document.getElementById("addForm").style.display = "none";
+    }
+
+    function showEditForm() {
+        document.getElementById("editForm").style.display = "block";
+    }
+    function hideEditForm() {
+        document.getElementById("editForm").style.display = "none";
+    }
+</script>
+
+    
     <!-- Js Plugins -->
     <script src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
@@ -149,6 +183,8 @@
     <script src="${pageContext.request.contextPath}/js/masonry.pkgd.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/owl.carousel.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    
+   <jsp:include page="footer.jsp" />
 </body>
 
 </html>
