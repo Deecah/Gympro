@@ -1,0 +1,243 @@
+/* CSS cho trainer/package.jsp - Chỉ styling cho main content */
+
+/* Main content area */
+.flex-grow-1 {
+    flex: 1;
+    margin-left: 240px;
+    background: #ffffff;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+/* Header */
+h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Action buttons container */
+.d-flex.justify-content-between {
+    margin-bottom: 1.5rem;
+}
+
+/* Create package button */
+.btn-primary {
+    background: #3498db;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* Search container */
+.d-flex.align-items-center {
+    position: relative;
+}
+
+/* Search input */
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 8px 12px 8px 35px;
+    font-size: 14px;
+    width: 300px;
+    background: #ffffff;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Search icon */
+.fas.fa-search {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 10;
+}
+
+/* Table styling */
+.table {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header */
+.table thead {
+    background: #f8f9fa;
+}
+
+.table thead th {
+    border: none;
+    padding: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Table body */
+.table tbody tr {
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Package image */
+.package-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #e9ecef;
+}
+
+/* Package name */
+.table tbody td:nth-child(2) {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Description */
+.table tbody td:nth-child(3) {
+    color: #6c757d;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Price */
+.table tbody td:nth-child(4) {
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* Duration */
+.table tbody td:nth-child(5) {
+    color: #fd7e14;
+    font-weight: 600;
+}
+
+/* Action buttons */
+.btn-group {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-outline-primary {
+    border: 1px solid #3498db;
+    color: #3498db;
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-outline-secondary {
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    background: transparent;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #495057;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #3498db;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .flex-grow-1 {
+        margin-left: 200px;
+        padding: 1rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-control {
+        width: 250px;
+    }
+    
+    .table {
+        font-size: 12px;
+    }
+    
+    .package-img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .btn-outline-primary,
+    .btn-outline-secondary {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+} 

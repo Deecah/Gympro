@@ -11,11 +11,11 @@
         <title>Gympro</title>
 
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
         <!-- Css Styles -->
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -38,35 +38,35 @@
 
 
         <!-- Hero Section Begin -->
-       <section class="hero-section set-bg" data-setbg="img/hero-bg.jpg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="hero-text">
-                    <span>FITNESS ELEMENTS</span>
-                    <h1>BMI CALCULATOR</h1>
-                    <p>Gympro comes packed with the user-friendly BMI Calculator<br /> shortcode which lets</p>
-                    
-                    <!-- Nút bấm xổ form -->
-                    <a href="#" class="primary-btn" id="toggleBmiForm">Read More</a>
+        <section class="hero-section set-bg" data-setbg="img/hero-bg.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="hero-text">
+                            <span>FITNESS ELEMENTS</span>
+                            <h1>BMI CALCULATOR</h1>
+                            <p>Gympro comes packed with the user-friendly BMI Calculator<br /> shortcode which lets</p>
 
-                    <!-- Form BMI ẩn mặc định -->
-                    <div class="bmi-form-container" id="bmiForm" style="display: none; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px;">
-                        <label for="height" style="color:white;">Height (cm):</label>
-                        <input type="number" id="height" placeholder="Example: 170" min="50" max="250" class="form-control" />
+                            <!-- Nút bấm xổ form -->
+                            <a href="#" class="primary-btn" id="toggleBmiForm">Read More</a>
 
-                        <label for="weight" style="color:white; margin-top: 10px;">Weight (kg):</label>
-                        <input type="number" id="weight" placeholder="Example: 65" min="30" max="300" class="form-control" />
+                            <!-- Form BMI ẩn mặc định -->
+                            <div class="bmi-form-container" id="bmiForm" style="display: none; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px;">
+                                <label for="height" style="color:white;">Height (cm):</label>
+                                <input type="number" id="height" placeholder="Example: 170" min="50" max="250" class="form-control" />
 
-                        <button onclick="calculateBMI()" class="btn btn-warning mt-3">Calculate BMI</button>
-                        <p id="bmiResult" style="margin-top:10px; font-weight: bold; color: white;"></p>
+                                <label for="weight" style="color:white; margin-top: 10px;">Weight (kg):</label>
+                                <input type="number" id="weight" placeholder="Example: 65" min="30" max="300" class="form-control" />
+
+                                <button onclick="calculateBMI()" class="btn btn-warning mt-3">Calculate BMI</button>
+                                <p id="bmiResult" style="margin-top:10px; font-weight: bold; color: white;"></p>
+                            </div>
+
+                        </div>
                     </div>
-
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- Hero Section End -->
 

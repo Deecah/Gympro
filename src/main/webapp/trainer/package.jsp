@@ -9,11 +9,8 @@
     <head>
         <title>Packages</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            body { margin: 0; }
-            .sidebar { width: 240px; min-height: 100vh; }
-            .package-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-        </style>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/stylecss/package-trainer.css">
         
         <script>
             // Set current user ID for notification.js
@@ -34,11 +31,15 @@
             <div class="flex-grow-1 p-4 bg-light">
                 <h2>Packages</h2>
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <a href="<%= request.getContextPath() %>/TrainerPackageServlet?action=create" class="btn btn-primary">+ Create package</a>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a href="<%= request.getContextPath() %>/TrainerPackageServlet?action=create" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Create Package
+                    </a>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-search me-2 text-muted"></i>
+                        <input class="form-control" placeholder="Search packages..." style="width: 300px;"/>
+                    </div>
                 </div>
-
-                <input class="form-control mb-3" placeholder="Search"/>
 
                 <table class="table table-hover align-middle bg-white">
                     <thead class="table-light">

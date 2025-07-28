@@ -8,32 +8,13 @@
     <meta charset="UTF-8">
     <title>Packages Purchased</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: #f9f9f9;
-            padding: 30px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .table-container {
-            background: #fff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-        h2 {
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-        .btn-feedback {
-            font-size: 0.9rem;
-        }
-        .modal-content {
-            border-radius: 12px;
-        }
-    </style>
+    <link href="stylecss/packagesPurchased.css" rel="stylesheet">
 </head>
 <body>
     <div class="container table-container text-center">
+        <a href="index.jsp" class="btn btn-outline-secondary mb-3" style="float:left;">
+            ← Back to Home
+        </a>
         <h2>📦 Packages You've Purchased</h2>
 
         <table class="table table-striped">
@@ -60,18 +41,18 @@
                                 <td>${row[4]}</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary btn-feedback"
-                                            onclick="openFeedbackModal('package', ${row[5]})">
+                                            onclick="openFeedbackModal('package', '${row[5]}')">
                                         Give Feedback
                                     </button>
                                 </td>
                                 <td> <%-- ✅ New Schedule Button --%>
-                                    <form action="schedule.jsp" method="get" style="margin: 0;">
+                                    <form action="${pageContext.request.contextPath}/timetable" method="get" style="margin: 0;">
                                         <input type="hidden" name="packageId" value="${row[5]}" />
                                         <button type="submit" class="btn btn-sm btn-outline-secondary">
                                             Schedule
                                         </button>
                                     </form>
-                        </td>
+                                </td>
                             </tr>
                         </c:forEach>
                     </c:when>

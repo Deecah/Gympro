@@ -809,5 +809,16 @@
     }
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <c:if test="${param.error == 'overlap'}">
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var addWorkoutModal = new bootstrap.Modal(document.getElementById('addWorkoutModal'));
+        addWorkoutModal.show();
+        document.getElementById('workoutValidationAlert').style.display = 'block';
+        document.getElementById('workoutValidationMessage').innerText =
+            "Workout time overlaps with another workout in this day. Please choose a different time.";
+    });
+</script>
+</c:if>
     </body>
 </html>

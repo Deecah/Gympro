@@ -40,7 +40,7 @@
             <!-- Right section -->
             <div class="col-md-8 right-section">
                 <h3 class="role-header">Edit Profile</h3>
-                <form action="../TrainerProfileServlet" method="post">
+                <form action="${pageContext.request.contextPath}/TrainerProfileServlet" method="post">
                     <div class="form-group">
                         <label>Name:</label>
                         <input type="text" name="name" value="<%= user.getUserName() %>" class="form-control" required />
@@ -74,7 +74,7 @@
                         <input type="number" name="experience" value="<%= trainer.getExperienceYears() %>" class="form-control" />
                     </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <a href="profile-trainer.jsp" class="btn btn-secondary ml-2">Cancel</a>
+                    <a href="${pageContext.request.contextPath}/trainer/profile-trainer.jsp" class="btn btn-secondary ml-2">Cancel</a>
                 </form>
             </div>
         </div>
