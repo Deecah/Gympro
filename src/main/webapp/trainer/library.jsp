@@ -51,12 +51,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <a href="create-exercise.jsp" class="btn btn-primary">+ Add Exercise</a>
-                <button class="btn btn-outline-secondary">Manage Categories</button>
             </div>
-            <button class="btn btn-outline-dark">Export</button>
         </div>
 
-        <input class="form-control mb-3" placeholder="Search exercises..."/>
+        <input id="searchInput" class="form-control mb-3" placeholder="Search exercises..." onkeyup="filterExercises()" />
 
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-dark text-center">
@@ -67,7 +65,7 @@
                     <th>Equipment</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="exerciseTable">
                 <c:forEach var="ex" items="${exercises}">
                     <tr onclick="window.location.href='${pageContext.request.contextPath}/EditExerciseServlet?id=${ex.exerciseID}'" style="cursor:pointer;">
                         <td>${ex.name}</td>
@@ -80,7 +78,26 @@
         </table>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function filterExercises() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const rows = document.getElementById("exerciseTable").getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            let match = false;
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                if (cell.textContent.toLowerCase().includes(filter)) {
+                    match = true;
+                    break;
+                }
+            }
+            rows[i].style.display = match ? "" : "none";
+        }
+    }
+</script>
 </body>
 </html>

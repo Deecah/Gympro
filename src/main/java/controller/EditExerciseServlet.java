@@ -1,67 +1,154 @@
 package controller;
 
-import dao.ExerciseDAO;
+import Utils.CloudinaryUploader;
+import dao.ExerciseLibraryDAO;
+import model.ExerciseLibrary;
+
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.io.InputStream;
 
-@WebServlet(name = "EditExerciseServlet", urlPatterns = {"/EditExerciseServlet"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
+        maxFileSize = 1024 * 1024 * 100, // 100 MB
+        maxRequestSize = 1024 * 1024 * 150 // 150 MB
+)
+@WebServlet("/EditExerciseServlet")
 public class EditExerciseServlet extends HttpServlet {
+
+    private final ExerciseLibraryDAO exerciseDAO = new ExerciseLibraryDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            int exerciseId = Integer.parseInt(request.getParameter("exerciseId"));
-            int exerciseLibraryId = Integer.parseInt(request.getParameter("exerciseLibraryId"));
-            int sets = Integer.parseInt(request.getParameter("sets"));
-            int reps = Integer.parseInt(request.getParameter("reps"));
-            String restTimeStr = request.getParameter("restTime");
-            String notes = request.getParameter("notes");
 
-            // Validation
-            if (sets <= 0 || reps <= 0) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Sets and reps must be greater than 0.");
+        request.setCharacterEncoding("UTF-8");
+
+        try {
+            System.out.println("doPost started");
+            int exerciseId = Integer.parseInt(request.getParameter("exerciseID"));
+            System.out.println("Parsed exerciseId: " + exerciseId);
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            String muscleGroup = request.getParameter("muscleGroup");
+            String equipment = request.getParameter("equipment");
+            String existingVideoURL = request.getParameter("existingVideoURL");
+
+            // Validate required fields
+            if (name == null || name.trim().isEmpty()
+                    || description == null || description.trim().isEmpty()
+                    || muscleGroup == null || muscleGroup.trim().isEmpty()) {
+
+                ExerciseLibrary exercise = new ExerciseLibrary();
+                exercise.setExerciseID(exerciseId);
+                exercise.setName(name);
+                exercise.setDescription(description);
+                exercise.setMuscleGroup(muscleGroup);
+                exercise.setEquipment(equipment);
+                exercise.setVideoURL(existingVideoURL);
+
+                request.setAttribute("exercise", exercise);
+                request.setAttribute("error", "Please fill in all required information!");
+                request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
                 return;
             }
 
-            Integer restTime = null;
-            if (restTimeStr != null && !restTimeStr.trim().isEmpty()) {
-                restTime = Integer.parseInt(restTimeStr);
-                if (restTime < 0) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Rest time cannot be negative.");
+            // Handle video upload (optional)
+            Part videoPart = request.getPart("videoFile");
+            boolean isNewVideoUploaded = videoPart != null && videoPart.getSize() > 0
+                    && videoPart.getSubmittedFileName() != null && !videoPart.getSubmittedFileName().isEmpty()
+                    && videoPart.getContentType() != null && videoPart.getContentType().startsWith("video/");
+
+            String videoURL = null;
+
+            if (isNewVideoUploaded) {
+                try (InputStream videoStream = videoPart.getInputStream()) {
+                    // Optional: organize by exerciseId folder or trainerId folder
+                    videoURL = CloudinaryUploader.upload(videoStream, videoPart.getContentType(), "exercises/edit_" + exerciseId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    ExerciseLibrary exercise = new ExerciseLibrary();
+                    exercise.setExerciseID(exerciseId);
+                    exercise.setName(name);
+                    exercise.setDescription(description);
+                    exercise.setMuscleGroup(muscleGroup);
+                    exercise.setEquipment(equipment);
+                    exercise.setVideoURL(existingVideoURL);
+
+                    request.setAttribute("exercise", exercise);
+                    request.setAttribute("error", "Error uploading video.");
+                    request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
                     return;
                 }
-            }
-
-            ExerciseDAO exerciseDAO = new ExerciseDAO();
-            boolean success = exerciseDAO.updateExercise(exerciseId, exerciseLibraryId, sets, reps, restTime, notes);
-            
-            if (success) {
-                // Redirect back to program detail page
-                String referer = request.getHeader("Referer");
-                if (referer != null && !referer.isEmpty()) {
-                    response.sendRedirect(referer);
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/ProgramServlet");
-                }
+            } else if (existingVideoURL != null && !existingVideoURL.trim().isEmpty()) {
+                videoURL = existingVideoURL;
             } else {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                    "Failed to update exercise.");
+                // No video at all - reject
+                ExerciseLibrary exercise = new ExerciseLibrary();
+                exercise.setExerciseID(exerciseId);
+                exercise.setName(name);
+                exercise.setDescription(description);
+                exercise.setMuscleGroup(muscleGroup);
+                exercise.setEquipment(equipment);
+                exercise.setVideoURL(null);
+
+                request.setAttribute("exercise", exercise);
+                request.setAttribute("error", "Please upload a video or keep the existing one.");
+                request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
+                return;
             }
 
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid input data.");
+            // Update exercise
+            ExerciseLibrary exercise = new ExerciseLibrary();
+            exercise.setExerciseID(exerciseId);
+            exercise.setName(name);
+            exercise.setDescription(description);
+            exercise.setMuscleGroup(muscleGroup);
+            exercise.setEquipment(equipment);
+            exercise.setVideoURL(videoURL);
+
+            boolean success = exerciseDAO.updateExercise(exercise);
+
+            if (success) {
+                response.sendRedirect(request.getContextPath() + "/trainer/library.jsp?action=list");
+            } else {
+                request.setAttribute("exercise", exercise);
+                request.setAttribute("error", "Failed to update exercise.");
+                request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
+            }
+
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "An error occurred while updating the exercise.");
+            e.printStackTrace();
+
+            // Repopulate form with user input if error occurs
+            ExerciseLibrary exercise = new ExerciseLibrary();
+            try {
+                exercise.setExerciseID(Integer.parseInt(request.getParameter("exerciseId")));
+            } catch (Exception ignored) {
+            }
+            exercise.setName(request.getParameter("name"));
+            exercise.setDescription(request.getParameter("description"));
+            exercise.setMuscleGroup(request.getParameter("muscleGroup"));
+            exercise.setEquipment(request.getParameter("equipment"));
+            exercise.setVideoURL(request.getParameter("existingVideoURL"));
+
+            request.setAttribute("exercise", exercise);
+            request.setAttribute("error", "Unexpected error occurred. Please try again.");
+            request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        ExerciseLibrary exercise = exerciseDAO.getExerciseById(id);
+
+        request.setAttribute("exercise", exercise);
+        request.getRequestDispatcher("/trainer/edit-exercise.jsp").forward(request, response);
     }
 }

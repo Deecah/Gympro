@@ -51,10 +51,10 @@
                             </div>
 
                             <!-- Search Bar tích hợp -->
-                            <form action="SearchServlet" method="get" class="d-flex justify-content-center">
+                            <form action="searchPackage" method="get" class="d-flex justify-content-center">
                                 <input type="text" name="keyword"
                                        class="form-control w-50 me-2 rounded-pill px-4"
-                                       placeholder="Find Trainer or Package..." required />
+                                       placeholder="Find Package..." required />
                                 <button type="submit" class="btn btn-light text-primary rounded-pill px-4 fw-semibold">
                                     Find
                                 </button>
