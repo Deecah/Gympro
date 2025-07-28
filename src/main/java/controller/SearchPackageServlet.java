@@ -26,9 +26,9 @@ public class SearchPackageServlet extends HttpServlet {
         }
 
         // Gửi dữ liệu sang JSP
-        request.setAttribute("packageList", list);
+        request.setAttribute("packages", list);
         request.setAttribute("keyword", keyword); // để giữ lại giá trị ô input khi reload
-        request.getRequestDispatcher("searchPackage.jsp").forward(request, response);
+        request.getRequestDispatcher("packages.jsp").forward(request, response);
     }
 
     @Override
