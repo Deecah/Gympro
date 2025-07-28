@@ -13,13 +13,16 @@ import java.util.logging.Logger;
 public class CustomerProgramDAO {
 
     public int assignProgramToCustomer(int programId, int customerId, LocalDate startDate) {
+        // Tính toán ngày bắt đầu hợp lý để tránh các buổi tập trong quá khứ
+        LocalDate adjustedStartDate = calculateAdjustedStartDate(startDate);
+        
         String sql = "INSERT INTO CustomerProgram (ProgramID, CustomerID, StartDate) VALUES (?, ?, ?)";
         try (Connection con = ConnectDatabase.getInstance().openConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, programId);
             ps.setInt(2, customerId);
-            ps.setDate(3, Date.valueOf(startDate));
+            ps.setDate(3, Date.valueOf(adjustedStartDate));
             ps.executeUpdate();
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -32,6 +35,32 @@ public class CustomerProgramDAO {
             Logger.getLogger(CustomerProgramDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return -1;
+    }
+    
+    /**
+     * Tính toán ngày bắt đầu hợp lý để tránh các buổi tập trong quá khứ
+     * Nếu ngày được chọn là chủ nhật nhưng chương trình có buổi tập vào thứ 2, thứ 3
+     * thì sẽ điều chỉnh để buổi tập đầu tiên không rơi vào quá khứ
+     */
+    private LocalDate calculateAdjustedStartDate(LocalDate requestedStartDate) {
+        LocalDate currentDate = LocalDate.now();
+        
+        // Nếu ngày yêu cầu đã trong quá khứ, bắt đầu từ ngày mai
+        if (requestedStartDate.isBefore(currentDate)) {
+            return currentDate.plusDays(1);
+        }
+        
+        // Nếu ngày yêu cầu là hôm nay, kiểm tra xem có phải là ngày cuối tuần không
+        // Nếu là chủ nhật và đã muộn, bắt đầu từ thứ 2 tuần sau
+        if (requestedStartDate.equals(currentDate)) {
+            int dayOfWeek = currentDate.getDayOfWeek().getValue(); // 1=Monday, 7=Sunday
+            if (dayOfWeek == 7) { // Chủ nhật
+                // Nếu đã muộn trong ngày chủ nhật, bắt đầu từ thứ 2 tuần sau
+                return currentDate.plusDays(1); // Thứ 2 tuần sau
+            }
+        }
+        
+        return requestedStartDate;
     }
 
     // ✅ Dùng khi chỉ muốn lấy chương trình mới nhất (nếu cần)

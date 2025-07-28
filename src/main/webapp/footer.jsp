@@ -71,16 +71,57 @@
 
 
 <script>
+    // Function cho user đã đăng nhập
     function toggleMenu() {
         const menu = document.getElementById("dropdownMenu");
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        const guestMenu = document.getElementById("guestDropdownMenu");
+        
+        // Đóng guest menu nếu đang mở
+        if (guestMenu) {
+            guestMenu.style.display = "none";
+        }
+        
+        // Toggle user menu
+        if (menu) {
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
     }
 
+    // Function cho guest (chưa đăng nhập)
+    function toggleGuestMenu() {
+        const guestMenu = document.getElementById("guestDropdownMenu");
+        const menu = document.getElementById("dropdownMenu");
+        
+        // Đóng user menu nếu đang mở
+        if (menu) {
+            menu.style.display = "none";
+        }
+        
+        // Toggle guest menu
+        if (guestMenu) {
+            guestMenu.style.display = (guestMenu.style.display === "block") ? "none" : "block";
+        }
+    }
+
+    // Event listener để đóng menu và notification khi click ra ngoài
     window.addEventListener("click", function (e) {
         const menu = document.getElementById("dropdownMenu");
+        const guestMenu = document.getElementById("guestDropdownMenu");
         const avatar = document.querySelector(".header-avatar img");
-        if (!menu.contains(e.target) && !avatar.contains(e.target)) {
+        
+        // Đóng user menu
+        if (menu && !menu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
             menu.style.display = "none";
+        }
+        
+        // Đóng guest menu
+        if (guestMenu && !guestMenu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
+            guestMenu.style.display = "none";
+        }
+        
+        // Đóng hộp thông báo
+        if (notificationBox && notificationBell && !notificationBox.contains(e.target) && !notificationBell.contains(e.target)) {
+            notificationBox.style.display = 'none';
         }
     });
 
@@ -99,8 +140,12 @@
                 notificationBox.style.display = 'block';
                 // ?�ng menu avatar n?u n� ?ang m?
                 const avatarMenu = document.getElementById("dropdownMenu");
+                const guestMenu = document.getElementById("guestDropdownMenu");
                 if (avatarMenu) {
                     avatarMenu.style.display = 'none';
+                }
+                if (guestMenu) {
+                    guestMenu.style.display = 'none';
                 }
                 // Khi m? h?p th�ng b�o, c� th? reset s? l??ng th�ng b�o v? 0
                 if (notificationCount) {
@@ -110,30 +155,22 @@
             }
         });
     }
-    // ?�ng c? h?p th�ng b�o v� menu avatar khi click ra ngo�i
-    window.addEventListener("click", function (e) {
-        const avatarMenu = document.getElementById("dropdownMenu");
-        const avatar = document.querySelector(".header-avatar img");
-
-        // ?�ng menu avatar
-        if (avatarMenu && !avatarMenu.contains(e.target) && (!avatar || !avatar.contains(e.target))) {
-            avatarMenu.style.display = "none";
-        }
-
-        // ?�ng h?p th�ng b�o
-        if (notificationBox && notificationBell && !notificationBox.contains(e.target) && !notificationBell.contains(e.target)) {
-            notificationBox.style.display = 'none';
-        }
-    });
-
-    // C?p nh?t hi?n th? badge th�ng b�o khi t?i trang
+    // Cập nhật hiển thị badge thông báo khi tải trang
     document.addEventListener('DOMContentLoaded', function () {
         if (notificationCount) {
             const initialCount = parseInt(notificationCount.textContent);
             if (initialCount > 0) {
-                notificationCount.style.display = 'flex'; // Hi?n th? n?u c� th�ng b�o
+                notificationCount.style.display = 'flex'; // Hiển thị nếu có thông báo
             } else {
-                notificationCount.style.display = 'none'; // ?n n?u kh�ng c�
+                notificationCount.style.display = 'none'; // Ẩn nếu không có
+            }
+        }
+        
+        // Xử lý chuyển đến form đăng ký khi có hash #signup
+        if (window.location.hash === '#signup') {
+            const signUpButton = document.getElementById('signUp');
+            if (signUpButton) {
+                signUpButton.click();
             }
         }
     });

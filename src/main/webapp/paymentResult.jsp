@@ -8,6 +8,17 @@
         <title>Transaction Result</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
               crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
+        <script>
+            // Set current user ID for notification.js
+            <% if (session.getAttribute("user") != null) { %>
+            var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+            <% } else { %>
+            var currentUserId = null;
+            <% } %>
+        </script>
+        <script src="js/notification.js"></script>
+        
         <style>
             body {
                 background-color: #f4f4f4;

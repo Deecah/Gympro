@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import model.User;
 import Utils.CloudinaryUploader;
+import Utils.NotificationUtil;
 
 @WebServlet(name = "ChangeAvatarServlet", urlPatterns = {"/ChangeAvatarServlet"})
 @MultipartConfig(
@@ -61,7 +62,13 @@ public class ChangeAvatarServlet extends HttpServlet {
 
         UserDAO userDAO = new UserDAO();
         user.setAvatarUrl(avatarUrl);
-        userDAO.updateAvatar(user.getUserId(), avatarUrl);
+        boolean success = userDAO.updateAvatar(user.getUserId(), avatarUrl);
+        
+        if (success) {
+            NotificationUtil.sendSuccessNotification(user.getUserId(), 
+                "Avatar Updated Successfully", 
+                "Your profile picture has been updated successfully!");
+        }
 
         session.setAttribute("user", user);
         String role = user.getRole(); 

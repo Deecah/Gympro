@@ -8,6 +8,8 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import Utils.NotificationUtil;
+import model.User;
 
 @WebServlet(name = "AddWorkoutServlet", urlPatterns = {"/AddWorkoutServlet"})
 public class AddWorkoutServlet extends HttpServlet {
@@ -29,7 +31,21 @@ public class AddWorkoutServlet extends HttpServlet {
             }
 
             WorkoutDAO workoutDAO = new WorkoutDAO();
-            workoutDAO.createWorkout(dayId, title, notes, startTime, endTime);
+            int result = workoutDAO.createWorkout(dayId, title, notes, startTime, endTime);
+            boolean success = result > 0;
+            
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            
+            if (success && user != null) {
+                NotificationUtil.sendSuccessNotification(user.getUserId(), 
+                    "Workout Added Successfully", 
+                    "Your new workout '" + title + "' has been added to the program successfully!");
+            } else if (user != null) {
+                NotificationUtil.sendErrorNotification(user.getUserId(), 
+                    "Workout Addition Failed", 
+                    "Failed to add workout '" + title + "'. Please try again.");
+            }
 
             ProgramDayDAO dayDAO = new ProgramDayDAO();
             int programId = dayDAO.getProgramIdByDayId(dayId);

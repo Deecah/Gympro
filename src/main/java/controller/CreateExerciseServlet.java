@@ -12,6 +12,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import Utils.NotificationUtil;
 
 @WebServlet(name = "CreateExerciseServlet", urlPatterns = {"/CreateExerciseServlet"})
 @MultipartConfig
@@ -94,8 +95,16 @@ public class CreateExerciseServlet extends HttpServlet {
 
         boolean success = exerciseDAO.insertExercise(exercise);
         if (success) {
+            // Gửi notification thành công
+            NotificationUtil.sendSuccessNotification(user.getUserId(), 
+                "Exercise Created Successfully", 
+                "Your new exercise '" + name + "' has been added to the library successfully!");
             response.sendRedirect("TrainerExerciseServlet?action=list");
         } else {
+            // Gửi notification lỗi
+            NotificationUtil.sendErrorNotification(user.getUserId(), 
+                "Exercise Creation Failed", 
+                "Failed to create exercise '" + name + "'. Please try again.");
             request.setAttribute("error", "Không thể tạo bài tập.");
             request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
         }

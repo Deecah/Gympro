@@ -18,6 +18,7 @@ import org.apache.http.HttpRequest;
 public class NotificationDAO {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationDAO.class.getName());
+    
     public List<Notification> getNotificationsByUserId(int userId) throws ClassNotFoundException {
         List<Notification> notifications = new ArrayList<>();
         String sql = "SELECT * FROM [dbo].[Notification] " +
@@ -121,5 +122,43 @@ public class NotificationDAO {
         }
         LOGGER.info("Hoàn thành gửi thông báo. Tổng: " + allUsers.size() + " users, Thành công: ");
     }
- 
+    
+     public boolean addNotification(Notification notification) throws ClassNotFoundException {
+        // SQL INSERT bao gồm UserID, Title, Content và CreatedTime
+        // Lưu ý: Nếu cột CreatedTime trong DB có DEFAULT (getdate()), bạn có thể bỏ qua nó trong câu SQL và setTimestamp
+        String sql = "INSERT INTO [dbo].[Notification] (UserID, NotificationTitle, NotificationContent, CreatedTime) " +
+                     "VALUES (?, ?, ?, ?)";
+
+        ConnectDatabase db = ConnectDatabase.getInstance();
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = db.openConnection(); // Mở kết nối
+            ps = con.prepareStatement(sql); // Chuẩn bị câu lệnh SQL
+
+            // Đặt giá trị cho các tham số
+            ps.setInt(1, notification.getUserID());
+            ps.setString(2, notification.getTitle());
+            ps.setString(3, notification.getContent());
+            
+            // Chuyển đổi LocalDateTime sang Timestamp để lưu vào DB
+            ps.setTimestamp(4, Timestamp.valueOf(notification.getCreatedTime()));
+
+            int rowsAffected = ps.executeUpdate(); // Thực thi câu lệnh UPDATE/INSERT/DELETE
+            return rowsAffected > 0; // Trả về true nếu có hàng nào bị ảnh hưởng
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi thêm thông báo: " + notification.getTitle(), e);
+            return false;
+        } finally {
+            // Đảm bảo đóng tất cả tài nguyên trong khối finally
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "Lỗi khi đóng tài nguyên trong addNotification", ex);
+            }
+        }
+    }
+
 }

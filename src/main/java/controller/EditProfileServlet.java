@@ -16,8 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import Utils.NotificationUtil;
 
-
+@WebServlet(name = "EditProfileServlet", urlPatterns = {"/EditProfileServlet"})
 public class EditProfileServlet extends HttpServlet {
 
     @Override
@@ -83,7 +84,7 @@ public class EditProfileServlet extends HttpServlet {
         }
 
         // Update session
-             if (success) {
+        if (success) {
             User updatedUser = userDAO.getUserById(id);
             HttpSession session = request.getSession();
             session.setAttribute("user", updatedUser);
@@ -95,6 +96,16 @@ public class EditProfileServlet extends HttpServlet {
                 Trainer updatedTrainer = new TrainerDAO().getProfile(id);
                 session.setAttribute("trainer", updatedTrainer);
             }
+            
+            // Gửi notification thành công
+            NotificationUtil.sendSuccessNotification(id, 
+                "Profile Updated Successfully", 
+                "Your profile information has been updated successfully!");
+        } else {
+            // Gửi notification lỗi
+            NotificationUtil.sendErrorNotification(id, 
+                "Profile Update Failed", 
+                "Failed to update your profile. Please try again.");
         }
 
         response.sendRedirect("profile.jsp");

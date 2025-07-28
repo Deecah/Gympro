@@ -11,41 +11,43 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PackageDAO {
-    
-    public List<Package> getAllPackages() {
-        String sql = "SELECT * FROM Package";
+
+    public List<Package> getPackagesByPage(int limit, int offset) {
+        String sql = "SELECT * FROM Package ORDER BY PackageID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         List<Package> list = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectDatabase.getInstance().openConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Package p = new Package();
-                p.setPackageID(rs.getInt("PackageID"));
-                p.setName(rs.getString("PackageName"));
-                p.setDescription(rs.getString("Description"));
-                p.setImageUrl(rs.getString("ImageUrl"));
-                p.setPrice(rs.getDouble("Price"));
-                p.setDuration(rs.getInt("Duration"));
-                list.add(p);
+        try (Connection con = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Package p = new Package();
+                    p.setPackageID(rs.getInt("PackageID"));
+                    p.setName(rs.getString("PackageName"));
+                    p.setDescription(rs.getString("Description"));
+                    p.setImageUrl(rs.getString("ImageUrl"));
+                    p.setPrice(rs.getDouble("Price"));
+                    p.setDuration(rs.getInt("Duration"));
+                    list.add(p);
+                }
             }
         } catch (Exception e) {
             Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
-            }
         }
         return list;
     }
-    
+
+    public int countAllPackages() {
+        String sql = "SELECT COUNT(*) FROM Package";
+        try (Connection con = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return 0;
+    }
+
     public List<Package> getAllPackagesByTrainer(int trainerId) {
         String sql = "SELECT * FROM Package WHERE TrainerID = ?";
         List<Package> list = new ArrayList<>();
@@ -129,7 +131,7 @@ public class PackageDAO {
         }
         return null;
     }
-    
+
     public Package getPackageById(int id) {
         String sql = "SELECT * FROM Package WHERE PackageID = ?";
         Connection con = null;
@@ -286,8 +288,12 @@ public class PackageDAO {
             Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
-                if (ps != null) ps.close();
-                if (con != null) con.close();
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -360,6 +366,7 @@ public class PackageDAO {
 
         return price;
     }
+
     public List<Package> searchByKeyword(String keyword) {
         List<Package> list = new ArrayList<>();
         String sql = "SELECT * FROM Package WHERE PackageName LIKE ? OR Description LIKE ?";
@@ -389,6 +396,5 @@ public class PackageDAO {
 
         return list;
     }
-
 
 }

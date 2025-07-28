@@ -7,7 +7,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
+@WebServlet(name = "DeleteCertificationServlet", urlPatterns = {"/DeleteCertificationServlet"})
 public class DeleteCertificationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

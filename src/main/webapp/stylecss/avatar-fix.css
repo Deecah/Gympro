@@ -1,0 +1,40 @@
+/* Avatar Fix - Override all other styles */
+.customer-avatar,
+img.customer-avatar,
+.d-flex .customer-avatar,
+.d-flex img.customer-avatar,
+.table .customer-avatar,
+.table img.customer-avatar,
+.customers-table .customer-avatar,
+.customers-table img.customer-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 1px solid #dee2e6 !important;
+    display: block !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .customer-avatar,
+    img.customer-avatar,
+    .d-flex .customer-avatar,
+    .d-flex img.customer-avatar,
+    .table .customer-avatar,
+    .table img.customer-avatar,
+    .customers-table .customer-avatar,
+    .customers-table img.customer-avatar {
+        width: 28px !important;
+        height: 28px !important;
+        max-width: 28px !important;
+        max-height: 28px !important;
+        min-width: 28px !important;
+        min-height: 28px !important;
+    }
+} 

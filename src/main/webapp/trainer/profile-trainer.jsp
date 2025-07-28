@@ -35,6 +35,16 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="<%= request.getContextPath() %>/stylecss/profile-trainer.css" />
+    
+    <script>
+        // Set current user ID for notification.js
+        <% if (session.getAttribute("user") != null) { %>
+        var currentUserId = <%= ((model.User)session.getAttribute("user")).getUserId() %>;
+        <% } else { %>
+        var currentUserId = null;
+        <% } %>
+    </script>
+    <script src="../js/notification.js"></script>
 </head>
 
 <body>
@@ -87,7 +97,7 @@
                 </c:forEach>
 
                 <div class="btn-group mt-4">
-                    <a href="${pageContext.request.contextPath}/ProfileServlet" class="btn btn-primary">Edit Profile</a>
+                    <a href="${pageContext.request.contextPath}/TrainerProfileServlet" class="btn btn-primary">Edit Profile</a>
                     <a href="${pageContext.request.contextPath}/EditCertificationServlet" class="btn btn-brown ml-2">Edit Certification</a>
                     <a href="../confirmOldPass.jsp" class="btn btn-warning ml-2">Change Password</a>
                     <a href="${pageContext.request.contextPath}/Navigate?target=backtohome" class="btn btn-secondary ml-2">← Back to Home</a>

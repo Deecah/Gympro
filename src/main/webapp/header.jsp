@@ -23,7 +23,20 @@
         }
     }
 %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+        
+        <script>
+            // Set current user ID for notification.js
+            <% if (user != null) { %>
+            var currentUserId = <%= user.getUserId() %>;
+            <% } else { %>
+            var currentUserId = null;
+            <% } %>
+        </script>
+        <script src="${pageContext.request.contextPath}/js/notification.js"></script>
+        
+
 <!-- Font Awesome 5 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -76,18 +89,30 @@
         </div>
 
         <div class="header-avatar" style="position: relative;">
-             <img src="<%= (user != null && user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) ? user.getAvatarUrl()
-                     : "img/default-avatar.jpg"%>"
-             onclick="toggleMenu()" 
-             class="avatar-img" 
-             alt="Avatar">
+            <% if (user != null) { %>
+                <!-- User đã đăng nhập -->
+                <img src="<%= (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) ? user.getAvatarUrl() : "img/default-avatar.jpg"%>"
+                     onclick="toggleMenu()" 
+                     class="avatar-img" 
+                     alt="Avatar">
+                <div id="dropdownMenu" class="avatar-dropdown">
+                    <a href="${pageContext.request.contextPath}/profile.jsp"><i class="fa fa-user"></i> Profile</a>
+                    <a href="packagesPurchased"><i class="fa fa-cube"></i> Packages Purchased</a>
+                    <a href="${pageContext.request.contextPath}/timetable"><i class="fa fa-calendar"></i> Schedule</a>
+                    <a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Logout</a>
+                </div>
+            <% } else { %>
+                <!-- User chưa đăng nhập (guest) -->
+                <img src="img/default-avatar.jpg"
+                     onclick="toggleGuestMenu()" 
+                     class="avatar-img" 
+                     alt="Avatar">
 
-            <div id="dropdownMenu" class="avatar-dropdown">
-                <a href="${pageContext.request.contextPath}/profile.jsp"><i class="fa fa-user"></i> Profile</a>
-                <a href="packagesPurchased"><i class="fa fa-cube"></i> Packages Purchased</a>
-                <a href="${pageContext.request.contextPath}/timetable"><i class="fa fa-calendar"></i> Schedule</a>
-                <a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Logout</a>
-            </div>
+                <div id="guestDropdownMenu" class="avatar-dropdown">
+                    <a href="${pageContext.request.contextPath}/login.jsp"><i class="fa fa-sign-in"></i> Login</a>
+                    <a href="${pageContext.request.contextPath}/login.jsp#signup"><i class="fa fa-user-plus"></i> Register</a>
+                </div>
+            <% } %>
         </div>
     </div>
 </header>

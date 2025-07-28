@@ -12,6 +12,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import Utils.NotificationUtil;
 
 @MultipartConfig
 @WebServlet(name = "TrainerPackageServlet", urlPatterns = {"/TrainerPackageServlet"})
@@ -102,8 +103,16 @@ public class TrainerPackageServlet extends HttpServlet {
 
             int newId = packageDAO.insertPackage(p, trainerId);
             if (newId > 0) {
+                // Gửi notification thành công
+                NotificationUtil.sendSuccessNotification(trainerId, 
+                    "Package Created Successfully", 
+                    "Your new package '" + name + "' has been created successfully!");
                 response.sendRedirect("TrainerPackageServlet?action=list");
             } else {
+                // Gửi notification lỗi
+                NotificationUtil.sendErrorNotification(trainerId, 
+                    "Package Creation Failed", 
+                    "Failed to create package '" + name + "'. Please try again.");
                 request.setAttribute("error", "Không tạo được gói tập.");
                 request.getRequestDispatcher("trainer/create-package.jsp").forward(request, response);
             }
@@ -154,8 +163,16 @@ public class TrainerPackageServlet extends HttpServlet {
 
             boolean updated = packageDAO.updatePackage(p, trainerId);
             if (updated) {
+                // Gửi notification thành công
+                NotificationUtil.sendSuccessNotification(trainerId, 
+                    "Package Updated Successfully", 
+                    "Your package '" + name + "' has been updated successfully!");
                 response.sendRedirect("TrainerPackageServlet?action=list");
             } else {
+                // Gửi notification lỗi
+                NotificationUtil.sendErrorNotification(trainerId, 
+                    "Package Update Failed", 
+                    "Failed to update package '" + name + "'. Please try again.");
                 request.setAttribute("error", "Cập nhật thất bại.");
                 request.setAttribute("package", p);
                 request.getRequestDispatcher("trainer/edit-package.jsp").forward(request, response);
