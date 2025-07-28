@@ -193,12 +193,24 @@
             </c:forEach>
         </div>
 
-      <!-- Pagination -->
+     <!-- Pagination -->
 <div class="row justify-content-center mt-4">
     <div class="col-auto">
         <ul class="pagination justify-content-center">
+            <%-- Ensure currentPage and totalPages exist --%>
             <c:set var="currentPage" value="${currentPage}" />
             <c:set var="totalPages" value="${totalPages}" />
+
+            <%-- Tính start & end an toàn --%>
+            <c:set var="start" value="${currentPage - 2}" />
+            <c:if test="${start < 1}">
+                <c:set var="start" value="1" />
+            </c:if>
+
+            <c:set var="end" value="${currentPage + 2}" />
+            <c:if test="${end > totalPages}">
+                <c:set var="end" value="${totalPages}" />
+            </c:if>
 
             <%-- Nút Previous --%>
             <c:if test="${currentPage > 1}">
@@ -207,32 +219,26 @@
                 </li>
             </c:if>
 
-            <%-- Hiện trang 1 nếu currentPage > 3 --%>
-            <c:if test="${currentPage > 3}">
+            <%-- Trang đầu & dấu ... đầu --%>
+            <c:if test="${start > 1}">
                 <li class="page-item"><a class="page-link" href="ExpertTrainerServlet?page=1">1</a></li>
             </c:if>
-
-            <%-- Dấu ... nếu cách xa đầu --%>
-            <c:if test="${currentPage > 4}">
+            <c:if test="${start > 2}">
                 <li class="page-item disabled"><a class="page-link">...</a></li>
             </c:if>
 
-            <%-- Hiện 2 trang trước, trang hiện tại, 2 trang sau --%>
-            <c:forEach var="i" begin="${currentPage - 2}" end="${currentPage + 2}">
-                <c:if test="${i >= 1 && i <= totalPages}">
-                    <li class="page-item ${i == currentPage ? 'active' : ''}">
-                        <a class="page-link" href="ExpertTrainerServlet?page=${i}">${i}</a>
-                    </li>
-                </c:if>
+            <%-- Hiển thị các trang gần currentPage --%>
+            <c:forEach var="i" begin="${start}" end="${end}">
+                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                    <a class="page-link" href="ExpertTrainerServlet?page=${i}">${i}</a>
+                </li>
             </c:forEach>
 
-            <%-- Dấu ... nếu cách xa cuối --%>
-            <c:if test="${currentPage < totalPages - 3}">
+            <%-- Dấu ... cuối & trang cuối --%>
+            <c:if test="${end < totalPages - 1}">
                 <li class="page-item disabled"><a class="page-link">...</a></li>
             </c:if>
-
-            <%-- Trang cuối nếu currentPage đủ xa --%>
-            <c:if test="${currentPage < totalPages - 2}">
+            <c:if test="${end < totalPages}">
                 <li class="page-item"><a class="page-link" href="ExpertTrainerServlet?page=${totalPages}">${totalPages}</a></li>
             </c:if>
 
@@ -245,6 +251,7 @@
         </ul>
     </div>
 </div>
+
 
     </div>
 </section>

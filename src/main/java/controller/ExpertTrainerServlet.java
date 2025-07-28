@@ -2,7 +2,6 @@ package controller;
 
 import dao.TrainerDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -50,7 +49,7 @@ public class ExpertTrainerServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-        request.getRequestDispatcher("trainers.jsp").forward(request, response);
+        request.getRequestDispatcher("./trainers.jsp").forward(request, response);
     }
 
     @Override
@@ -58,9 +57,5 @@ public class ExpertTrainerServlet extends HttpServlet {
             throws ServletException, IOException {
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
 
 }

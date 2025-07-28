@@ -40,10 +40,10 @@ public class CommentServlet extends HttpServlet {
                 CommentDAO commentDAO = new CommentDAO();
                 if (commentDAO.addComment(comment)) {
                     NotificationServlet sendNoti = new NotificationServlet();
-                    sendNoti.sendNotification("Sent comment successfully!!", response);
+                    sendNoti.sendPopupNotification("Send Comment success");
                 } else {
                     NotificationServlet sendNoti = new NotificationServlet();
-                    sendNoti.sendNotification("Sent comment fail!!. Please try again later!", response);
+                    sendNoti.sendPopupNotification("Sent comment fail!!. Please try again later!");
                 }
                 break;
             }
@@ -61,10 +61,10 @@ public class CommentServlet extends HttpServlet {
                 CommentDAO commentDAO = new CommentDAO();
                 if (commentDAO.addComment(comment)) {
                     NotificationServlet sendNoti = new NotificationServlet();
-                    sendNoti.sendNotification("Sent comment successfully!!", response);
+                    sendNoti.sendPopupNotification("Sent comment successfully!!");
                 } else {
                     NotificationServlet sendNoti = new NotificationServlet();
-                    sendNoti.sendNotification("Sent comment fail!!. Please try again later!", response);
+                    sendNoti.sendPopupNotification("Sent comment fail!!. Please try again later!");
                 }
                 break;
             }

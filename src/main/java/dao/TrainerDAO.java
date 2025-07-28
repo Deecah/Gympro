@@ -181,7 +181,7 @@ public class TrainerDAO {
                  "T.ExperienceYears, T.Description, T.Specialization " +
                  "FROM Users U " +
                  "INNER JOIN Trainer T ON U.Id = T.Id " +
-                 "WHERE U.Role = 'trainer'";
+                 "WHERE U.Role = 'Trainer'";
 
     ConnectDatabase db = ConnectDatabase.getInstance();
     Connection con = null;
