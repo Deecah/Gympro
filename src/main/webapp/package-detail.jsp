@@ -56,12 +56,10 @@
                             <p><i class="fa fa-clock-o text-success me-2"></i><span class="info-label">  Duration:</span> ${pkg.duration} days</p>
                             <p><i class="fa fa-usd text-success me-2"></i><span class="info-label">  Price:</span> ${pkg.price} VNĐ</p>
                             <div class="text-end mt-4">
-                                <form action="${pageContext.request.contextPath}/payment" method="post">
-                                    <input type="hidden" name="packageId" value="${pkg.packageID}" />
-                                    <button type="submit" class="btn btn-success purchase-btn">
-                                        <i class="fa fa-shopping-cart me-1"></i> Purchase Package
-                                    </button>
-                                </form>
+                                <a href="${pageContext.request.contextPath}/purchase?packageId=${pkg.packageID}" 
+                                   class="btn btn-success purchase-btn">
+                                    <i class="fa fa-shopping-cart me-1"></i> Purchase Package
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -92,27 +90,9 @@
                     </div>
                 </div>
 
-
                 <hr>
 
-                <!-- 3. Included Programs -->
-                <h4 class="section-heading">Included Programs</h4>
-                <div class="row mb-4 ps-md-2 pe-md-2">
-                    <c:forEach var="prog" items="${programs}">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">${prog.name}</h5>
-                                    <p class="card-text">${prog.description}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-
-                <hr>
-
-                <!-- 4. Feedback -->
+                <!-- 3. Feedback -->
                 <h4 class="section-heading">Customer Feedback</h4>
 
                 <c:if test="${empty feedbacks}">

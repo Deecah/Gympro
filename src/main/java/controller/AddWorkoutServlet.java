@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import Utils.NotificationUtil;
 import model.User;
+import java.util.List;
 
 @WebServlet(name = "AddWorkoutServlet", urlPatterns = {"/AddWorkoutServlet"})
 public class AddWorkoutServlet extends HttpServlet {
@@ -31,6 +32,23 @@ public class AddWorkoutServlet extends HttpServlet {
             }
 
             WorkoutDAO workoutDAO = new WorkoutDAO();
+            // Kiểm tra trùng thời gian
+            List<model.Workout> existingWorkouts = workoutDAO.getWorkoutsByDayId(dayId);
+            boolean overlap = false;
+            for (model.Workout w : existingWorkouts) {
+                if (w.getStartTime() != null && w.getEndTime() != null &&
+                    !(endTime.isBefore(w.getStartTime()) || startTime.isAfter(w.getEndTime()))) {
+                    overlap = true;
+                    break;
+                }
+            }
+            if (overlap) {
+                ProgramDayDAO dayDAO = new ProgramDayDAO();
+                int programId = dayDAO.getProgramIdByDayId(dayId);
+                response.sendRedirect("ProgramDetailServlet?programId=" + programId + "&error=overlap");
+                return;
+            }
+
             int result = workoutDAO.createWorkout(dayId, title, notes, startTime, endTime);
             boolean success = result > 0;
             

@@ -103,10 +103,10 @@ public class LoginServlet extends HttpServlet {
                         NotificationUtil.sendInfoNotification(userId, 
                             "Welcome Back, Trainer!", 
                             "You have successfully logged in to your trainer dashboard.");
-                        response.sendRedirect("trainer/trainer.jsp");
+                        response.sendRedirect("CustomerServlet");
                         break;
                     case "Admin":
-                        response.sendRedirect("adminDashboard.jsp");
+                        response.sendRedirect(request.getContextPath() + "/UserServlet");
                         break;
                     default:
                         response.sendRedirect("login.jsp?error=Unknown role");

@@ -36,7 +36,7 @@
             </div>
         </c:if>
 
-        <h2>Weekly Coding Challenge: Sign in/up Form</h2>
+        <h2>Welcome to GymPro – Find Your Perfect Trainer!</h2>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
                 <form action="${pageContext.request.contextPath}/VerificationServlet" method="post">

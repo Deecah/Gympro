@@ -27,32 +27,7 @@
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/chat.css" type="text/css">
-        <style>
-            .package-card:hover {
-                transform: scale(1.02);
-                box-shadow: 0 8px 20px rgba(0, 0, 0.5, 0.5) !important;
-            }
-            .search-banner {
-                background-color: #f8f9fa;
-            }
-
-            .search-banner h2 {
-                font-size: 26px;
-                font-weight: 600;
-                color: #1a73e8;
-            }
-
-            .search-banner input::placeholder {
-                color: #888;
-            }
-
-            .search-banner input:focus {
-                border-color: #1a73e8;
-                box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
-            }
-
-        </style>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/packages.css" type="text/css">
     </head>
     <body>
 
@@ -159,11 +134,67 @@
                                 <a class="page-link" href="CustomerPackageServlet?page=${currentPage - 1}">Previous</a>
                             </li>
                         </c:if>
-                        <c:forEach begin="1" end="${totalPages}" var="i">
+                        
+                        <%-- Logic hiển thị tối đa 5 trang --%>
+                        <c:set var="maxVisiblePages" value="5" />
+                        <c:set var="startPage" value="1" />
+                        <c:set var="endPage" value="${totalPages}" />
+                        
+                        <%-- Tính toán range hiển thị --%>
+                        <c:choose>
+                            <c:when test="${totalPages <= maxVisiblePages}">
+                                <%-- Hiển thị tất cả nếu tổng số trang <= 5 --%>
+                                <c:set var="startPage" value="1" />
+                                <c:set var="endPage" value="${totalPages}" />
+                            </c:when>
+                            <c:when test="${currentPage <= 3}">
+                                <%-- Hiển thị trang 1-5 nếu đang ở trang đầu --%>
+                                <c:set var="startPage" value="1" />
+                                <c:set var="endPage" value="5" />
+                            </c:when>
+                            <c:when test="${currentPage >= totalPages - 2}">
+                                <%-- Hiển thị 5 trang cuối nếu đang ở cuối --%>
+                                <c:set var="startPage" value="${totalPages - 4}" />
+                                <c:set var="endPage" value="${totalPages}" />
+                            </c:when>
+                            <c:otherwise>
+                                <%-- Hiển thị 2 trang trước và 2 trang sau trang hiện tại --%>
+                                <c:set var="startPage" value="${currentPage - 2}" />
+                                <c:set var="endPage" value="${currentPage + 2}" />
+                            </c:otherwise>
+                        </c:choose>
+                        
+                        <%-- Hiển thị dấu "..." nếu có trang bị ẩn ở đầu --%>
+                        <c:if test="${startPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="CustomerPackageServlet?page=1">1</a>
+                            </li>
+                            <c:if test="${startPage > 2}">
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            </c:if>
+                        </c:if>
+                        
+                        <%-- Hiển thị các trang trong range --%>
+                        <c:forEach begin="${startPage}" end="${endPage}" var="i">
                             <li class="page-item ${i == currentPage ? 'active' : ''}">
                                 <a class="page-link" href="CustomerPackageServlet?page=${i}">${i}</a>
                             </li>
                         </c:forEach>
+                        
+                        <%-- Hiển thị dấu "..." nếu có trang bị ẩn ở cuối --%>
+                        <c:if test="${endPage < totalPages}">
+                            <c:if test="${endPage < totalPages - 1}">
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            </c:if>
+                            <li class="page-item">
+                                <a class="page-link" href="CustomerPackageServlet?page=${totalPages}">${totalPages}</a>
+                            </li>
+                        </c:if>
+                        
                         <c:if test="${currentPage < totalPages}">
                             <li class="page-item">
                                 <a class="page-link" href="CustomerPackageServlet?page=${currentPage + 1}">Next</a>

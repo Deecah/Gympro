@@ -17,18 +17,25 @@
     <head>
         <meta charset="UTF-8">
         <title>Weekly Timetable</title>
-        <link rel="stylesheet" href="stylecss/schedule.css">
+        <link rel="stylesheet" href="stylecss/timetable.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="layout">
             <div class="sidebar">
                 <div class="sidebar-top">
-                    <a href="index.jsp" class="sidebar-home">Home</a>
+                    <a href="index.jsp" class="sidebar-home">
+                        <i class="fas fa-home me-2"></i>🏋️ Gympro
+                    </a>
                 </div>
 
                 <div class="sidebar-menu">
-                    <button>My Schedule</button>
-                    <button>Requests</button>
+                    <button>
+                        <i class="fas fa-calendar-alt"></i>My Schedule
+                    </button>
+                    <button>
+                        <i class="fas fa-bell"></i>Requests
+                    </button>
                 </div>
             </div>
 
@@ -47,8 +54,8 @@
                 <% } %>
             <% } %>
             
-            <form action="timetable" method="get" style="margin-bottom: 15px;">
-                    <label for="weekRangeSelect"><strong>Chọn tuần:</strong></label>
+                <form action="timetable" method="get" style="margin-bottom: 15px;">
+                    <label for="weekRangeSelect"><strong>Choose Week:</strong></label>
                     <select id="weekRangeSelect" name="weekRange" onchange="this.form.submit()">
                         <c:forEach var="opt" items="${weekOptions}">
                             <option value="${opt}" ${opt == currentWeekRange ? "selected" : ""}>${opt}</option>
@@ -59,13 +66,13 @@
                 <table class="timetable">
                     <thead>
                         <tr>
-                            <th>THỨ 2</th>
-                            <th>THỨ 3</th>
-                            <th>THỨ 4</th>
-                            <th>THỨ 5</th>
-                            <th>THỨ 6</th>
-                            <th>THỨ 7</th>
-                            <th>CHỦ NHẬT</th>
+                            <th>Monday </th>
+                            <th>Tuesday </th>
+                            <th>Wednesday </th>
+                            <th>Thursday </th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                            <th>Sunday</th>
                         </tr>
                     </thead>
                     <tbody>

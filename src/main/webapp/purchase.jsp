@@ -35,7 +35,7 @@
         
         <style>
     body {
-         background: linear-gradient(to right, #e0f7fa, #80deea);
+         background: #ffffff !important;
     }
 
     .payment-method-btn {
@@ -55,6 +55,14 @@
         max-height: 250px;
         object-fit: cover;
     }
+
+    .checkout-section {
+        background-color: #ffffff !important;
+    }
+
+    .spad {
+        background-color: #ffffff !important;
+    }
         </style>
 
     </head>
@@ -72,7 +80,7 @@
                 </div>
             </div>
         </section>
-        <section class="checkout-section spad" style="background: linear-gradient(to right, #4facfe, #00f2fe); min-height: 100vh;">
+        <section class="checkout-section spad" style="background: #ffffff; min-height: 100vh;">
             <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
                 <div class="card shadow-lg p-4" style="width: 100%; max-width: 700px; border-radius: 20px; background-color: white;">
                     <c:if test="${not empty pkg}">
