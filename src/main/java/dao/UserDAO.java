@@ -60,7 +60,7 @@ public class UserDAO {
      public ArrayList<User> getAllUsers() {
         ArrayList<User> userList = new ArrayList<>(); // Khởi tạo ArrayList
         try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
-            String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users";
+            String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users WHERE Role IN ('Trainer', 'Customer')";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) { // Dùng while để duyệt qua tất cả các dòng
@@ -386,4 +386,34 @@ public class UserDAO {
         } 
         return false;
     }
+    
+    public ArrayList<User> getUsersByRole(String role) {
+    ArrayList<User> userList = new ArrayList<>(); // Khởi tạo danh sách
+    String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users WHERE Role = ?";
+
+    try (Connection conn = ConnectDatabase.getInstance().openConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, role); // Gán tham số role cho câu lệnh SQL
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            User user = new User();
+            user.setUserId(rs.getInt("Id"));
+            user.setUserName(rs.getString("Name"));
+            user.setGender(rs.getString("Gender"));
+            user.setEmail(rs.getString("Email"));
+            user.setPhone(rs.getString("Phone"));
+            user.setAddress(rs.getString("Address"));
+            user.setAvatarUrl(rs.getString("AvatarUrl"));
+            user.setRole(rs.getString("Role"));
+            user.setStatus(rs.getString("Status"));
+            userList.add(user);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return userList;
+}
 }

@@ -440,7 +440,7 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="index.jsp"><i class="fas fa-home me-1"></i> Home</a>
+                                    <a class="nav-link" href="http://localhost:8080/SWP391/UserServlet"><i class="fas fa-home me-1"></i> Home</a>
                                 </li>
                             </ul>
                         </div>

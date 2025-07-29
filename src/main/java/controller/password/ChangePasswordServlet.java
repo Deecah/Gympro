@@ -1,4 +1,4 @@
-package controller;
+package controller.password;
 
 import Utils.HashUtil;
 import dao.UserDAO;
