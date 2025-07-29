@@ -173,6 +173,16 @@
                         </div>
                     </div>
                 </div>
+                <form action="ExpertTrainerServlet" method="get" class="d-flex justify-content-center align-items-center mb-4 gap-2">
+                    <input type="text" name="keyword"
+                           class="form-control rounded-pill px-4 shadow-sm w-50"
+                           placeholder="Find Trainers..."
+                           value="${keyword}" />
+                    <button type="submit"
+                            class="btn btn-outline-light bg-primary text-white fw-semibold rounded-pill px-4 shadow">
+                        🔍 Find
+                    </button>
+                </form>
 
                 <!-- Grid trainers -->
                 <div class="row">

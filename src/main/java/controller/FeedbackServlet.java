@@ -14,7 +14,7 @@ public class FeedbackServlet extends HttpServlet {
 
         int userId = Integer.parseInt(request.getParameter("userId"));
         String type = request.getParameter("type"); // 'package' or 'trainer'
-        int referenceId = Integer.parseInt(request.getParameter("referenceId"));
+        int referenceId = Integer.parseInt(request.getParameter("referenceId")); // e.g. packageId or trainerId
         int point = Integer.parseInt(request.getParameter("point"));
         String content = request.getParameter("content");
 
@@ -22,11 +22,9 @@ public class FeedbackServlet extends HttpServlet {
         boolean success = dao.insertFeedback(userId, type, referenceId, point, content);
 
         if (success) {
-            // Gửi notification thành công
-            NotificationUtil.sendSuccessNotification(userId, 
-                "Feedback Submitted Successfully", 
-                "Thank you for your feedback! Your review has been submitted successfully.");
-            response.sendRedirect("PackagesPurchasedServlet?feedback=success");
+            HttpSession session = request.getSession();
+            session.setAttribute("feedbackSuccess", true);
+            response.sendRedirect("PackageDetailServlet?packageId=" + referenceId);
         } else {
             // Gửi notification lỗi
             NotificationUtil.sendErrorNotification(userId, 

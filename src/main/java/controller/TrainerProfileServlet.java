@@ -64,7 +64,7 @@ public class TrainerProfileServlet extends HttpServlet {
 
         // Get trainer specific data
         Trainer trainer = (Trainer) session.getAttribute("trainer");
-        int experience = Integer.parseInt(request.getParameter("experienceYears"));
+        int experience = Integer.parseInt(request.getParameter("experience"));
         String description = request.getParameter("description");
         String specialization = request.getParameter("specialization");
 
