@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
+@WebServlet("/EditCertificationServlet")
 public class EditCertificationServlet extends HttpServlet {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
