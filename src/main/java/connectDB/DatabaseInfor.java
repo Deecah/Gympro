@@ -1,4 +1,3 @@
-
 package connectDB;
 
 public interface DatabaseInfor {
