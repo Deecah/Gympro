@@ -9,6 +9,7 @@ public class Comment {
     private Integer parentId; //thuoc tinh de luu xem comment nay co phai la comment goc khong
     private String content;
     private Timestamp createdAt;
+    private String userName; // Thêm userName để hiển thị
 
     public Comment(int id, int userId, int blogId, int parentId, String content, Timestamp createdAt) {
         this.id = id;
@@ -68,6 +69,14 @@ public class Comment {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+    
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
     
 

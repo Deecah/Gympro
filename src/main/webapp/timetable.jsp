@@ -152,7 +152,249 @@
             </div>
         </div>
 
+ <!-- Modal -->
+        <div id="requestModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📅 Request Change Schedule</h2>
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
+                
+                <div class="modal-body">
+                    <form id="requestForm">
+                        <!-- Week Selector -->
+                        <div class="week-selector">
+                            <label for="weekSelect" style="margin: 0; font-weight: 600; color: #333;">📅 Select Week:</label>
+                            <select id="weekSelect" name="weekSelect" class="form-control" style="width: auto; margin: 0;">
+                                <option value="">-- Select week --</option>
+                                <c:forEach var="opt" items="${weekOptions}">
+                                    <option value="${opt}">${opt}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="slotSelect">⏰ Select Slot to Change:</label>
+                            <div class="slot-selector">
+                                <div class="form-group">
+                                    <label for="slotSelect">Choose slot:</label>
+                                    <select id="slotSelect" name="slotSelect" class="form-control" required onchange="updateSlotInfo()">
+                                        <option value="">-- Select slot --</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="slotInfo" class="slot-info" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #007bff;">
+                                <strong>Selected Slot Info:</strong><br>
+                                <span id="slotTitle"></span><br>
+                                <span id="slotTime"></span><br>
+                                <span id="slotTrainer"></span><br>
+                                <span id="slotProgram"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newDay">🔄 Desired Change Day:</label>
+                            <div class="day-selector">
+                                <div class="form-group">
+                                    <label for="newDay">Select new day:</label>
+                                    <select id="newDay" name="newDay" class="form-control" required>
+                                        <option value="">-- Select day --</option>
+                                        <option value="monday">Monday</option>
+                                        <option value="tuesday">Tuesday</option>
+                                        <option value="wednesday">Wednesday</option>
+                                        <option value="thursday">Thursday</option>
+                                        <option value="friday">Friday</option>
+                                        <option value="saturday">Saturday</option>
+                                        <option value="sunday">Sunday</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newTime">New time:</label>
+                                    <input type="time" id="newTime" name="newTime" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reason">📝 Reason for Change:</label>
+                            <textarea id="reason" name="reason" class="form-control reason-textarea" 
+                                      placeholder="Please explain the reason for your schedule change request..." required></textarea>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitRequest()">✅ Submit Request</button>
+                </div>
+            </div>
+        </div>
+        
+  <script>
+            // Global variable to store slot data
+            let slotData = [];
+            
+            // Load slot data from the page
+            function loadSlotData() {
+                const slotSelect = document.getElementById('slotSelect');
+                slotSelect.innerHTML = '<option value="">-- Select slot --</option>';
+                
+                // Get all workout boxes from the timetable
+                const workoutBoxes = document.querySelectorAll('.workout-box');
+                let slotIndex = 0;
+                
+                workoutBoxes.forEach((box, index) => {
+                    const title = box.querySelector('strong').textContent;
+                    const timeSpan = box.querySelector('span').textContent;
+                    const trainerSpan = box.querySelectorAll('.program-name')[0].textContent;
+                    const programSpan = box.querySelectorAll('.program-name')[1].textContent;
+                    
+                    // Get the parent td to find slot ID
+                    const parentTd = box.closest('td');
+                    const slotId = parentTd.getAttribute('data-slot-id');
+                    
+                    // Create slot data object
+                    const slotInfo = {
+                        id: slotId,
+                        title: title,
+                        time: timeSpan,
+                        trainer: trainerSpan,
+                        program: programSpan,
+                        index: slotIndex++
+                    };
+                    
+                    slotData.push(slotInfo);
+                    
+                    // Create option for dropdown
+                    const option = document.createElement('option');
+                    option.value = slotIndex - 1;
+                    option.textContent = `${title} - ${timeSpan}`;
+                    slotSelect.appendChild(option);
+                });
+            }
+            
+            // Update slot info display
+            function updateSlotInfo() {
+                const slotSelect = document.getElementById('slotSelect');
+                const slotInfo = document.getElementById('slotInfo');
+                const slotTitle = document.getElementById('slotTitle');
+                const slotTime = document.getElementById('slotTime');
+                const slotTrainer = document.getElementById('slotTrainer');
+                const slotProgram = document.getElementById('slotProgram');
+                
+                if (slotSelect.value && slotSelect.value !== '') {
+                    const selectedSlot = slotData[parseInt(slotSelect.value)];
+                    if (selectedSlot) {
+                        slotTitle.textContent = `📋 ${selectedSlot.title}`;
+                        slotTime.textContent = `⏰ ${selectedSlot.time}`;
+                        slotTrainer.textContent = selectedSlot.trainer;
+                        slotProgram.textContent = selectedSlot.program;
+                        slotInfo.style.display = 'block';
+                    }
+                } else {
+                    slotInfo.style.display = 'none';
+                }
+            }
+            
+            // Modal functions
+            function openModal() {
+                document.getElementById('requestModal').style.display = 'block';
+                
+                // Load slot data when modal opens
+                loadSlotData();
+                
+                // Set current week as default (if available)
+                const currentWeekSelect = document.getElementById('weekRangeSelect');
+                if (currentWeekSelect && currentWeekSelect.value) {
+                    document.getElementById('weekSelect').value = currentWeekSelect.value;
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('requestModal').style.display = 'none';
+                // Reset form
+                document.getElementById('requestForm').reset();
+                // Reset slot data
+                slotData = [];
+                // Hide slot info
+                document.getElementById('slotInfo').style.display = 'none';
+            }
+
+            function submitRequest() {
+                const form = document.getElementById('requestForm');
+                const formData = new FormData(form);
+                
+                // Validate form
+                if (!form.checkValidity()) {
+                    alert('Please fill in all required information!');
+                    return;
+                }
+                
+                // Get form values
+                const weekSelect = formData.get('weekSelect');
+                const slotSelect = formData.get('slotSelect');
+                const newDay = formData.get('newDay');
+                const newTime = formData.get('newTime');
+                const reason = formData.get('reason');
+                
+                // Validate slot selection
+                if (!slotSelect || slotSelect === '') {
+                    alert('Please select a slot to change!');
+                    return;
+                }
+                
+                // Get selected slot data
+                const selectedSlot = slotData[parseInt(slotSelect)];
+                if (!selectedSlot) {
+                    alert('Invalid slot selection!');
+                    return;
+                }
+                
+                // Validate that new day/time is different from current slot
+                const currentSlotDay = getDayFromSlotId(selectedSlot.id);
+                const currentSlotTime = selectedSlot.time;
+                
+                if (newDay === currentSlotDay && newTime === currentSlotTime.split(' - ')[0]) {
+                    alert('New day or time must be different from current slot!');
+                    return;
+                }
+                
+                // Here you would typically send the data to your server
+                console.log('Schedule change request:');
+                console.log('Week:', weekSelect);
+                console.log('Current slot:', selectedSlot);
+                console.log('New day:', newDay);
+                console.log('New time:', newTime);
+                console.log('Reason:', reason);
+                
+                // Show success message
+                alert('✅ Your request has been submitted successfully!');
+                closeModal();
+            }
+            
+            // Helper function to get day from slot ID
+            function getDayFromSlotId(slotId) {
+                const day = Math.floor(slotId / 10);
+                const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                return days[day];
+            }
+
+            // Close modal when clicking outside of it
+            window.onclick = function(event) {
+                const modal = document.getElementById('requestModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        </script>
+        
         <script>
             // Set current user ID for notification.js
             <% if (user != null) { %>

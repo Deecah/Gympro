@@ -343,3 +343,343 @@
                 align-items: center; /* Căn giữa nội dung theo chiều dọc (nếu có nhiều hàng) */
                 padding: 0; /* Đảm bảo không có padding thừa từ cell */
             }
+
+/* Report Styles - Tương thích với màu sidebar và header */
+.report-card {
+    background: linear-gradient(135deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.report-header {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px 15px 0 0;
+    padding: 25px;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.report-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+
+.report-header .badge {
+    background: rgba(255,255,255,0.2) !important;
+    color: white !important;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+.report-body {
+    background: white;
+    border-radius: 0 0 15px 15px;
+    padding: 25px;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--sidebar-navbar-gradient-end);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-info strong {
+    color: var(--content-text-primary);
+    font-weight: 600;
+}
+
+.user-info small {
+    color: var(--content-text-secondary);
+    font-size: 0.85rem;
+}
+
+.reason-badge {
+    background: linear-gradient(45deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(255, 94, 98, 0.3);
+    display: inline-block;
+}
+
+.time-badge {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(116, 185, 255, 0.3);
+}
+
+.action-btn {
+    background: linear-gradient(45deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px 10px rgba(230, 57, 70, 0.3);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--content-text-secondary);
+}
+
+.empty-state i {
+    font-size: 5em;
+    margin-bottom: 25px;
+    opacity: 0.4;
+    color: var(--sidebar-navbar-gradient-end);
+}
+
+.empty-state h4 {
+    color: var(--content-text-primary);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Table styles for reports */
+.report-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.report-table .table {
+    margin: 0;
+}
+
+.report-table .table thead th {
+    background: linear-gradient(45deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.report-table .table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.report-table .table tbody tr:hover {
+    background-color: rgba(230, 57, 70, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.report-table .table tbody td {
+    padding: 15px 20px;
+    border-color: rgba(0,0,0,0.08);
+    vertical-align: middle;
+}
+
+/* Responsive design for reports */
+@media (max-width: 768px) {
+    .report-header {
+        padding: 20px;
+    }
+    
+    .report-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .report-body {
+        padding: 20px;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .reason-badge, .time-badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .action-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for report cards */
+.report-card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading state for reports */
+.report-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--content-text-secondary);
+}
+
+.report-loading .spinner-border {
+    color: var(--sidebar-navbar-gradient-end);
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Ban User and View User Buttons */
+.ban-btn {
+    background: linear-gradient(45deg, #dc3545, #c82333) !important;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 16px;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+    font-size: 0.85rem;
+}
+
+.ban-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(45deg, #c82333, #bd2130) !important;
+}
+
+.view-btn {
+    background: linear-gradient(45deg, #17a2b8, #138496) !important;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 16px;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px 10px rgba(23, 162, 184, 0.3);
+    font-size: 0.85rem;
+}
+
+.view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(23, 162, 184, 0.4);
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(45deg, #138496, #117a8b) !important;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background: linear-gradient(45deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    color: white;
+    border-radius: 15px 15px 0 0;
+    border-bottom: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 20px 25px;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+}
+
+.alert .btn-close {
+    filter: invert(1);
+}
+
+/* Responsive for buttons */
+@media (max-width: 768px) {
+    .ban-btn, .view-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .d-flex.gap-2 {
+        flex-direction: column;
+        gap: 8px !important;
+    }
+}

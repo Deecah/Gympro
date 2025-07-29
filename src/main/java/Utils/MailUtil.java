@@ -1,7 +1,7 @@
 package Utils;
 
 import constant.EmailInfor;
-import controller.ResetPasswordServlet;
+import controller.password.ResetPasswordServlet;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;

@@ -37,26 +37,62 @@ public class ReportServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        ReportDAO reportDAO = new ReportDAO();
-        ArrayList<ViolationReport> reportList = reportDAO.getAllReports();
-        HashMap<Integer,User> mapUser = new HashMap();
-        for(ViolationReport r : reportList){    // vong loop de lay cac user lien quan toi reports
-            int id = r.getReportedUserID();
-            if(!mapUser.containsKey(id)){
-                UserDAO userDAO = new UserDAO();
-                User u = userDAO.getUserById(id);
-                mapUser.put(id, u);
+        try {
+            ReportDAO reportDAO = new ReportDAO();
+            UserDAO userDAO = new UserDAO();
+            
+            // Lấy danh sách báo cáo
+            ArrayList<ViolationReport> reportList = reportDAO.getAllReports();
+            
+            // Debug: In ra số lượng báo cáo
+            System.out.println("Số lượng báo cáo: " + (reportList != null ? reportList.size() : "null"));
+            
+            // Tạo map để lưu thông tin user
+            HashMap<Integer, User> mapUser = new HashMap<>();
+            
+            if (reportList != null && !reportList.isEmpty()) {
+                for (ViolationReport report : reportList) {
+                    // Lấy thông tin người bị báo cáo
+                    int reportedUserId = report.getReportedUserID();
+                    if (!mapUser.containsKey(reportedUserId)) {
+                        User reportedUser = userDAO.getUserById(reportedUserId);
+                        if (reportedUser != null) {
+                            mapUser.put(reportedUserId, reportedUser);
+                            System.out.println("Đã thêm user bị báo cáo: " + reportedUser.getUserName());
+                        } else {
+                            System.out.println("Không tìm thấy user bị báo cáo với ID: " + reportedUserId);
+                        }
+                    }
+                    
+                    // Lấy thông tin người báo cáo
+                    int fromUserId = report.getFromUserID();
+                    if (!mapUser.containsKey(fromUserId)) {
+                        User fromUser = userDAO.getUserById(fromUserId);
+                        if (fromUser != null) {
+                            mapUser.put(fromUserId, fromUser);
+                            System.out.println("Đã thêm user báo cáo: " + fromUser.getUserName());
+                        } else {
+                            System.out.println("Không tìm thấy user báo cáo với ID: " + fromUserId);
+                        }
+                    }
+                }
             }
-            id = r.getFromUserID();
-            if(!mapUser.containsKey(id)){
-                UserDAO userDAO = new UserDAO();
-                User u = userDAO.getUserById(id);
-                mapUser.put(id, u);
-            }
+            
+            // Debug: In ra số lượng user trong map
+            System.out.println("Số lượng user trong map: " + mapUser.size());
+            
+            // Set attributes
+            request.setAttribute("mapUser", mapUser);
+            request.setAttribute("reportList", reportList);
+            
+            // Forward đến JSP
+            request.getRequestDispatcher("/adminDashboard/viewreport.jsp").forward(request, response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Redirect về trang lỗi hoặc hiển thị thông báo lỗi
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Có lỗi xảy ra: " + e.getMessage());
         }
-        request.setAttribute("mapUser", mapUser);
-        request.setAttribute("reportList", reportList);
-        request.getRequestDispatcher("/adminDashboard/viewreport.jsp").forward(request, response);
     }
 
     @Override
@@ -69,5 +105,4 @@ public class ReportServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
-
 }

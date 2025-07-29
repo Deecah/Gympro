@@ -6,7 +6,7 @@
     <div class="sidebar-heading text-white border-bottom bg-dark p-3">
         <h4>Admin Dashboard</h4>
     </div>
-
+    
     <div class="accordion accordion-flush" id="sidebarAccordion">
 
         <!-- Manage User -->
@@ -21,9 +21,6 @@
                     <div class="list-group list-group-flush">
                         <a href="<%=context%>/UserServlet?action=view" class="list-group-item list-group-item-action sidebar-item">
                             <i class="fas fa-list-alt me-2"></i> View User List
-                        </a>
-                        <a href="<%=context%>/TrainerServlet" class="list-group-item list-group-item-action sidebar-item">
-                            <i class="fas fa-list-alt me-2"></i> View Trainer List
                         </a>
                         <a href="<%=context%>/ReportServlet" class="list-group-item list-group-item-action sidebar-item">
                             <i class="fas fa-exclamation-triangle me-2"></i> Violation Reports
