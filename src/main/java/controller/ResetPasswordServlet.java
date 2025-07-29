@@ -1,4 +1,4 @@
-    package controller;
+package controller;
 
 import Utils.HashUtil;
 import dao.UserDAO;
@@ -226,4 +226,3 @@ public class ResetPasswordServlet extends HttpServlet {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }
-
