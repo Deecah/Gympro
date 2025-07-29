@@ -102,4 +102,16 @@ public class ExerciseLibraryDAO {
 
     return false;
 }
+    public boolean deleteExercise(int id) {
+        String sql = "DELETE FROM ExerciseLibrary WHERE ExerciseID = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
