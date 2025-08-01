@@ -32,7 +32,7 @@ public class DeleteProgramServlet extends HttpServlet {
             ProgramDAO programDAO = new ProgramDAO();
             
             // Kiểm tra program có thuộc về trainer này không
-            if (programDAO.getProgramById(programId, trainerId) == null) {
+            if (programDAO.getProgramById(programId) == null) {
                 response.sendRedirect(request.getContextPath() + "/ProgramServlet?error=unauthorized");
                 return;
             }

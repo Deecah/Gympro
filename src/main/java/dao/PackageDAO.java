@@ -27,6 +27,7 @@ public class PackageDAO {
                     p.setImageUrl(rs.getString("ImageUrl"));
                     p.setPrice(rs.getDouble("Price"));
                     p.setDuration(rs.getInt("Duration"));
+                    p.setTrainerID(rs.getInt("TrainerID"));
                     list.add(p);
                 }
             }

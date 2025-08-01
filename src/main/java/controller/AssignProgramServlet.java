@@ -40,7 +40,7 @@ public class AssignProgramServlet extends HttpServlet {
         
         // Load danh sách programs và packages (giống như ProgramServlet)
         ProgramDAO programDAO = new ProgramDAO();
-        List<Program> programs = programDAO.getAllProgramsByTrainer(trainer.getUserId());
+        List<Program> programs = programDAO.getAllPrograms(trainer.getUserId());
         List<Package> packageList = new PackageDAO().getAllPackagesByTrainer(trainer.getUserId());
         
         // Debug logging

@@ -1,104 +1,93 @@
 package controller;
 
-import Utils.CloudinaryUploader;
 import dao.ExerciseLibraryDAO;
+import dao.ExerciseDAO;
 import model.ExerciseLibrary;
+import model.Exercise;
 import model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
-import java.io.InputStream;
-import Utils.NotificationUtil;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-@WebServlet(name = "CreateExerciseServlet", urlPatterns = {"/CreateExerciseServlet"})
+@WebServlet("/CreateExerciseServlet")
 @MultipartConfig
 public class CreateExerciseServlet extends HttpServlet {
-
-    private final ExerciseLibraryDAO exerciseDAO = new ExerciseLibraryDAO();
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user == null || !"Trainer".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
-    }
+    private ExerciseLibraryDAO exerciseLibraryDAO = new ExerciseLibraryDAO();
+    private ExerciseDAO exerciseDAO = new ExerciseDAO();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user == null || !"Trainer".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                userId = cookie.getValue();
+            } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                role = cookie.getValue();
+            }
+        }
+        // Check if user is authenticated and is a trainer
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
             return;
         }
-
-        request.setCharacterEncoding("UTF-8");
-
-        String name = request.getParameter("name");
+        String exerciseLibraryId = request.getParameter("exerciseLibraryId");
+        String exerciseName = request.getParameter("exerciseName");
         String description = request.getParameter("description");
         String muscleGroup = request.getParameter("muscleGroup");
         String equipment = request.getParameter("equipment");
-
-        // Validate required fields
-        if (name == null || name.trim().isEmpty()
-                || description == null || description.trim().isEmpty()
-                || muscleGroup == null || muscleGroup.trim().isEmpty()) {
-
-            request.setAttribute("error", "Please fill in the required information!");
-            request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
-            return;
-        }
-
-        // Handle video upload (optional)
-        String videoURL = null;
+        int sets = Integer.parseInt(request.getParameter("sets"));
+        int reps = Integer.parseInt(request.getParameter("reps"));
+        int rest = Integer.parseInt(request.getParameter("restTimeSeconds"));
         Part videoPart = request.getPart("videoFile");
 
-        boolean isValidVideo = videoPart != null
-                && videoPart.getSize() > 0
-                && videoPart.getSubmittedFileName() != null
-                && !videoPart.getSubmittedFileName().isEmpty()
-                && videoPart.getContentType() != null
-                && videoPart.getContentType().startsWith("video/");
-
-        if (isValidVideo) {
-            try (InputStream videoStream = videoPart.getInputStream()) {
-                String folder = "exercises/trainer_" + user.getUserId();
-                videoURL = CloudinaryUploader.upload(videoStream, videoPart.getContentType(), folder);
-            } catch (Exception e) {
-                e.printStackTrace();
-                request.setAttribute("error", "Error uploading video!");
-                request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
-                return;
-            }
-        }
-
-        // Create Exercise object
         ExerciseLibrary exercise = new ExerciseLibrary();
-        exercise.setName(name);
+        exercise.setName(exerciseName);
         exercise.setDescription(description);
         exercise.setMuscleGroup(muscleGroup);
         exercise.setEquipment(equipment);
-        exercise.setVideoURL(videoURL);
+        exercise.setSets(sets);
+        exercise.setReps(reps);
+        exercise.setRestTimeSeconds(rest);
+        exercise.setTrainerID(Integer.parseInt(userId));
 
-        boolean success = exerciseDAO.insertExercise(exercise);
-        if (success) {
-            response.sendRedirect(request.getContextPath() + "/trainer/library.jsp?action=list");
+        String videoUrl = null;
+        if (videoPart != null && videoPart.getSize() > 0) {
+            String fileName = Paths.get(videoPart.getSubmittedFileName()).getFileName().toString();
+            String uploadPath = getServletContext().getRealPath("") + "uploads/videos/";
+            Files.createDirectories(Paths.get(uploadPath));
+            String filePath = uploadPath + fileName;
+            videoPart.write(filePath);
+            videoUrl = request.getContextPath() + "/uploads/videos/" + fileName;
+            exercise.setVideoURL(videoUrl);
+        }
+
+        int exerciseId;
+        if (exerciseLibraryId != null && !exerciseLibraryId.isEmpty()) {
+            exerciseId = Integer.parseInt(exerciseLibraryId);
         } else {
-            request.setAttribute("error", "Can't save exercise!");
-            request.getRequestDispatcher("trainer/create-exercise.jsp").forward(request, response);
+            exerciseId = exerciseLibraryDAO.insertExercise(exercise);
+        }
+
+        if (exerciseId != -1) {
+            // Optionally link to a workout if workoutId is provided
+            String workoutIdStr = request.getParameter("workoutId");
+            if (workoutIdStr != null && !workoutIdStr.isEmpty()) {
+                Exercise ex = new Exercise();
+                ex.setWorkoutID(Integer.parseInt(workoutIdStr));
+                ex.setExerciseLibraryID(exerciseId);
+                exerciseDAO.addExercise(ex);
+            }
+            response.sendRedirect("trainer/library.jsp?action=list&success=Exercise created successfully");
+        } else {
+            response.sendRedirect("trainer/create-exercise.jsp?error=Failed to create exercise");
         }
     }
 }
