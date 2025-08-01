@@ -462,7 +462,7 @@
     <!-- Assign Program Modal -->
     <div class="modal fade" id="assignProgramModal" tabindex="-1" aria-labelledby="assignProgramModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form action="<%= request.getContextPath() %>/AssignProgramServlet" method="post" class="modal-content">
+            <form action="${pageContext.request.contextPath}/AssignProgramServlet" method="post" class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="assignProgramModalLabel">
                         <i class="fas fa-paper-plane me-2"></i>Assign Program to Customer
@@ -471,6 +471,11 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="programId" id="assignProgramId" />
+                    <c:if test="${not empty error}">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>${error}
+                        </div>
+                    </c:if>
                     <div class="mb-3">
                         <label class="form-label" for="customerId">
                             <i class="fas fa-users me-2"></i>Select Customer
@@ -633,6 +638,17 @@
         // Open Assign Modal
         function openAssignModal(programId, name, description) {
             document.getElementById('assignProgramId').value = programId;
+            document.getElementById('assignProgramModalLabel').innerHTML =
+                `<i class="fas fa-paper-plane me-2"></i>Assign Program: ${name}`;
+            // Optionally display program info
+            const modalBody = document.querySelector('#assignProgramModal .modal-body');
+            let programInfo = modalBody.querySelector('.program-info-alert');
+            if (!programInfo) {
+                programInfo = document.createElement('div');
+                programInfo.className = 'alert program-info-alert alert-info';
+                modalBody.insertBefore(programInfo, modalBody.firstChild);
+            }
+            programInfo.innerHTML = `<strong>${name}</strong><br><span>${description}</span>`;
             new bootstrap.Modal(document.getElementById('assignProgramModal')).show();
         }
 
