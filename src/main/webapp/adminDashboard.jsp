@@ -400,9 +400,7 @@
                         <div id="collapseContent" class="accordion-collapse collapse" aria-labelledby="headingContent" data-bs-parent="#sidebarAccordion">
                             <div class="accordion-body p-0">
                                 <div class="list-group list-group-flush">
-                                    <a href="#" class="list-group-item list-group-item-action sidebar-item" data-target="edit-content">
-                                        <i class="fas fa-edit me-2"></i> Edit Content
-                                    </a>
+                                   
                                     <a href="#" class="list-group-item list-group-item-action sidebar-item" data-target="add-content">
                                         <i class="fas fa-plus-circle me-2"></i> Add Content
                                     </a>

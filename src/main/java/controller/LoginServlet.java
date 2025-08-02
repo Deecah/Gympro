@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         if (code != null) {
             handleGoogleLogin(request, response, code);
         } else {
-            doPost(request, response); // fallback cho các action khác
+            doPost(request, response);
         }
     }
 
@@ -106,7 +106,7 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect("CustomerServlet");
                         break;
                     case "Admin":
-                        response.sendRedirect(request.getContextPath() + "/UserServlet");
+                        response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
                         break;
                     default:
                         response.sendRedirect("login.jsp?error=Unknown role");

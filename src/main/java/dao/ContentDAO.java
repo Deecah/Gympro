@@ -22,12 +22,28 @@ public class ContentDAO {
         return false;
     }
 
+    public static Content getById(int id) {
+        Content content = null;
+        try (Connection conn = ConnectDatabase.getInstance().openConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Content WHERE id = ?")) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                content = new Content(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("body")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
+
     public static List<Content> getAll() {
         List<Content> list = new ArrayList<>();
         String sql = "SELECT * FROM Content ORDER BY id DESC";
-        try (Connection conn = ConnectDatabase.getInstance().openConnection(); 
-             Statement stmt = conn.createStatement(); 
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = ConnectDatabase.getInstance().openConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 Content c = new Content(

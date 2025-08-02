@@ -258,7 +258,7 @@ html, body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Special styling for cells with workout data */
+/* Special styling for cells with workout data 
 .timetable tbody td:has(.workout-box) {
   background: linear-gradient(135deg, #ebf3fd 0%, #d6eaf8 100%);
   border: 2px solid #3498db;
@@ -282,7 +282,7 @@ html, body {
   border-color: #3498db;
   transform: scale(1.03);
   box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
-}
+}*/
 
 /* WORKOUT BOX STYLES - ENHANCED WITH BETTER COLORS */
 .workout-box {

@@ -22,6 +22,15 @@
                 <div class="content-item" style="<%= i == 0 ? "" : "display:none;" %>">
                     <h4 class="text-primary"><%= c.getTitle() %></h4>
                     <p><%= c.getBody().replaceAll("\n", "<br/>") %></p>
+
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="edit-content.jsp?id=<%= c.getId() %>" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="delete-content?id=<%= c.getId() %>" 
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Are you sure you want to delete this content?');">
+                           Delete
+                        </a>
+                    </div>
                     <hr/>
                 </div>
                 <%
