@@ -25,12 +25,22 @@ public class TrainerPackageServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user == null || !"Trainer".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                userId = cookie.getValue();
+            } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                role = cookie.getValue();
+            }
+        }
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
             return;
         }
-        int trainerId = user.getUserId();
+        int trainerId = Integer.parseInt(userId);
+        request.setAttribute("role",role);
 
         if (action == null || action.equals("list")) {
             List<Package> packages = packageDAO.getAllPackagesByTrainer(trainerId);

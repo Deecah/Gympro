@@ -1,109 +1,32 @@
 package model;
 
-import java.sql.Timestamp;
-import java.time.LocalTime;
+import java.sql.Time;
+import java.util.Date;
 
 public class Workout {
-
-    private int workoutID;
-    private int dayID;
+    private int workoutId;
+    private int dayId;
+    private Time startTime;
+    private Time endTime;
     private String title;
     private String notes;
-    private Timestamp createdAt;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private int startHour;
-    private String startStr;
-    private String endStr;
-    private String programName;
+    private Date createdAt;
+    private int trainerId;
 
-    // Getters and Setters
-    public int getWorkoutID() {
-        return workoutID;
-    }
-
-    public void setWorkoutID(int workoutID) {
-        this.workoutID = workoutID;
-    }
-
-    public int getDayID() {
-        return dayID;
-    }
-
-    public void setDayID(int dayID) {
-        this.dayID = dayID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setStartHour(int startHour) {
-        this.startHour = startHour;
-    }
-
-    public int getStartHour() {
-        return startHour;
-    }
-
-    public void setStartStr(String startStr) {
-        this.startStr = startStr;
-    }
-
-    public String getStartStr() {
-        return startStr;
-    }
-
-    public void setEndStr(String endStr) {
-        this.endStr = endStr;
-    }
-
-    public String getEndStr() {
-        return endStr;
-    }
-
-    public String getProgramName() {
-        return programName;
-    }
-
-    public void setProgramName(String programName) {
-        this.programName = programName;
-    }
-
+    public int getWorkoutId() { return workoutId; }
+    public void setWorkoutId(int workoutId) { this.workoutId = workoutId; }
+    public int getDayId() { return dayId; }
+    public void setDayId(int dayId) { this.dayId = dayId; }
+    public Time getStartTime() { return startTime; }
+    public void setStartTime(Time startTime) { this.startTime = startTime; }
+    public Time getEndTime() { return endTime; }
+    public void setEndTime(Time endTime) { this.endTime = endTime; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public int getTrainerId() { return trainerId; }
+    public void setTrainerId(int trainerId) { this.trainerId = trainerId; }
 }

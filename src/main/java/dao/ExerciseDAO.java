@@ -3,169 +3,72 @@ package dao;
 import connectDB.ConnectDatabase;
 import model.Exercise;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ExerciseDAO {
+    public boolean addExercises(List<Exercise> exercises) {
+        String sql = "INSERT INTO Exercise (WorkoutID, ExerciseLibraryID) " +
+                "VALUES (?, ?)";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (Exercise exercise : exercises) {
+                ps.setInt(1, exercise.getWorkoutID());
+                ps.setInt(2, exercise.getExerciseLibraryID());
+                ps.addBatch();
+            }
+            int[] results = ps.executeBatch();
+            for (int result : results) {
+                if (result == PreparedStatement.EXECUTE_FAILED) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-    public int addExerciseToWorkout(int workoutId, int exerciseId, int sets, int reps, int restTime, String notes) {
-        String sql = "INSERT INTO Exercise (WorkoutID, ExerciseID, Sets, Reps, RestTimeSeconds, Notes) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            con = ConnectDatabase.getInstance().openConnection();
-            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, workoutId);
-            ps.setInt(2, exerciseId);
-            ps.setInt(3, sets);
-            ps.setInt(4, reps);
-            ps.setInt(5, restTime);
-            ps.setString(6, notes);
+    public int addExercise(Exercise ex) {
+        String sql = "INSERT INTO Exercise (WorkoutID, ExerciseLibraryID) VALUES (?, ?)";
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, ex.getWorkoutID());
+            ps.setInt(2, ex.getExerciseLibraryID());
             ps.executeUpdate();
-
-            rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) return rs.getInt(1);
             }
         } catch (Exception e) {
-            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-            }
+            e.printStackTrace();
         }
-
         return -1;
     }
 
-    public List<Exercise> getExercisesByWorkout(int workoutId) {
-        String sql = "SELECT e.*, el.Name AS ExerciseName, el.VideoURL, el.Description "
-                + "FROM Exercise e "
-                + "JOIN ExerciseLibrary el ON e.ExerciseID = el.ExerciseID "
-                + "WHERE e.WorkoutID = ?";
+    public List<Exercise> getExercisesByWorkoutId(int workoutID) {
         List<Exercise> list = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            con = ConnectDatabase.getInstance().openConnection();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, workoutId);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Exercise ex = new Exercise();
-                ex.setWorkoutID(rs.getInt("WorkoutID"));
-                ex.setExerciseId(rs.getInt("ExerciseID"));
-                ex.setSets(rs.getInt("Sets"));
-                ex.setReps(rs.getInt("Reps"));
-                ex.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));
-                ex.setNotes(rs.getString("Notes"));
-                ex.setExerciseName(rs.getString("ExerciseName"));
-                ex.setVideoURL(rs.getString("VideoURL"));
-                ex.setDescription(rs.getString("Description"));
-                list.add(ex);
+        String sql = "SELECT e.* " +
+                "FROM Exercise e JOIN ExerciseLibrary el ON e.ExerciseLibraryID = el.ExerciseLibraryID WHERE e.WorkoutID = ?";
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, workoutID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Exercise ex = new Exercise();
+                    ex.setExerciseID(rs.getInt("ExerciseID"));
+                    ex.setWorkoutID(rs.getInt("WorkoutID"));
+                    ex.setExerciseLibraryID(rs.getInt("ExerciseLibraryID"));
+                    list.add(ex);
+                }
             }
         } catch (Exception e) {
-            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-            }
+            e.printStackTrace();
         }
-
         return list;
     }
-
-    public boolean deleteExercise(int exerciseId) {
-        String sql = "DELETE FROM Exercise WHERE ExerciseID = ?";
-        
-        try (Connection con = ConnectDatabase.getInstance().openConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, exerciseId);
-            int rows = ps.executeUpdate();
-            return rows > 0;
-        } catch (Exception e) {
-            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return false;
-    }
-
-    public Exercise getExerciseById(int exerciseId) {
-        String sql = "SELECT e.*, el.Name AS ExerciseName, el.VideoURL, el.Description " +
-                    "FROM Exercise e " +
-                    "JOIN ExerciseLibrary el ON e.ExerciseID = el.ExerciseID " +
-                    "WHERE e.ExerciseID = ?";
-        
-        try (Connection con = ConnectDatabase.getInstance().openConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, exerciseId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Exercise ex = new Exercise();
-                    ex.setWorkoutID(rs.getInt("WorkoutID"));
-                    ex.setExerciseId(rs.getInt("ExerciseID"));
-                    ex.setSets(rs.getInt("Sets"));
-                    ex.setReps(rs.getInt("Reps"));
-                    ex.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));
-                    ex.setNotes(rs.getString("Notes"));
-                    ex.setExerciseName(rs.getString("ExerciseName"));
-                    ex.setVideoURL(rs.getString("VideoURL"));
-                    ex.setDescription(rs.getString("Description"));
-                    return ex;
-                }
-            }
-        } catch (Exception e) {
-            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return null;
-    }
-
-    public boolean updateExercise(int exerciseId, int exerciseLibraryId, int sets, int reps, Integer restTime, String notes) {
-        String sql = "UPDATE Exercise SET ExerciseID = ?, Sets = ?, Reps = ?, RestTimeSeconds = ?, Notes = ? WHERE ExerciseID = ?";
-        
-        try (Connection con = ConnectDatabase.getInstance().openConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, exerciseLibraryId);
-            ps.setInt(2, sets);
-            ps.setInt(3, reps);
-            ps.setInt(4, restTime != null ? restTime : 0);
-            ps.setString(5, notes);
-            ps.setInt(6, exerciseId);
-            
-            int rows = ps.executeUpdate();
-            return rows > 0;
-        } catch (Exception e) {
-            Logger.getLogger(ExerciseDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return false;
-    }
-
 }

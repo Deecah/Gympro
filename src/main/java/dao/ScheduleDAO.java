@@ -74,12 +74,7 @@ public class ScheduleDAO {
 
             while (rs.next()) {
                 Exercise ex = new Exercise();
-                ex.setExerciseId(rs.getInt("exercise_id"));
-                ex.setExerciseName(rs.getString("name"));
-                ex.setSets(rs.getInt("sets"));
-                ex.setReps(rs.getInt("reps"));
-                ex.setRestTimeSeconds(rs.getInt("rest_time_seconds"));
-                ex.setNotes(rs.getString("notes"));
+                ex.setExerciseID(rs.getInt("exercise_id"));
                 exercises.add(ex);
             }
         } catch (Exception e) {

@@ -1,1 +1,6 @@
 /target/
+/.idea
+/.vscode
+/.smarttomcat
+/SWP391_PT_System.iml
+/src/main/webapp/uploads/
