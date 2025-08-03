@@ -1,0 +1,685 @@
+ :root {
+                --primary-gradient-start: #ff5e62; /* Brighter red-orange from image */
+                --primary-gradient-end: #ff9966;   /* Orange-yellow from image */
+                /* Sử dụng lại gradient chính cho sidebar và navbar, nhưng với tông màu đậm hơn */
+                --sidebar-navbar-gradient-start: #E63946; /* Đỏ đậm hơn */
+                --sidebar-navbar-gradient-end: #F4A261;   /* Cam cháy đậm hơn */
+
+                --dark-bg-primary: #343a40; /* Dark background for overall wrapper */
+                --light-content-bg: #ffffff; /* White background for content area */
+                --dark-text-primary: #dee2e6; /* Light text for elements on dark/gradient */
+                --dark-text-secondary: #adb5bd; /* Muted text for elements on dark/gradient */
+                --content-text-primary: #343a40; /* Dark text for content area */
+                --content-text-secondary: #6c757d; /* Muted text in content area */
+                --dark-border-color: rgba(255,255,255,0.1);
+                --light-border-color: rgba(0,0,0,0.1);
+            }
+
+            body {
+                background-color: var(--dark-bg-primary);
+                color: var(--content-text-primary);
+                overflow-x: hidden;
+            }
+            #wrapper {
+                background-color: var(--dark-bg-primary);
+            }
+
+            /* Sidebar background with gradient */
+            #sidebar-wrapper {
+                min-height: 100vh;
+                margin-left: -17rem;
+                transition: margin .25s ease-out;
+                background-image: linear-gradient(to bottom, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end)); /* Gradient background */
+                color: #fff;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                width: 17rem;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+            }
+
+            .sidebar-heading {
+                background-color: rgba(0,0,0,0.2) !important; /* Slightly darker overlay for heading */
+                border-bottom: 1px solid rgba(255,255,255,0.3) !important;
+            }
+
+            /* Active state for sidebar sub-items */
+            .list-group-item.active {
+                background-color: rgba(0,0,0,0.4) !important; /* Darker overlay for active item */
+                border-color: rgba(255,255,255,0.5) !important; /* Slightly more visible border */
+                color: #fff !important;
+                font-weight: bold;
+            }
+            .list-group-item {
+                color: rgba(255,255,255,0.95); /* Slightly muted white for normal items */
+                background-color: transparent; /* Transparent to show gradient background */
+                border: none;
+                padding: 1rem 1.5rem;
+                font-size: 1.05rem;
+                transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+                border-radius: 0;
+            }
+            /* Hover state for sidebar items - darker overlay */
+            .list-group-item:hover {
+                background-color: rgba(0,0,0,0.3) !important; /* Đậm hơn 1 chút cho hover */
+                color: #fff;
+            }
+
+            /* Styles for Accordion Headers (the main group titles) */
+            .accordion-header .accordion-button {
+                background-color: transparent !important; /* Transparent to show gradient */
+                color: rgba(255,255,255,0.95) !important;
+                padding: 1rem 1.5rem;
+                font-weight: bold;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+                border-radius: 0;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+            /* Hover state for accordion buttons - darker overlay */
+            .accordion-header .accordion-button:hover {
+                background-color: rgba(0,0,0,0.3) !important;
+                color: #fff !important;
+            }
+            /* Expanded state for accordion buttons - slightly darker */
+            .accordion-header .accordion-button:not(.collapsed) {
+                background-color: rgba(0,0,0,0.35) !important;
+                color: #fff !important;
+                box-shadow: none;
+            }
+            .accordion-header .accordion-button:focus {
+                box-shadow: none;
+                outline: none;
+            }
+
+            /* Styles for Accordion Body (the sub-items) */
+            .accordion-body {
+                padding: 0;
+                background-color: transparent; /* Transparent to show gradient */
+            }
+            .accordion-body .list-group-item {
+                padding-left: 2.5rem;
+                font-size: 0.95rem;
+                background-color: transparent; /* Transparent to show gradient */
+            }
+            /* Hover for sub-items in accordion body */
+            .accordion-body .list-group-item:hover {
+                background-color: rgba(0,0,0,0.35); /* Slightly darker hover */
+            }
+            .accordion-item {
+                background-color: transparent;
+                border: none;
+            }
+            .accordion-collapse {
+                border: none;
+            }
+
+            .accordion-button::after {
+                font-family: "Font Awesome 6 Free";
+                content: "\f0d7";
+                font-weight: 900;
+                display: inline-block;
+                margin-left: auto;
+                transition: transform 0.2s ease-in-out;
+                background-image: none;
+                color: rgba(255,255,255,0.9);
+            }
+            .accordion-button:not(.collapsed)::after {
+                transform: rotate(180deg);
+            }
+
+            /* --- Right Content Area Styles --- */
+            #page-content-wrapper {
+                width: 100%;
+                padding-left: 0;
+                transition: margin-left .25s ease-out;
+                background-color: var(--light-content-bg); /* White background */
+                min-height: 100vh;
+                color: var(--content-text-primary); /* Dark text for content area */
+            }
+
+            /* Navbar background with gradient */
+            .navbar {
+                background-image: linear-gradient(to right, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end)) !important;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+            .navbar-light .navbar-nav .nav-link {
+                color: #fff; /* White text on gradient navbar */
+            }
+            .navbar-light .navbar-nav .nav-link:hover {
+                color: rgba(255,255,255,0.85); /* Slightly less white on hover */
+            }
+            .navbar-light .navbar-nav .nav-item.active .nav-link {
+                color: #fff; /* Active nav link text remains white */
+                font-weight: bold;
+            }
+
+            .content-section {
+                display: none;
+                background-color: var(--light-content-bg); /* White background for content cards */
+                border: 1px solid var(--light-border-color); /* Light border */
+                color: var(--content-text-primary);
+            }
+            .content-section.active {
+                display: block;
+            }
+            .content-section h1 { /* Welcome Admin title */
+                color: var(--content-text-primary); /* Darker color for main titles */
+            }
+            .content-section h2 {
+                color: var(--primary-gradient-end); /* Use gradient end color for section headings */
+                margin-bottom: 1.5rem;
+            }
+            .content-section p.lead {
+                color: var(--content-text-secondary);
+            }
+
+            .table {
+                color: var(--content-text-primary);
+                background-color: var(--light-content-bg);
+            }
+            .table th, .table td {
+                border-color: rgba(0,0,0,0.15); /* Darker borders for tables on white background */
+            }
+            .table-striped tbody tr:nth-of-type(odd) {
+                background-color: rgba(0,0,0,0.05); /* Light stripe for tables on white background */
+            }
+            .table-hover tbody tr:hover {
+                background-color: rgba(0,0,0,0.1); /* Light hover for tables on white background */
+            }
+
+            .form-label {
+                color: var(--content-text-primary);
+            }
+            .form-control {
+                background-color: #f8f9fa; /* Light grey for input fields */
+                color: var(--content-text-primary);
+                border-color: rgba(0,0,0,0.2);
+            }
+            .form-control:focus {
+                background-color: #e9ecef; /* Slightly darker grey on focus */
+                color: var(--content-text-primary);
+                border-color: var(--primary-gradient-end);
+                box-shadow: 0 0 0 0.25rem rgba(255, 153, 102, 0.25);
+            }
+            .form-control::placeholder {
+                color: var(--content-text-secondary);
+                opacity: 1;
+            }
+
+            .btn-primary, .btn-success, .btn-danger, .btn-info {
+                font-weight: 500;
+                border-width: 1px;
+            }
+            /* Custom gradient for primary buttons */
+            .btn-primary {
+                background-image: linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end));
+                border: none;
+                color: #fff;
+            }
+            .btn-primary:hover {
+                background-image: linear-gradient(to right, #e04a4e, #e08357);
+                border: none;
+                color: #fff;
+            }
+
+            .btn-success {
+                background-color: #28a745;
+                border-color: #28a745;
+            }
+            .btn-success:hover {
+                background-color: #218838;
+                border-color: #1e7e34;
+            }
+            .btn-danger {
+                background-color: #dc3545;
+                border-color: #dc3545;
+            }
+            .btn-danger:hover {
+                background-color: #c82333;
+                border-color: #bd212f;
+            }
+            .btn-info {
+                background-color: #17a2b8;
+                border-color: #17a2b8;
+            }
+            .btn-info:hover {
+                background-color: #138496;
+                border-color: #117a8b;
+            }
+
+            .btn-sm {
+                padding: .25rem .5rem;
+                font-size: .875rem;
+                line-height: 1.5;
+                border-radius: .2rem;
+            }
+
+            .badge {
+                padding: .5em .75em;
+                font-size: .8em;
+                vertical-align: middle;
+                border-radius: .25rem;
+            }
+            .badge.bg-success {
+                background-color: #28a745 !important;
+            }
+            .badge.bg-danger {
+                background-color: #dc3545 !important;
+            }
+            .badge.bg-warning {
+                background-color: #ffc107 !important;
+                color: #343a40 !important;
+            }
+            .badge.bg-primary {
+                background-color: var(--primary-gradient-end) !important;
+            }
+
+            .message-area {
+                min-height: 25px;
+                font-size: 0.85rem;
+                color: var(--content-text-secondary);
+            }
+            .alert {
+                background-color: #e2e3e5; /* Light alert background */
+                color: #383d41; /* Dark text for alerts */
+                border-color: #d3d6da;
+            }
+            .alert-info {
+                background-color: #cfe2ff !important;
+                color: #055160 !important;
+                border-color: #b6effb !important;
+            }
+            .alert-success {
+                background-color: #d1e7dd !important;
+                color: #0f5132 !important;
+                border-color: #badbcc !important;
+            }
+            .alert-warning {
+                background-color: #fff3cd !important;
+                color: #664d03 !important;
+                border-color: #ffecb5 !important;
+            }
+            .alert-danger {
+                background-color: #f8d7da !important;
+                color: #842029 !important;
+                border-color: #f5c2c7 !important;
+            }
+            .alert .btn-close {
+                filter: none; /* Remove filter for close button on light background */
+            }
+
+            @media (min-width: 768px) {
+                #sidebar-wrapper {
+                    margin-left: 0;
+                }
+                #page-content-wrapper {
+                    margin-left: 17rem;
+                }
+                #wrapper.toggled #sidebar-wrapper {
+                    margin-left: 0;
+                }
+                #wrapper.toggled #page-content-wrapper {
+                    margin-left: 17rem;
+                }
+            }
+            .dropdown-arrow {
+                transition: transform 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+            }
+
+            .dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
+                transform: rotate(180deg); /* Xoay mũi tên 180 độ khi dropdown mở */
+            }
+
+            /* Quan trọng: Ẩn mũi tên mặc định của Bootstrap nếu bạn chỉ muốn dùng Font Awesome */
+            .dropdown-toggle::after {
+                display: none;
+            }
+            .actions-cell {
+                display: flex; /* Biến cell thành flex container */
+                justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+                align-items: center; /* Căn giữa nội dung theo chiều dọc (nếu có nhiều hàng) */
+                padding: 0; /* Đảm bảo không có padding thừa từ cell */
+            }
+
+/* Report Styles - Tương thích với màu sidebar và header */
+.report-card {
+    background: linear-gradient(135deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.report-header {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px 15px 0 0;
+    padding: 25px;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.report-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+
+.report-header .badge {
+    background: rgba(255,255,255,0.2) !important;
+    color: white !important;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+.report-body {
+    background: white;
+    border-radius: 0 0 15px 15px;
+    padding: 25px;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--sidebar-navbar-gradient-end);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-info strong {
+    color: var(--content-text-primary);
+    font-weight: 600;
+}
+
+.user-info small {
+    color: var(--content-text-secondary);
+    font-size: 0.85rem;
+}
+
+.reason-badge {
+    background: linear-gradient(45deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(255, 94, 98, 0.3);
+    display: inline-block;
+}
+
+.time-badge {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(116, 185, 255, 0.3);
+}
+
+.action-btn {
+    background: linear-gradient(45deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px 10px rgba(230, 57, 70, 0.3);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--content-text-secondary);
+}
+
+.empty-state i {
+    font-size: 5em;
+    margin-bottom: 25px;
+    opacity: 0.4;
+    color: var(--sidebar-navbar-gradient-end);
+}
+
+.empty-state h4 {
+    color: var(--content-text-primary);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Table styles for reports */
+.report-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.report-table .table {
+    margin: 0;
+}
+
+.report-table .table thead th {
+    background: linear-gradient(45deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.report-table .table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.report-table .table tbody tr:hover {
+    background-color: rgba(230, 57, 70, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.report-table .table tbody td {
+    padding: 15px 20px;
+    border-color: rgba(0,0,0,0.08);
+    vertical-align: middle;
+}
+
+/* Responsive design for reports */
+@media (max-width: 768px) {
+    .report-header {
+        padding: 20px;
+    }
+    
+    .report-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .report-body {
+        padding: 20px;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .reason-badge, .time-badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .action-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for report cards */
+.report-card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading state for reports */
+.report-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--content-text-secondary);
+}
+
+.report-loading .spinner-border {
+    color: var(--sidebar-navbar-gradient-end);
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Ban User and View User Buttons */
+.ban-btn {
+    background: linear-gradient(45deg, #dc3545, #c82333) !important;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 16px;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+    font-size: 0.85rem;
+}
+
+.ban-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(45deg, #c82333, #bd2130) !important;
+}
+
+.view-btn {
+    background: linear-gradient(45deg, #17a2b8, #138496) !important;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 16px;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px 10px rgba(23, 162, 184, 0.3);
+    font-size: 0.85rem;
+}
+
+.view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(23, 162, 184, 0.4);
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(45deg, #138496, #117a8b) !important;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background: linear-gradient(45deg, var(--sidebar-navbar-gradient-start), var(--sidebar-navbar-gradient-end));
+    color: white;
+    border-radius: 15px 15px 0 0;
+    border-bottom: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 20px 25px;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+}
+
+.alert .btn-close {
+    filter: invert(1);
+}
+
+/* Responsive for buttons */
+@media (max-width: 768px) {
+    .ban-btn, .view-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .d-flex.gap-2 {
+        flex-direction: column;
+        gap: 8px !important;
+    }
+}
