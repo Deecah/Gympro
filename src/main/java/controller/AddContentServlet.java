@@ -28,7 +28,7 @@ public class AddContentServlet extends HttpServlet {
             response.sendRedirect("contentList.jsp");  // ✅ Thành công thì chuyển trang
         } else {
             request.setAttribute("error", "Insert failed");
-            request.getRequestDispatcher("adminDashboard.jsp").forward(request, response); // ❌ nếu lỗi
+            request.getRequestDispatcher("/adminDashboard/addContent.jsp").forward(request, response); // ❌ nếu lỗi
         }
     }
 

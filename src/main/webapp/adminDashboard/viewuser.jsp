@@ -19,7 +19,7 @@
                     <%-- Các phần nội dung sẽ được tải bằng AJAX hoặc hiển thị/ẩn --%>
                     <div class="container mt-5">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2><i class="fas fa-users me-2"></i> View User List</h2>
+                            <h2><i class="fas fa-users me-2"></i>  User List</h2>
                             
                             <!-- Filter Dropdown -->
                             <div class="d-flex align-items-center">

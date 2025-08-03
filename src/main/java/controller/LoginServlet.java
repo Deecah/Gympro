@@ -112,7 +112,7 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect("CustomerServlet");
                         break;
                     case "Admin":
-                        response.sendRedirect(request.getContextPath() + "/adminDashboard.jsp");
+                        response.sendRedirect(request.getContextPath() + "/UserServlet");
                         break;
                     default:
                         response.sendRedirect("login.jsp?error=Unknown role");

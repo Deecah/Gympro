@@ -20,7 +20,7 @@
                 <div class="accordion-body p-0">
                     <div class="list-group list-group-flush">
                         <a href="<%=context%>/UserServlet?action=view" class="list-group-item list-group-item-action sidebar-item">
-                            <i class="fas fa-list-alt me-2"></i> View User List
+                            <i class="fas fa-list-alt me-2"></i> User List
                         </a>
                         <a href="<%=context%>/ReportServlet" class="list-group-item list-group-item-action sidebar-item">
                             <i class="fas fa-exclamation-triangle me-2"></i> Violation Reports
@@ -40,15 +40,33 @@
             <div id="collapseContent" class="accordion-collapse collapse">
                 <div class="accordion-body p-0">
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action sidebar-item">
-                            <i class="fas fa-edit me-2"></i> Edit Content
+                        <a href="<%=context%>/ContentServlet?action=viewAll" class="list-group-item list-group-item-action sidebar-item">
+                            <i class="fas fa-edit me-2"></i> Content List
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action sidebar-item">
+                        <a href="<%=context%>/ContentServlet?action=add" class="list-group-item list-group-item-action sidebar-item">
                             <i class="fas fa-plus-circle me-2"></i> Add Content
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action sidebar-item">
-                            <i class="fas fa-trash-alt me-2"></i> Delete Content
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingContent">
+                <button class="accordion-button collapsed" type="button" data-target="#collapseContent">
+                    <i class="fas fa-file-alt me-2"></i> Manage Package
+                </button>
+            </h2>
+            <div id="collapseContent" class="accordion-collapse collapse">
+                <div class="accordion-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="<%=context%>/ContentServlet?action=viewAll" class="list-group-item list-group-item-action sidebar-item">
+                            <i class="fas fa-edit me-2"></i> Package List
                         </a>
+                        <a href="<%=context%>/ContentServlet?action=add" class="list-group-item list-group-item-action sidebar-item">
+                            <i class="fas fa-plus-circle me-2"></i> Add Package
+                        </a>
+
                     </div>
                 </div>
             </div>

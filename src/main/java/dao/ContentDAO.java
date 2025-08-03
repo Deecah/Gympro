@@ -21,7 +21,10 @@ public class ContentDAO {
         }
         return false;
     }
-
+    public static void main(String[] args) {
+        System.out.println(ContentDAO.delete(11));
+        
+    }
     public static Content getById(int id) {
         Content content = null;
         try (Connection conn = ConnectDatabase.getInstance().openConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Content WHERE id = ?")) {
