@@ -99,7 +99,7 @@
 
                         <h5 class="text-center mt-4 mb-3">Select a payment method</h5>
 
-                        <form method="post" action="SelectPaymentMethodServlet" class="text-center">
+                        <form method="post" action="${pageContext.request.contextPath}/SelectPaymentMethodServlet" class="text-center">
                             <input type="hidden" name="packageId" value="${pkg.packageID}">
                             <input type="hidden" name="trainerId" value="${pkg.trainerID}">
                             <input type="hidden" name="amount" value="${pkg.price}">

@@ -1,4 +1,3 @@
-
 package controller;
 
 import dao.ContractDAO;
@@ -37,9 +36,9 @@ public class CustomerPackageServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
         int offset = (page - 1) * pageSize;
         List<Package> packages = dao.getPackagesByPage(pageSize, offset);
-        request.setAttribute("packages", packages);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
+//        request.setAttribute("packages", packages);
+//        request.setAttribute("currentPage", page);
+//        request.setAttribute("totalPages", totalPages);
 
         HttpSession session = request.getSession(false);
         Integer customerId = (session != null) ? (Integer) session.getAttribute("userId") : null;
@@ -48,11 +47,12 @@ public class CustomerPackageServlet extends HttpServlet {
         if (customerId != null) {
             ContractDAO contractDAO = new ContractDAO();
             for (Package p : packages) {
-                boolean isActive = contractDAO.isPackageActiveForCustomer(customerId, p.getPackageID());
+                boolean isActive  = contractDAO.isPackageActiveForCustomer(customerId, p.getPackageID());
                 purchaseStatus.put(p.getPackageID(), isActive);
             }
         }
-
+        List<Package> list = dao.getAllPackages();
+        request.setAttribute("packages", list);
         request.setAttribute("purchaseStatus", purchaseStatus);
         RequestDispatcher dispatcher = request.getRequestDispatcher("packages.jsp");
         dispatcher.forward(request, response);

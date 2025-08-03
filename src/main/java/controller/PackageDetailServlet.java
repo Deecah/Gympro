@@ -27,7 +27,6 @@ public class PackageDetailServlet extends HttpServlet {
         // DAO lấy dữ liệu
         PackageDAO packageDAO = new PackageDAO();
         TrainerDAO trainerDAO = new TrainerDAO();
-        ProgramDAO programDAO = new ProgramDAO();
 //        FeedbackDAO feedbackDAO = new FeedbackDAO();
 
         // 1. Gói tập

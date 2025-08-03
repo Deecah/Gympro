@@ -27,13 +27,38 @@ public class PackageDAO {
                     p.setImageUrl(rs.getString("ImageUrl"));
                     p.setPrice(rs.getDouble("Price"));
                     p.setDuration(rs.getInt("Duration"));
-                    p.setTrainerID(rs.getInt("TrainerID"));
+                    p.setTrainerID(rs.getInt("Trainer_ID"));
                     list.add(p);
                 }
             }
         } catch (Exception e) {
             Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return list;
+    }
+
+    public List<Package> getAllPackages() {
+        List<Package> list = new ArrayList<>();
+        String sql = "SELECT * FROM Package";
+
+        try (Connection con = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Package pkg = new Package();
+                pkg.setPackageID(rs.getInt("PackageID"));
+                pkg.setTrainerID(rs.getInt("Trainer_ID")); // 
+                pkg.setName(rs.getString("PackageName"));
+                pkg.setDescription(rs.getString("Description"));
+                pkg.setImageUrl(rs.getString("ImageUrl"));
+                pkg.setPrice(rs.getDouble("Price"));
+                pkg.setDuration(rs.getInt("Duration"));
+                list.add(pkg);
+            }
+
+        } catch (Exception e) {
+            Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+
         return list;
     }
 
@@ -49,8 +74,13 @@ public class PackageDAO {
         return 0;
     }
 
+    public static void main(String[] args) {
+        PackageDAO p = new PackageDAO();
+        System.out.println(p.getAllPackages());
+    }
+    
     public List<Package> getAllPackagesByTrainer(int trainerId) {
-        String sql = "SELECT * FROM Package WHERE TrainerID = ?";
+        String sql = "SELECT * FROM Package WHERE Trainer_ID = ?";
         List<Package> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement ps = null;
@@ -68,7 +98,7 @@ public class PackageDAO {
                 p.setImageUrl(rs.getString("ImageUrl"));
                 p.setPrice(rs.getDouble("Price"));
                 p.setDuration(rs.getInt("Duration"));
-                p.setTrainerID(rs.getInt("TrainerID"));
+                p.setTrainerID(rs.getInt("Trainer_ID"));
                 list.add(p);
             }
         } catch (Exception e) {
@@ -92,7 +122,7 @@ public class PackageDAO {
     }
 
     public Package getPackageByIdAndTrainerId(int id, int trainerId) {
-        String sql = "SELECT * FROM Package WHERE PackageID = ? AND TrainerID = ?";
+        String sql = "SELECT * FROM Package WHERE PackageID = ? AND Trainer_ID = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -110,7 +140,7 @@ public class PackageDAO {
                 p.setImageUrl(rs.getString("ImageUrl"));
                 p.setPrice(rs.getDouble("Price"));
                 p.setDuration(rs.getInt("Duration"));
-                p.setTrainerID(rs.getInt("TrainerID"));
+                p.setTrainerID(rs.getInt("Trainer_ID"));
                 return p;
             }
         } catch (Exception e) {
@@ -151,7 +181,7 @@ public class PackageDAO {
                 p.setImageUrl(rs.getString("ImageUrl"));
                 p.setPrice(rs.getDouble("Price"));
                 p.setDuration(rs.getInt("Duration"));
-                p.setTrainerID(rs.getInt("TrainerID"));
+                p.setTrainerID(rs.getInt("Trainer_ID"));
                 return p;
             }
         } catch (Exception e) {
@@ -175,7 +205,7 @@ public class PackageDAO {
     }
 
     public int insertPackage(Package p, int trainerId) {
-        String sql = "INSERT INTO Package (PackageName, TrainerID, Description, ImageUrl, Price, Duration) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Package (PackageName, Trainer_ID, Description, ImageUrl, Price, Duration) VALUES (?, ?, ?, ?, ?, ?)";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -214,7 +244,7 @@ public class PackageDAO {
     }
 
     public boolean updatePackage(Package p, int trainerId) {
-        String sql = "UPDATE Package SET PackageName = ?, Description = ?, ImageUrl = ?, Price = ?, Duration = ? WHERE PackageID = ? AND TrainerID = ?";
+        String sql = "UPDATE Package SET PackageName = ?, Description = ?, ImageUrl = ?, Price = ?, Duration = ? WHERE PackageID = ? AND Trainer_ID = ?";
         Connection con = null;
         PreparedStatement ps = null;
         try {
@@ -246,7 +276,7 @@ public class PackageDAO {
     }
 
     public boolean deletePackage(int id, int trainerId) {
-        String sql = "DELETE FROM Package WHERE PackageID = ? AND TrainerID = ?";
+        String sql = "DELETE FROM Package WHERE PackageID = ? AND Trainer_ID = ?";
         Connection con = null;
         PreparedStatement ps = null;
         try {
@@ -273,7 +303,7 @@ public class PackageDAO {
     }
 
     public int getTrainerIdByPackage(int packageId) {
-        String sql = "SELECT TrainerID FROM Package WHERE PackageID = ?";
+        String sql = "SELECT Trainer_ID FROM Package WHERE PackageID = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement ps = null;
@@ -283,7 +313,7 @@ public class PackageDAO {
             ps.setInt(1, packageId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt("TrainerID");
+                return rs.getInt("Trainer_ID");
             }
         } catch (Exception e) {
             Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, null, e);
