@@ -1,0 +1,56 @@
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Đóng gói logo + nav + btn lại */
+.left-side {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* khoảng cách giữa logo và menu */
+}
+
+/* Giữ nguyên các style avatar như trước */
+.account-avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.account-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.account-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 5px;
+    min-width: 120px;
+    z-index: 1000;
+}
+
+.account-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.account-dropdown ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.account-dropdown ul li a:hover {
+    background-color: #f2f2f2;
+}
