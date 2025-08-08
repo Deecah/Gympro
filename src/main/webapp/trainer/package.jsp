@@ -64,10 +64,6 @@
                             <td><%= p.getDuration() %></td>
                             <td class="text-end">
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-outline-primary" 
-                                       href="<%= request.getContextPath() %>/PackageDetailServlet?packageId=<%= p.getPackageID() %>">
-                                        View Programs
-                                    </a>
                                     <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                                             data-bs-toggle="dropdown" aria-expanded="false">
                                         <span style="font-size: 18px;">&#8942;</span>

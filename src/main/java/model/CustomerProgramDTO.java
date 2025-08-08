@@ -1,7 +1,6 @@
 package model;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 public class CustomerProgramDTO {
@@ -12,18 +11,11 @@ public class CustomerProgramDTO {
     private String customerName;
     private String avatarUrl;
     private String programName;
+    private Date endDate;
+    private Date startDate;
+    private int scheduleId;
 
     public CustomerProgramDTO() {
-    }
-
-    public CustomerProgramDTO(int id, int programId, int customerId, LocalDateTime assignedAt, String customerName, String avatarUrl, String programName) {
-        this.id = id;
-        this.programId = programId;
-        this.customerId = customerId;
-        this.assignedAt = assignedAt;
-        this.customerName = customerName;
-        this.avatarUrl = avatarUrl;
-        this.programName = programName;
     }
 
     public int getId() {
@@ -82,6 +74,30 @@ public class CustomerProgramDTO {
         this.programName = programName;
     }
 
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public int getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
+    }
+
     @Override
     public String toString() {
         return "CustomerProgramDTO{" +
@@ -92,6 +108,9 @@ public class CustomerProgramDTO {
                 ", customerName='" + customerName + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", programName='" + programName + '\'' +
+                ", endDate=" + endDate +
+                ", startDate=" + startDate +
+                ", scheduleId=" + scheduleId +
                 '}';
     }
 }

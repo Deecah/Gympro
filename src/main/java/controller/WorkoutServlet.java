@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
 
@@ -18,11 +19,11 @@ public class WorkoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         if ("add".equals(action)) {
-            int dayId = Integer.parseInt(request.getParameter("dayId"));
+            Date date = Date.valueOf(request.getParameter("date"));
             LocalTime startTime = LocalTime.parse(request.getParameter("startTime"));
             LocalTime endTime = LocalTime.parse(request.getParameter("endTime"));
-            String title = request.getParameter("title");
-            String notes = request.getParameter("notes");
+            int scheduleId = Integer.parseInt(request.getParameter("scheduleId"));
+            int customerProgramId = Integer.parseInt(request.getParameter("customerProgramId"));
             String trainerId = null;
             String role = null;
             Cookie[] cookies = request.getCookies();
@@ -39,16 +40,16 @@ public class WorkoutServlet extends HttpServlet {
             }
 
             Workout w = new Workout();
-            w.setDayId(dayId);
+            w.setStatus("pending");
             w.setStartTime(Time.valueOf(startTime));
             w.setEndTime(Time.valueOf(endTime));
-            w.setTitle(title);
-            w.setNotes(notes);
+            w.setDate(date);
+            w.setScheduleId(scheduleId);
             w.setTrainerId(Integer.parseInt(trainerId));
-
+            w.setCustomerProgramId(customerProgramId);
             int success = dao.addWorkout(w);
             if (success!=-1) {
-                response.sendRedirect("program-detail.jsp?dayId=" + dayId);
+                response.sendRedirect("program-detail.jsp?date=" + date);
             } else {
                 request.setAttribute("error", "Failed to add workout.");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);

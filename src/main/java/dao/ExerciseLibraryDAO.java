@@ -3,15 +3,17 @@ package dao;
 import connectDB.ConnectDatabase;
 import model.ExerciseLibrary;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseLibraryDAO {
 
+    /**
+     * Thêm một bài tập vào ExerciseLibrary
+     * @param exercise Đối tượng ExerciseLibrary
+     * @return ExerciseLibraryID của bản ghi vừa thêm, hoặc -1 nếu thất bại
+     */
     public int insertExercise(ExerciseLibrary exercise) {
         String sql = "INSERT INTO ExerciseLibrary (ExerciseName, Description, VideoUrl, MuscleGroup, Equipment, Sets, Reps, RestTimeSeconds, TrainerID) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -26,16 +28,25 @@ public class ExerciseLibraryDAO {
             ps.setInt(7, exercise.getReps());
             ps.setInt(8, exercise.getRestTimeSeconds());
             ps.setInt(9, exercise.getTrainerID());
-            ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return -1;
     }
 
+    /**
+     * Lấy danh sách tất cả bài tập theo TrainerID
+     * @param trainerId ID của huấn luyện viên
+     * @return Danh sách ExerciseLibrary
+     */
     public List<ExerciseLibrary> getAllExercises(int trainerId) {
         List<ExerciseLibrary> exercises = new ArrayList<>();
         String sql = "SELECT ExerciseLibraryID, ExerciseName, Sets, Reps, RestTimeSeconds, VideoUrl, " +
@@ -44,27 +55,33 @@ public class ExerciseLibraryDAO {
         try (Connection conn = ConnectDatabase.getInstance().openConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, trainerId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                ExerciseLibrary exercise = new ExerciseLibrary();
-                exercise.setExerciseID(rs.getInt("ExerciseLibraryID"));
-                exercise.setName(rs.getString("ExerciseName"));
-                exercise.setSets(rs.getInt("Sets"));
-                exercise.setReps(rs.getInt("Reps"));
-                exercise.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));
-                exercise.setVideoURL(rs.getString("VideoUrl"));
-                exercise.setDescription(rs.getString("Description"));
-                exercise.setMuscleGroup(rs.getString("MuscleGroup"));
-                exercise.setEquipment(rs.getString("Equipment"));
-                exercise.setTrainerID(rs.getInt("TrainerID"));
-                exercises.add(exercise);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ExerciseLibrary exercise = new ExerciseLibrary();
+                    exercise.setExerciseID(rs.getInt("ExerciseLibraryID"));
+                    exercise.setName(rs.getString("ExerciseName"));
+                    exercise.setSets(rs.getInt("Sets"));
+                    exercise.setReps(rs.getInt("Reps"));
+                    exercise.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));
+                    exercise.setVideoURL(rs.getString("VideoUrl"));
+                    exercise.setDescription(rs.getString("Description"));
+                    exercise.setMuscleGroup(rs.getString("MuscleGroup"));
+                    exercise.setEquipment(rs.getString("Equipment"));
+                    exercise.setTrainerID(rs.getInt("TrainerID"));
+                    exercises.add(exercise);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return exercises;
     }
 
+    /**
+     * Lấy bài tập theo ExerciseLibraryID
+     * @param id ID của bài tập
+     * @return Đối tượng ExerciseLibrary hoặc null nếu không tìm thấy
+     */
     public ExerciseLibrary getExerciseById(int id) {
         String sql = "SELECT * FROM ExerciseLibrary WHERE ExerciseLibraryID = ?";
         try (Connection conn = ConnectDatabase.getInstance().openConnection();
@@ -72,28 +89,33 @@ public class ExerciseLibraryDAO {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    ExerciseLibrary ex = new ExerciseLibrary();
-                    ex.setExerciseID(rs.getInt("ExerciseLibraryID"));
-                    ex.setName(rs.getString("ExerciseName"));
-                    ex.setDescription(rs.getString("Description"));
-                    ex.setVideoURL(rs.getString("VideoUrl"));
-                    ex.setMuscleGroup(rs.getString("MuscleGroup"));
-                    ex.setEquipment(rs.getString("Equipment"));
-                    ex.setSets(rs.getInt("Sets"));
-                    ex.setReps(rs.getInt("Reps"));
-                    ex.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));
-                    ex.setTrainerID(rs.getInt("TrainerID"));
-                    return ex;
+                    ExerciseLibrary exercise = new ExerciseLibrary();
+                    exercise.setExerciseID(rs.getInt("ExerciseLibraryID"));
+                    exercise.setName(rs.getString("ExerciseName"));
+                    exercise.setDescription(rs.getString("Description"));
+                    exercise.setVideoURL(rs.getString("VideoUrl"));
+                    exercise.setMuscleGroup(rs.getString("MuscleGroup"));
+                    exercise.setEquipment(rs.getString("Equipment"));
+                    exercise.setSets(rs.getInt("Sets"));
+                    exercise.setReps(rs.getInt("Reps"));
+                    exercise.setRestTimeSeconds(rs.getInt("RestTimeSeconds"));
+                    exercise.setTrainerID(rs.getInt("TrainerID"));
+                    return exercise;
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * Cập nhật bài tập
+     * @param exercise Đối tượng ExerciseLibrary
+     * @return true nếu cập nhật thành công, false nếu thất bại
+     */
     public boolean updateExercise(ExerciseLibrary exercise) {
-        String sql = "UPDATE ExerciseLibrary SET ExerciseName=?, Description=?, VideoUrl=?, MuscleGroup=?, Equipment=?, Sets=?, Reps=?, RestTimeSeconds=? WHERE ExerciseLibraryID=?";
+        String sql = "UPDATE ExerciseLibrary SET ExerciseName = ?, Description = ?, VideoUrl = ?, MuscleGroup = ?, Equipment = ?, Sets = ?, Reps = ?, RestTimeSeconds = ? WHERE ExerciseLibraryID = ?";
         try (Connection conn = ConnectDatabase.getInstance().openConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, exercise.getName());
@@ -106,21 +128,26 @@ public class ExerciseLibraryDAO {
             ps.setInt(8, exercise.getRestTimeSeconds());
             ps.setInt(9, exercise.getExerciseID());
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
+    /**
+     * Xóa bài tập
+     * @param id ID của bài tập
+     * @return true nếu xóa thành công, false nếu thất bại
+     */
     public boolean deleteExercise(int id) {
         String sql = "DELETE FROM ExerciseLibrary WHERE ExerciseLibraryID = ?";
         try (Connection conn = ConnectDatabase.getInstance().openConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 }

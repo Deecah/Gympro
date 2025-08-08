@@ -353,9 +353,6 @@
                              </div>
                         </div>
                         <div class="action-buttons-cell d-flex gap-2">
-                            <button class="btn btn-assign" onclick="openAssignModal(${p.programId},'${p.name}','${p.description}')">
-                                <i class="fas fa-paper-plane me-1"></i>Assign
-                            </button>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-dropdown dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false">

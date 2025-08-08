@@ -1,5 +1,6 @@
 package controller;
 
+import dao.ProgramDAO;
 import dao.ProgressDAO;
 import dao.UserDAO;
 import jakarta.servlet.*;
@@ -9,12 +10,13 @@ import model.Customer;
 import model.Progress;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import model.User;
 
 @WebServlet("/progress")
 public class ProgressServlet extends HttpServlet {
-
+    private ProgramDAO programDAO = new ProgramDAO();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -25,7 +27,7 @@ public class ProgressServlet extends HttpServlet {
             String role = user.getRole();
             System.out.println(">>> userId from session: " + userId);
             System.out.println(">>> role from session: " + role);
-            List<Progress> progressList = ProgressDAO.getProgressByUserID(userId);
+            List<Progress> progressList = new ArrayList<>();
 
             request.setAttribute("progressList", progressList);
             request.setAttribute("user", user); // Gửi sang JSP nếu cần hiển thị tên
@@ -33,5 +35,5 @@ public class ProgressServlet extends HttpServlet {
 
         request.getRequestDispatcher("viewProgress.jsp").forward(request, response);
     }
-    
+
 }

@@ -1,32 +1,81 @@
 package model;
 
+import java.sql.Date;
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Workout {
     private int workoutId;
-    private int dayId;
+    private Date date;
     private Time startTime;
     private Time endTime;
-    private String title;
-    private String notes;
-    private Date createdAt;
     private int trainerId;
+    private String status;
+    private int customerProgramId;
+    private  int scheduleId;
 
-    public int getWorkoutId() { return workoutId; }
-    public void setWorkoutId(int workoutId) { this.workoutId = workoutId; }
-    public int getDayId() { return dayId; }
-    public void setDayId(int dayId) { this.dayId = dayId; }
-    public Time getStartTime() { return startTime; }
-    public void setStartTime(Time startTime) { this.startTime = startTime; }
-    public Time getEndTime() { return endTime; }
-    public void setEndTime(Time endTime) { this.endTime = endTime; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-    public int getTrainerId() { return trainerId; }
-    public void setTrainerId(int trainerId) { this.trainerId = trainerId; }
+    public int getWorkoutId() {
+        return workoutId;
+    }
+
+    public void setWorkoutId(int workoutId) {
+        this.workoutId = workoutId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getTrainerId() {
+        return trainerId;
+    }
+
+    public void setTrainerId(int trainerId) {
+        this.trainerId = trainerId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getCustomerProgramId() {
+        return customerProgramId;
+    }
+
+    public void setCustomerProgramId(int customerProgramId) {
+        this.customerProgramId = customerProgramId;
+    }
+
+    public int getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
+    }
 }

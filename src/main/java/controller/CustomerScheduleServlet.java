@@ -1,20 +1,17 @@
 package controller;
 
 import dao.CustomerProgramDAO;
-import jakarta.servlet.http.*;
-import model.CustomerProgram;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 import model.CustomerProgramDTO;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
-@WebServlet("/ScheduleServlet")
-public class ScheduleServlet extends HttpServlet {
+@WebServlet("/CustomerScheduleServlet")
 
+public class CustomerScheduleServlet extends HttpServlet {
     private CustomerProgramDAO customerProgramDAO = new CustomerProgramDAO();
 
     @Override
@@ -30,18 +27,18 @@ public class ScheduleServlet extends HttpServlet {
                 role = cookie.getValue();
             }
         }
-        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+        if (userId == null || role == null || !role.equalsIgnoreCase("Customer")) {
             response.sendRedirect("login.jsp");
             return;
         }
-        int trainerId = Integer.parseInt(userId);
+        int customerId = Integer.parseInt(userId);
 
         // Lấy danh sách CustomerProgram theo trainerId
-        List<CustomerProgramDTO> customerPrograms = customerProgramDAO.getCustomerProgramsByTrainerId(trainerId);
+        List<CustomerProgramDTO> customerPrograms = customerProgramDAO.getCustomerProgramsByCustomer(customerId);
 
         // Truyền dữ liệu vào JSP
         request.setAttribute("customerPrograms", customerPrograms);
-        request.setAttribute("trainerId", trainerId);
-        request.getRequestDispatcher("trainer/schedule.jsp").forward(request, response);
+        request.setAttribute("customerId", customerId);
+        request.getRequestDispatcher("customerSchedule.jsp").forward(request, response);
     }
 }

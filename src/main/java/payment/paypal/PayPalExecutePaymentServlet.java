@@ -17,6 +17,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,11 +70,11 @@ public class PayPalExecutePaymentServlet extends HttpServlet {
             System.out.println("✅ Transaction recorded with ID: " + transactionId);
 
             if (transactionId > 0) {
-                LocalDateTime start = LocalDateTime.now();
-                LocalDateTime end = start.plusDays(duration);
+                LocalDate start = LocalDate.now();
+                LocalDate end = start.plusDays(duration);
 
                 ContractDAO contractDAO = new ContractDAO();
-                contractDAO.createContract(trainerId, customerId, packageId, start, end);
+                contractDAO.createContract(trainerId, customerId, packageId, Date.valueOf(start),Date.valueOf(end));
                 System.out.println("✅ Contract created");
 
                 // 6. Gán chương trình (nếu chưa)
@@ -83,7 +84,7 @@ public class PayPalExecutePaymentServlet extends HttpServlet {
                 System.out.println("✅ Program ID resolved: " + programId);
 
                 if (programId > 0 && !cpDAO.isProgramAlreadyAssigned(customerId, programId)) {
-                    cpDAO.assignProgramToCustomer(programId, customerId, LocalDate.from(start));
+                    cpDAO.assignProgramToCustomer(programId, customerId, Date.valueOf(start),Date.valueOf(end));
                     System.out.println("✅ Program assigned to customer");
                 }
 

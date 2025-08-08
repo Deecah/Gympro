@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.*;
 
 @WebServlet("/ProgramDetailServlet")
@@ -30,7 +31,7 @@ public class ProgramDetailServlet extends HttpServlet {
         Program program = programDAO.getProgramById(programId);
         List<ProgramWeek> weeks = programWeekDAO.getWeeksByProgramId(programId);
         Map<Integer, List<ProgramDay>> daysMap = programDayDAO.get(programId);
-        Map<Integer, List<Workout>> dayWorkouts = workoutDAO.getWorkoutsByProgram(programId);
+        Map<Date, List<Workout>> dayWorkouts = workoutDAO.getWorkoutsByProgram(programId);
         Map<Integer, List<ExerciseLibrary>> workoutExercises = workoutDAO.getExercisesByWorkouts(dayWorkouts);
         List<ExerciseLibrary> exerciseList = exerciseProgramDAO.getExercisesByProgram(programId);
         ArrayList<User> customers = userDAO.getCustomersByTrainer(user.getUserId());

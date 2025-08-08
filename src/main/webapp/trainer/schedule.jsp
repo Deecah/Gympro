@@ -84,14 +84,6 @@
         </div>
         <div class="flex-grow-1 p-4 bg-light">
             <h2>Customer Programs for Trainer</h2>
-            <div class="week-form">
-                <form id="weekForm">
-                    <input type="hidden" name="trainerId" value="${trainerId}">
-                    <label>Week Start Date: <input type="date" name="weekStartDate" value="${defaultWeekStartDate}" required></label>
-                    <button type="submit">Load Customers</button>
-                </form>
-            </div>
-
             <table class="schedule-table">
                 <thead>
                     <tr>
@@ -108,7 +100,7 @@
                             <td>${customerProgram.programName}</td>
                             <td>${customerProgram.assignedAt}</td>
                             <td>
-                                <a class="action-link" href="/TimetableServlet?customerProgramId=${customerProgram.id}&programId=${customerProgram.programId}&weekStartDate=${param.weekStartDate}&trainerId=${trainerId}">View/Create Workout</a>
+                                <a class="action-link" href="${pageContext.request.contextPath}/TimetableServlet?customerProgramId=${customerProgram.id}&programId=${customerProgram.programId}&startDate=${customerProgram.startDate}&endDate=${customerProgram.endDate}&trainerId=${trainerId}&scheduleId=${customerProgram.scheduleId}">View Schedule</a>
                             </td>
                         </tr>
                     </c:forEach>

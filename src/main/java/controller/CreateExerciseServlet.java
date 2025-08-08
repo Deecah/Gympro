@@ -77,14 +77,6 @@ public class CreateExerciseServlet extends HttpServlet {
         }
 
         if (exerciseId != -1) {
-            // Optionally link to a workout if workoutId is provided
-            String workoutIdStr = request.getParameter("workoutId");
-            if (workoutIdStr != null && !workoutIdStr.isEmpty()) {
-                Exercise ex = new Exercise();
-                ex.setWorkoutID(Integer.parseInt(workoutIdStr));
-                ex.setExerciseLibraryID(exerciseId);
-                exerciseDAO.addExercise(ex);
-            }
             response.sendRedirect("trainer/library.jsp?action=list&success=Exercise created successfully");
         } else {
             response.sendRedirect("trainer/create-exercise.jsp?error=Failed to create exercise");
