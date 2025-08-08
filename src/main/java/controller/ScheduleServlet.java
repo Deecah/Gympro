@@ -36,19 +36,11 @@ public class ScheduleServlet extends HttpServlet {
         }
         int trainerId = Integer.parseInt(userId);
 
-        // Lấy weekStartDate từ request, mặc định là thứ Hai của tuần hiện tại (28/07/2025)
-        String weekStartDate = request.getParameter("weekStartDate");
-        if (weekStartDate == null || weekStartDate.isEmpty()) {
-            LocalDate monday = LocalDate.of(2025, 7, 28); // Thứ Hai của tuần chứa 03/08/2025
-            weekStartDate = monday.toString();
-        }
-
         // Lấy danh sách CustomerProgram theo trainerId
         List<CustomerProgramDTO> customerPrograms = customerProgramDAO.getCustomerProgramsByTrainerId(trainerId);
 
         // Truyền dữ liệu vào JSP
         request.setAttribute("customerPrograms", customerPrograms);
-        request.setAttribute("defaultWeekStartDate", weekStartDate);
         request.setAttribute("trainerId", trainerId);
         request.getRequestDispatcher("trainer/schedule.jsp").forward(request, response);
     }

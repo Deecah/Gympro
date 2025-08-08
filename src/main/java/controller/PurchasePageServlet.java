@@ -1,19 +1,15 @@
 package controller;
 
-import dao.ContractDAO;
-import dao.CustomerProgramDAO;
-import dao.PackageDAO;
-import dao.TransactionDAO;
-import model.Contract;
-import model.CustomerProgram;
-import model.Package;
+import dao.*;
+import model.*;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import model.Transaction;
+import model.Package;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +19,7 @@ public class PurchasePageServlet extends HttpServlet {
     private ContractDAO contractDAO = new ContractDAO();
     private CustomerProgramDAO customerProgramDAO = new CustomerProgramDAO();
     private TransactionDAO transactionDAO =new TransactionDAO();
+    private CustomerWorkoutScheduleDAO customerWorkoutScheduleDAO = new CustomerWorkoutScheduleDAO();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -61,8 +58,10 @@ public class PurchasePageServlet extends HttpServlet {
                 contract.setCustomerID(Integer.parseInt(userId));
                 contract.setStatus("active");
                 contract.setTrainerID(Integer.parseInt(rawTrainerId));
-                contract.setStartDate(LocalDateTime.now());
-                contract.setEndDate(LocalDateTime.now().plusDays(p.getDuration()));
+                LocalDate startDate = LocalDate.now();
+                LocalDate endDate = startDate.plusDays(p.getDuration());
+                contract.setStartDate(java.sql.Date.valueOf(startDate));
+                contract.setEndDate(java.sql.Date.valueOf(endDate));
                 contract.setPackageID(Integer.parseInt(rawPackageId));
                 int contractId = contractDAO.createContract(contract.getTrainerID(), contract.getCustomerID(), contract.getPackageID(), contract.getStartDate(), contract.getEndDate());
                 Transaction transaction = new Transaction();
@@ -77,8 +76,16 @@ public class PurchasePageServlet extends HttpServlet {
                 customerProgram.setCustomerId(Integer.parseInt(userId));
                 customerProgram.setProgramId(Integer.parseInt((rawProgramId)));
                 customerProgram.setAssignedAt(LocalDateTime.now());
-                customerProgram.setStartDate(LocalDate.now());
-                customerProgramDAO.assignProgramToCustomer(customerProgram.getProgramId(), customerProgram.getCustomerId(), customerProgram.getStartDate());
+                LocalDate curent = LocalDate.now();
+                customerProgram.setStartDate(Date.valueOf(curent));
+                customerProgram.setEndDate(Date.valueOf(curent.plusDays(p.getDuration())));
+                int customerProgramId = customerProgramDAO.assignProgramToCustomer(customerProgram.getProgramId(), customerProgram.getCustomerId(), customerProgram.getStartDate(), customerProgram.getEndDate());
+                CustomerWorkoutSchedule schedule = new CustomerWorkoutSchedule();
+                schedule.setCustomerProgramId(customerProgramId);
+                schedule.setStartAt(contract.getStartDate());
+                schedule.setEndAt(contract.getEndDate());
+                schedule.setStatus("pending");
+                customerWorkoutScheduleDAO.addSchedule(schedule);
                 request.getRequestDispatcher("packagesPurchased").forward(request, response);
             } else {
                 response.sendRedirect("not-found.jsp");

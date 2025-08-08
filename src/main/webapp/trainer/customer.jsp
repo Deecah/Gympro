@@ -85,60 +85,24 @@
 
                 <!-- Customers Table -->
                 <div class="customers-table-container">
-                    <table class="table customers-table">
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th><i class="fas fa-check-square me-2"></i></th>
-                                <th><i class="fas fa-user me-2"></i>Client</th>
-                                <th><i class="fas fa-chart-line me-2"></i>Program Progress</th>
-                                <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                                <th>Customer Name</th>
+                                <th>Program Name</th>
+                                <th>Total Workouts</th>
+                                <th>Completed Workouts</th>
+                                <th>Progress (%)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="customer" items="${customers}">
+                            <c:forEach var="progress" items="${customers}">
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="form-check-input"/>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="${customer.customerAvatar}" class="customer-avatar" 
-                                                 onerror="this.src='../img/default-avatar.jpg'"/>
-                                            <div class="customer-info">
-                                                <div class="customer-name">${customer.customerName}</div>
-                                                <div class="customer-email">${customer.customerEmail}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="progress-card">
-                                            <div class="program-name">
-                                                <i class="fas fa-dumbbell me-2"></i>${customer.programName}
-                                            </div>
-                                            <div class="progress-stats">
-                                                <div class="progress-percentage">${customer.progressPercent}%</div>
-                                                <div class="workout-count">
-                                                    ${customer.completedWorkouts}/${customer.totalWorkouts} workouts
-                                                </div>
-                                            </div>
-                                            <div class="progress-bar-container">
-                                                <div class="progress-bar" 
-                                                     style="width: ${customer.progressPercent}%"></div>
-                                            </div>
-                                            <div class="mt-2">
-                                                <a href="${pageContext.request.contextPath}/CustomerServlet?action=viewProgress&customerId=${customer.customerId}&programId=${customer.programId}" 
-                                                   class="view-details-btn">
-                                                    <i class="fas fa-eye me-1"></i>View Details
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a href="${pageContext.request.contextPath}/ChatServlet?chatWith=${customer.customerId}&userId=${sessionScope.user.userId}" 
-                                           class="btn-chat">
-                                            <i class="fas fa-comments"></i>Chat
-                                        </a>
-                                    </td>
+                                    <td>${progress.customerName}</td>
+                                    <td>${progress.programName}</td>
+                                    <td>${progress.totalWorkouts}</td>
+                                    <td>${progress.completedWorkouts}</td>
+                                    <td>${progress.progressPercent}%</td>
                                 </tr>
                             </c:forEach>
                         </tbody>

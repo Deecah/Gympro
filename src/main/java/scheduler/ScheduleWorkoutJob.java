@@ -11,7 +11,6 @@ public class ScheduleWorkoutJob implements Job {
     public void execute(JobExecutionContext context) {
         JobDataMap dataMap = context.getMergedJobDataMap();
         Workout workout = (Workout) dataMap.get("workout");
-        System.out.println("Scheduled workout executed: " + workout.getTitle() + " at " + LocalDateTime.now());
     }
 
     public static void schedule(Workout workout, String dateStr, String startTimeStr) throws Exception {

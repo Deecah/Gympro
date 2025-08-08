@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ContractDAO {
 
-    public int createContract(int trainerId, int customerId, int packageId, LocalDateTime startDate, LocalDateTime endDate) {
+    public int createContract(int trainerId, int customerId, int packageId, Date startDate, Date endDate) {
         // First validate that customer exists
         if (!customerExists(customerId)) {
             Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE,
@@ -32,7 +32,7 @@ public class ContractDAO {
             ps.setInt(1, trainerId);
             ps.setInt(2, customerId);
             ps.setInt(3, packageId);
-            ps.setDate(4, Date.valueOf(startDate.toLocalDate()));
+            ps.setDate(4, startDate);
             ps.setDate(5, Date.valueOf(endDate.toLocalDate()));
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
