@@ -71,7 +71,8 @@ public class PurchasePageServlet extends HttpServlet {
                 transaction.setDescription("good");
                 transaction.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
                 transaction.setCustomerId(Integer.parseInt(userId));
-                transactionDAO.addTransaction(transaction);
+                int transactionID=transactionDAO.addTransaction(transaction);
+                System.out.println("transactionID: " + transactionID);
                 CustomerProgram customerProgram = new CustomerProgram();
                 customerProgram.setCustomerId(Integer.parseInt(userId));
                 customerProgram.setProgramId(Integer.parseInt((rawProgramId)));

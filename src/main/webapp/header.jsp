@@ -98,7 +98,7 @@
                 <div id="dropdownMenu" class="avatar-dropdown">
                     <a href="${pageContext.request.contextPath}/profile.jsp"><i class="fa fa-user"></i> Profile</a>
                     <a href="packagesPurchased"><i class="fa fa-cube"></i> Packages Purchased</a>
-                    <a href="${pageContext.request.contextPath}/timetable"><i class="fa fa-calendar"></i> Schedule</a>
+                    <a href="${pageContext.request.contextPath}/CustomerScheduleServlet"><i class="fa fa-calendar"></i> Schedule</a>
                     <a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Logout</a>
                 </div>
             <% } else { %>
@@ -116,4 +116,3 @@
         </div>
     </div>
 </header>
-

@@ -1,16 +1,66 @@
+
 package dao;
 
 import connectDB.ConnectDatabase;
 import model.User;
-import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.GoogleAccount;
 import Utils.PasswordUtil;
 
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDAO {
+
+    public ArrayList<User> getCustomersWithActiveContracts(int trainerId) {
+        ArrayList<User> customers = new ArrayList<>();
+        String sql = "SELECT u.* FROM Users u JOIN Contract c ON u.UserID = c.CustomerID " +
+                "WHERE c.TrainerID = ? AND c.Status = 'active'";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, trainerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User();
+                    user.setUserId(rs.getInt("UserID"));
+                    user.setUserName(rs.getString("UserName"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setRole(rs.getString("Role"));
+                    customers.add(user);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public ArrayList<User> getCustomersByTrainer(int trainerId) {
+        ArrayList<User> customers = new ArrayList<>();
+        String sql = "SELECT u.Id, u.Name, u.Email, u.Role " +
+                     "FROM Customer c " +
+                     "JOIN Users u ON c.Id = u.Id " +
+                     "JOIN Contracts ct ON c.Id = ct.CustomerID " +
+                     "WHERE ct.TrainerID = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, trainerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User();
+                    user.setUserId(rs.getInt("Id"));
+                    user.setUserName(rs.getString("Name"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setRole(rs.getString("Role"));
+                    customers.add(user);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
 
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE Email = ?";
@@ -54,16 +104,15 @@ public class UserDAO {
             }
         }
         return null;
-        
     }
 
-     public ArrayList<User> getAllUsers() {
-        ArrayList<User> userList = new ArrayList<>(); // Khởi tạo ArrayList
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> userList = new ArrayList<>();
         try (Connection conn = ConnectDatabase.getInstance().openConnection()) {
             String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users WHERE Role IN ('Trainer', 'Customer')";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) { // Dùng while để duyệt qua tất cả các dòng
+            while (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getInt("Id"));
                 user.setUserName(rs.getString("Name"));
@@ -74,21 +123,20 @@ public class UserDAO {
                 user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setRole(rs.getString("Role"));
                 user.setStatus(rs.getString("Status"));
-                userList.add(user); // Thêm user vào danh sách
+                userList.add(user);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return userList;
     }
-     
+
     public User getUserById(int userId) {
         User user = null;
         try (Connection con = ConnectDatabase.getInstance().openConnection()) {
             String sql = "SELECT Id, Name, Email, AvatarUrl FROM Users WHERE Id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, userId);
-
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User();
@@ -121,11 +169,11 @@ public class UserDAO {
                 user.setAvatarUrl(rs.getString("AvatarUrl"));
                 user.setPassword(rs.getBytes("Password"));
                 return user;
-
             }
         }
         return null;
     }
+
     public boolean addUser(User user) {
         if (isEmailExists(user.getEmail())) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.WARNING, "Email already exists!");
@@ -142,8 +190,7 @@ public class UserDAO {
 
         try {
             con = db.openConnection();
-            con.setAutoCommit(false); // atomic transaction
-            // Insert user vào bảng Users
+            con.setAutoCommit(false);
             userStmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             userStmt.setString(1, user.getUserName());
             userStmt.setString(2, user.getEmail());
@@ -161,7 +208,6 @@ public class UserDAO {
             }
             int userId = generatedKeys.getInt(1);
 
-            // Insert by role
             switch (user.getRole()) {
                 case "Customer":
                     insertRoleSQL = "INSERT INTO Customer (Id) VALUES (?)";
@@ -183,7 +229,7 @@ public class UserDAO {
         } catch (ClassNotFoundException | SQLException e) {
             try {
                 if (con != null) {
-                    con.rollback(); // rollback nếu lỗi
+                    con.rollback();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, "Rollback failed", ex);
@@ -210,6 +256,7 @@ public class UserDAO {
             }
         }
     }
+
     public boolean addUserFromGoogle(GoogleAccount googleAcc) {
         User user = new User();
         user.setUserName(googleAcc.getName());
@@ -218,8 +265,9 @@ public class UserDAO {
         user.setRole("Customer");
         return addUser(user);
     }
+
     public boolean isEmailExists(String email) {
-        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM Users WHERE Email = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -231,22 +279,25 @@ public class UserDAO {
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
-                statement.close();
-                con.close();
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return false;
-    }    
+    }
+
     public void deleteUser(String id) {
-        String sql = "delete from Users WHERE id=? ;";
+        String sql = "DELETE FROM Users WHERE Id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -256,23 +307,26 @@ public class UserDAO {
             int userId = Integer.parseInt(id);
             statement.setInt(1, userId);
             statement.executeUpdate();
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
-                statement.close();
-                con.close();
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
-    public boolean updateUser(User user) {
-        try (Connection con = ConnectDatabase.getInstance().openConnection(); PreparedStatement ps = con.prepareStatement("UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?")) {
 
+    public boolean updateUser(User user) {
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     "UPDATE Users SET Name = ?, Gender = ?, Email = ?, Phone = ?, Address = ?, Role = ?, Status = ? WHERE Id = ?")) {
             ps.setString(1, user.getUserName());
             ps.setString(2, user.getGender());
             ps.setString(3, user.getEmail());
@@ -281,11 +335,10 @@ public class UserDAO {
             ps.setString(6, user.getRole());
             ps.setString(7, user.getStatus());
             ps.setInt(8, user.getUserId());
-
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace(); // Log the exception for debugging
-            return false; // Return false if an exception occurs
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -312,12 +365,10 @@ public class UserDAO {
             statement = con.prepareStatement(sql);
             statement.setString(1, avatarUrl);
             statement.setInt(2, userId);
-            int rowsAffected = statement.executeUpdate();  
-            return rowsAffected > 0;  
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
                 if (statement != null) {
@@ -330,11 +381,11 @@ public class UserDAO {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return false;  
+        return false;
     }
 
-    public boolean banUser(int userId){
-        String sql = "UPDATE Users SET Status = ? WHERE id = ?";
+    public boolean banUser(int userId) {
+        String sql = "UPDATE Users SET Status = ? WHERE Id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -344,24 +395,26 @@ public class UserDAO {
             statement.setString(1, "Banned");
             statement.setInt(2, userId);
             statement.executeUpdate();
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return true;
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+            return false;
         } finally {
             try {
-                statement.close();
-                con.close();
-                return true;
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } 
-        return false;
+        }
     }
 
-    public boolean unbanUser(int userId){
-        String sql = "UPDATE Users SET Status = ? WHERE id = ?";
+    public boolean unbanUser(int userId) {
+        String sql = "UPDATE Users SET Status = ? WHERE Id = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement statement = null;
@@ -371,49 +424,47 @@ public class UserDAO {
             statement.setString(1, "Normal");
             statement.setInt(2, userId);
             statement.executeUpdate();
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(ConnectDatabase.class.getName()).log(Level.SEVERE, null, e);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return true;
+        } catch (ClassNotFoundException | SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+            return false;
         } finally {
             try {
-                statement.close();
-                con.close();
-                return true;
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } 
-        return false;
-    }
-    
-    public ArrayList<User> getUsersByRole(String role) {
-    ArrayList<User> userList = new ArrayList<>(); // Khởi tạo danh sách
-    String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users WHERE Role = ?";
-
-    try (Connection conn = ConnectDatabase.getInstance().openConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-
-        ps.setString(1, role); // Gán tham số role cho câu lệnh SQL
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-            User user = new User();
-            user.setUserId(rs.getInt("Id"));
-            user.setUserName(rs.getString("Name"));
-            user.setGender(rs.getString("Gender"));
-            user.setEmail(rs.getString("Email"));
-            user.setPhone(rs.getString("Phone"));
-            user.setAddress(rs.getString("Address"));
-            user.setAvatarUrl(rs.getString("AvatarUrl"));
-            user.setRole(rs.getString("Role"));
-            user.setStatus(rs.getString("Status"));
-            userList.add(user);
         }
-    } catch (Exception e) {
-        e.printStackTrace();
     }
 
-    return userList;
-}
+    public ArrayList<User> getUsersByRole(String role) {
+        ArrayList<User> userList = new ArrayList<>();
+        String sql = "SELECT Id, Name, Gender, Email, Phone, Address, AvatarUrl, Role, Status FROM Users WHERE Role = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, role);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("Id"));
+                user.setUserName(rs.getString("Name"));
+                user.setGender(rs.getString("Gender"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setAvatarUrl(rs.getString("AvatarUrl"));
+                user.setRole(rs.getString("Role"));
+                user.setStatus(rs.getString("Status"));
+                userList.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
 }
