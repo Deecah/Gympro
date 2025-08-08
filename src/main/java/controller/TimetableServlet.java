@@ -1,95 +1,236 @@
 package controller;
 
-import dao.WorkoutDAO;
+import connectDB.ConnectDatabase;
+import dao.TimetableDAO;
 import dao.ProgressDAO;
-import model.WorkoutSlotDTO;
+import dao.WorkoutDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import model.User;
+import model.CustomerWorkoutSchedule;
+import model.ExerciseProgram;
+import model.Workout;
 
 import java.io.IOException;
-import java.time.*;
+import java.io.PrintWriter;
+import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@WebServlet("/timetable")
+import com.google.gson.Gson;
+
+@WebServlet({"/TimetableServlet", "/workoutDetail"})
+@MultipartConfig
 public class TimetableServlet extends HttpServlet {
 
+    private TimetableDAO timetableDAO = new TimetableDAO();
+    private ProgressDAO progressDAO = new ProgressDAO();
+    private WorkoutDAO workoutDAO = new WorkoutDAO();
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        HttpSession session = req.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-
-        if (user == null) {
-            resp.sendRedirect("login.jsp");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getServletPath();
+        if ("/workoutDetail".equals(path)) {
+            int workoutId = Integer.parseInt(request.getParameter("workoutId"));
+            Object workoutDetail = timetableDAO.getWorkoutDetail(workoutId);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.print(new Gson().toJson(workoutDetail));
+            out.flush();
             return;
         }
 
-        int customerId = user.getUserId();
-        String role = user.getRole();
-        ZoneId zone = ZoneId.systemDefault();
-        DateTimeFormatter fullFmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate today = LocalDate.now();
-
-        // Xác định tuần đang chọn hoặc mặc định là tuần hiện tại
-        LocalDate startOfWeek;
-        String selectedRange = req.getParameter("weekRange");
-        if (selectedRange != null && selectedRange.contains(" - ")) {
-            try {
-                String[] parts = selectedRange.split(" - ");
-                startOfWeek = LocalDate.parse(parts[0].trim(), fullFmt);
-            } catch (Exception e) {
-                startOfWeek = today.with(DayOfWeek.MONDAY);
-            }
-        } else {
-            startOfWeek = today.with(DayOfWeek.MONDAY);
-        }
-
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
-        String currentWeekRange = fullFmt.format(startOfWeek) + " - " + fullFmt.format(endOfWeek);
-
-        // Tạo danh sách tuần trong năm
-        List<String> weekOptions = new ArrayList<>();
-        LocalDate firstMonday = LocalDate.of(today.getYear(), 1, 4).with(DayOfWeek.MONDAY);
-        for (int i = 0; i < 52; i++) {
-            LocalDate s = firstMonday.plusWeeks(i);
-            LocalDate e = s.plusDays(6);
-            weekOptions.add(fullFmt.format(s) + " - " + fullFmt.format(e));
-        }
-        if (!weekOptions.contains(currentWeekRange)) {
-            weekOptions.add(0, currentWeekRange);
-        }
-
-        // Lấy dữ liệu lịch theo slotId
-        WorkoutDAO dao = new WorkoutDAO();
-        Map<Integer, List<WorkoutSlotDTO>> slotMap =
-                dao.getSlotSchedule(customerId, startOfWeek, endOfWeek, role);
-
-        // Bổ sung trạng thái completed cho từng slot
-        ProgressDAO progressDAO = new ProgressDAO();
-        for (List<WorkoutSlotDTO> slots : slotMap.values()) {
-            for (WorkoutSlotDTO slot : slots) {
-                if (slot.getWorkoutId() > 0) {
-                    boolean completed = progressDAO.isWorkoutCompleted(customerId, slot.getWorkoutId());
-                    slot.setCompleted(completed);
+        HttpSession session = request.getSession();
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                    userId = cookie.getValue();
+                } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                    role = cookie.getValue();
                 }
             }
         }
-
-        // Gửi dữ liệu sang JSP
-        req.setAttribute("slotMap", slotMap);
-        req.setAttribute("weekOptions", weekOptions);
-        req.setAttribute("currentWeekRange", currentWeekRange);
-        
-        // Xử lý thông báo từ MarkCompletedServlet
-        String msg = req.getParameter("msg");
-        if (msg != null) {
-            req.setAttribute("message", msg);
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
+            return;
         }
 
-        req.getRequestDispatcher("timetable.jsp").forward(req, resp);
+        int customerProgramId = Integer.parseInt(request.getParameter("customerProgramId"));
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        int trainerId = Integer.parseInt(userId);
+        String weekStartStr = request.getParameter("weekStartDate");
+        int scheduleId = Integer.parseInt(request.getParameter("scheduleId"));
+        LocalDate weekStartDate;
+        try {
+            weekStartDate = weekStartStr != null && !weekStartStr.isEmpty() ?
+                    LocalDate.parse(weekStartStr, DateTimeFormatter.ISO_LOCAL_DATE).with(DayOfWeek.MONDAY) :
+                    LocalDate.now().with(java.time.DayOfWeek.MONDAY);
+        } catch (DateTimeParseException e) {
+            weekStartDate = LocalDate.now().with(java.time.DayOfWeek.MONDAY);
+        }
+        weekStartStr = weekStartDate.toString();
+
+        if (!timetableDAO.isValidTrainerForProgram(trainerId, customerProgramId)) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        // Lấy programId từ CustomerProgram
+        int programId = getProgramIdFromCustomerProgram(customerProgramId);
+
+        List<CustomerWorkoutSchedule> schedules = timetableDAO.getSchedulesForWeek(customerProgramId, weekStartStr);
+        List<ExerciseProgram> exercisePrograms = timetableDAO.getExerciseProgramsByProgramId(programId);
+        LocalDate startLocalDate = LocalDate.parse(startDate);
+        LocalDate endLocalDate = LocalDate.parse(endDate);
+        // Always use Monday for week start
+        LocalDate firstMonday = startLocalDate.with(DayOfWeek.MONDAY);
+        LocalDate lastMonday = endLocalDate.with(DayOfWeek.MONDAY);
+        List<String> weekOptions = new ArrayList<>();
+        for (LocalDate d = firstMonday; !d.isAfter(lastMonday); d = d.plusWeeks(1)) {
+            weekOptions.add(d.toString());
+        }
+
+        // Add weekDates for JSP (each day in the week)
+        List<LocalDate> weekDates = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            weekDates.add(weekStartDate.plusDays(i));
+        }
+        request.setAttribute("customerProgramId", customerProgramId);
+        request.setAttribute("weekDates", weekDates);
+        request.setAttribute("scheduleId", scheduleId);
+        request.setAttribute("schedules", schedules);
+        request.setAttribute("exercisePrograms", exercisePrograms);
+        request.setAttribute("weekOptions", weekOptions);
+        request.setAttribute("trainerId", trainerId);
+        request.setAttribute("programId", programId);
+        request.setAttribute("startDate", LocalDate.parse(startDate));
+        request.setAttribute("endDate", LocalDate.parse(endDate));
+        request.setAttribute("weekStartDate", weekStartDate);
+        request.getRequestDispatcher("trainer/timetable.jsp").forward(request, response);
+    }
+
+    private int getProgramIdFromCustomerProgram(int customerProgramId) {
+        String sql = "SELECT ProgramID FROM CustomerProgram WHERE Id = ?";
+        try (Connection conn = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, customerProgramId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("ProgramID");
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equalsIgnoreCase("userId")) {
+                    userId = cookie.getValue();
+                } else if (cookie.getName().equalsIgnoreCase("role")) {
+                    role = cookie.getValue();
+                }
+            }
+        }
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        String customerProgramIdStr = request.getParameter("customerProgramId");
+        String programIdStr = request.getParameter("programId");
+        String scheduleIdStr = request.getParameter("scheduleId");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String weekStartStr = request.getParameter("weekStartDate");
+
+        if ("addWorkout".equals(action)) {
+            try {
+                // Validate required parameters
+                String startTimeStr = request.getParameter("startTime");
+                String endTimeStr = request.getParameter("endTime");
+                String scheduledDateStr = request.getParameter("scheduledDate");
+                System.out.println(scheduledDateStr);
+                Date date = Date.valueOf(scheduledDateStr);
+                LocalTime startTime = LocalTime.parse(startTimeStr);
+                LocalTime endTime = LocalTime.parse(endTimeStr);
+                int customerProgramId = Integer.parseInt(customerProgramIdStr);
+                int programId = Integer.parseInt(programIdStr);
+                String[] exerciseProgramIds = request.getParameterValues("exerciseProgramIds");
+                int scheduleId = Integer.parseInt(scheduleIdStr);
+
+                Workout w = new Workout();
+                w.setStatus("pending");
+                w.setStartTime(Time.valueOf(startTime));
+                w.setEndTime(Time.valueOf(endTime));
+                w.setDate(date);
+                w.setTrainerId(Integer.parseInt(userId));
+                w.setCustomerProgramId(customerProgramId);
+                List<Integer> exerciseProgramIdList = exerciseProgramIds != null ?
+                        Arrays.stream(exerciseProgramIds).map(Integer::parseInt).collect(Collectors.toList()) :
+                        new ArrayList<>();
+
+                timetableDAO.addWorkoutAndSchedule(scheduleId, w, exerciseProgramIdList);
+
+                int trainerId = Integer.parseInt(userId);
+                request.setAttribute("scheduleId", scheduleId);
+                request.setAttribute("trainerId", trainerId);
+                request.setAttribute("programId", programId);
+                request.setAttribute("endDate", endDate);
+                request.setAttribute("startDate", startDate);
+                request.setAttribute("weekStartDate", weekStartStr);
+                request.setAttribute("customerProgramId",customerProgramId);
+                doGet(request,response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.getWriter().write("Failed to add workout: " + e.getMessage());
+            }
+        } else if ("updateStatus".equals(action)) {
+            try {
+                String status = request.getParameter("status");
+                int workoutId = Integer.parseInt(request.getParameter("workoutId"));
+                int customerProgramId = Integer.parseInt(request.getParameter("customerProgramId"));
+                int scheduleId = Integer.parseInt(scheduleIdStr);
+                int trainerId = Integer.parseInt(userId);
+                int programId = Integer.parseInt(programIdStr);
+
+                workoutDAO.markCompletedWorkout(workoutId, status);
+                if ("completed".equals(status)) {
+                    progressDAO.updateProgressPercent(customerProgramId);
+                }
+
+                request.setAttribute("scheduleId", scheduleId);
+                request.setAttribute("trainerId", trainerId);
+                request.setAttribute("programId", programId);
+                request.setAttribute("endDate", endDate);
+                request.setAttribute("startDate", startDate);
+                request.setAttribute("customerProgramId",customerProgramId);
+                request.setAttribute("weekStartDate", weekStartStr);
+                doGet(request,response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.getWriter().write("Failed to update status: " + e.getMessage());
+            }
+        }
     }
 }
