@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class TransactionDAO {
 
     public int addTransaction(Transaction transaction) {
-        String sql = "INSERT INTO Transactions (CustomerID, Amount, Status, Type, Description) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO [Transaction] (ContractID, Amount, Status, CreatedTime, Description, CustomerID) VALUES (?, ?, ?, ?, ?, ?)";
         int transactionId = -1;
 
         ConnectDatabase db = ConnectDatabase.getInstance();
@@ -22,11 +22,12 @@ public class TransactionDAO {
         try {
             con = db.openConnection();
             ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, transaction.getCustomerId());
+            ps.setInt(1, transaction.getContractId());
             ps.setBigDecimal(2, transaction.getAmount());
-            ps.setString(3, transaction.getStatus()); 
-            ps.setString(4, transaction.getType());
+            ps.setString(3, transaction.getStatus());
+            ps.setTimestamp(4, transaction.getCreatedTime());
             ps.setString(5, transaction.getDescription());
+            ps.setInt(6,transaction.getCustomerId());
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -55,7 +56,7 @@ public class TransactionDAO {
 
 
     public void updateTransactionStatus(int transactionId, String status) {
-        String sql = "UPDATE Transactions SET Status = ? WHERE TransactionID = ?";
+        String sql = "UPDATE [Transaction] SET Status = ? WHERE TransactionID = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement ps = null;
@@ -78,7 +79,7 @@ public class TransactionDAO {
     }
 
     public Transaction getTransactionById(int id) {
-        String sql = "SELECT * FROM Transactions WHERE TransactionID = ?";
+        String sql = "SELECT * FROM [Transaction] WHERE TransactionID = ?";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement ps = null;
@@ -93,6 +94,8 @@ public class TransactionDAO {
                 t.setAmount(rs.getBigDecimal("Amount"));
                 t.setCreatedTime(rs.getTimestamp("CreatedTime"));
                 t.setStatus(rs.getString("Status"));
+                t.setContractId(rs.getInt("ContractID"));
+                t.setDescription(rs.getString("Description"));
                 t.setCustomerId(rs.getInt("CustomerID"));
                 return t;
             }

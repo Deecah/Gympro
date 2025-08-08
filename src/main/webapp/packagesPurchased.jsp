@@ -10,34 +10,118 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                background: #f9f9f9;
+                background: linear-gradient(135deg, #f9f9f9 60%, #e3e6f3 100%);
                 padding: 30px;
-                font-family: 'Segoe UI', sans-serif;
+                font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
             }
             .table-container {
                 background: #fff;
-                padding: 25px;
-                border-radius: 15px;
-                box-shadow: 0 0 10px rgba(0,0,0,0.05);
+                padding: 30px 35px 35px 35px;
+                border-radius: 18px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+                margin-top: 30px;
             }
             h2 {
                 font-weight: bold;
                 margin-bottom: 25px;
+                color: #2d3a4b;
+                letter-spacing: 1px;
             }
             .btn-feedback {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
+                border-radius: 20px;
+                padding: 4px 18px;
+                transition: background 0.2s, color 0.2s;
+            }
+            .btn-feedback:hover {
+                background: #0d6efd;
+                color: #fff;
+            }
+            .btn-outline-secondary {
+                border-radius: 20px;
+                padding: 4px 18px;
             }
             .modal-content {
-                border-radius: 12px;
+                border-radius: 14px;
+                box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.10);
             }
             .star {
-                font-size: 2rem;
-                color: lightgray;
+                font-size: 2.1rem;
+                color: #e0e0e0;
                 cursor: pointer;
+                transition: color 0.2s;
             }
             .star.hovered,
             .star.selected {
-                color: gold;
+                color: #ffc107;
+            }
+            .table th, .table td {
+                vertical-align: middle !important;
+                text-align: center;
+            }
+            .table-striped > tbody > tr:nth-of-type(odd) {
+                background-color: #f6f8fa;
+            }
+            .table-light th {
+                background: #e3e6f3;
+                color: #2d3a4b;
+                font-weight: 600;
+            }
+            .toast-container {
+                z-index: 1100;
+            }
+            /* Custom scrollbar */
+            ::-webkit-scrollbar {
+                width: 8px;
+                background: #f1f1f1;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #cfd8dc;
+                border-radius: 8px;
+            }
+            /* Responsive */
+            @media (max-width: 768px) {
+                .table-container {
+                    padding: 10px 2px;
+                }
+                h2 {
+                    font-size: 1.2rem;
+                }
+                .table th, .table td {
+                    font-size: 0.95rem;
+                }
+            }
+            /* New: Avatar and status badge for trainer */
+            .trainer-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                justify-content: center;
+            }
+            .trainer-avatar {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #e3e6f3;
+            }
+            .status-badge {
+                display: inline-block;
+                padding: 2px 12px;
+                border-radius: 12px;
+                font-size: 0.95em;
+                font-weight: 500;
+                color: #fff;
+            }
+            .status-active {
+                background: #37b24d;
+            }
+            .status-expired {
+                background: #f03e3e;
+            }
+            .status-pending {
+                background: #fab005;
+                color: #333;
             }
         </style>
     </head>
@@ -56,6 +140,8 @@
                     <tr>
                         <th class="text-center">Package Name</th>
                         <th class="text-center">Trainer Name</th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Duration</th>
                         <th class="text-center">Start Date</th>
                         <th class="text-center">End Date</th>
                         <th class="text-center">Status</th>
@@ -68,20 +154,29 @@
                         <c:when test="${not empty purchasedList}">
                             <c:forEach var="row" items="${purchasedList}">
                                 <tr>
-                                    <td>${row[0]}</td>
-                                    <td>${row[1]}</td>
-                                    <td>${row[2]}</td>
-                                    <td>${row[3]}</td>
-                                    <td>${row[4]}</td>
+                                    <td>${row.name}</td>
+                                    <td>${row.userName}</td>
+                                    <td>${row.price}</td>
+                                    <td>${row.duration} days</td>
+                                    <td>${row.startDate}</td>
+                                    <td>${row.endDate}</td>
+                                    <td>
+                                        <span class="status-badge
+                                            ${row.contractStatus == 'active' ? 'status-active' : ''}
+                                            ${row.contractStatus == 'expired' ? 'status-expired' : ''}
+                                            ${row.contractStatus == 'pending' ? 'status-pending' : ''}">
+                                            ${row.contractStatus}
+                                        </span>
+                                    </td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary btn-feedback"
-                                                onclick="openFeedbackModal('package', '${row[5]}')">
+                                                onclick="openFeedbackModal('package', '${row.packageID}')">
                                             Give Feedback
                                         </button>
                                     </td>
-                                    <td> <%-- ✅ New Schedule Button --%>
+                                    <td>
                                         <form action="${pageContext.request.contextPath}/timetable" method="get" style="margin: 0;">
-                                            <input type="hidden" name="packageId" value="${row[5]}" />
+                                            <input type="hidden" name="packageId" value="${row.packageID}" />
                                             <button type="submit" class="btn btn-sm btn-outline-secondary">
                                                 Schedule
                                             </button>
@@ -92,7 +187,7 @@
                         </c:when>
                         <c:otherwise>
                             <tr>
-                                <td colspan="7" class="text-center">You have not purchased any packages yet.</td>
+                                <td colspan="12" class="text-center">You have not purchased any packages yet.</td>
                             </tr>
                         </c:otherwise>
                     </c:choose>

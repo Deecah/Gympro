@@ -1,18 +1,47 @@
 package model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.List;
 
 public class CustomerWorkoutSchedule {
     private int scheduleId;
     private int customerProgramId;
-    private int programDayId;
-    private int workoutId;
-    private LocalDate scheduledDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private int programId;
+    private Date startAt;
+    private Date endAt;
     private String status;
+    private String programName;
+    private String customerName;
+    private int workoutId;
+    private List<ExerciseProgram> exercises;
+    private Date date;
+    private Time startTime;
+    private Time endTime;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
 
     public int getScheduleId() {
         return scheduleId;
@@ -30,12 +59,52 @@ public class CustomerWorkoutSchedule {
         this.customerProgramId = customerProgramId;
     }
 
-    public int getProgramDayId() {
-        return programDayId;
+    public int getProgramId() {
+        return programId;
     }
 
-    public void setProgramDayId(int programDayId) {
-        this.programDayId = programDayId;
+    public void setProgramId(int programId) {
+        this.programId = programId;
+    }
+
+    public Date getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(Date startAt) {
+        this.startAt = startAt;
+    }
+
+    public Date getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(Date endAt) {
+        this.endAt = endAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public int getWorkoutId() {
@@ -46,35 +115,30 @@ public class CustomerWorkoutSchedule {
         this.workoutId = workoutId;
     }
 
-    public LocalDate getScheduledDate() {
-        return scheduledDate;
+    public List<ExerciseProgram> getExercises() {
+        return exercises;
     }
 
-    public void setScheduledDate(LocalDate scheduledDate) {
-        this.scheduledDate = scheduledDate;
+    public void setExercises(List<ExerciseProgram> exercises) {
+        this.exercises = exercises;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    @Override
+    public String toString() {
+        return "CustomerWorkoutSchedule{" +
+                "scheduleId=" + scheduleId +
+                ", customerProgramId=" + customerProgramId +
+                ", programId=" + programId +
+                ", startAt=" + startAt +
+                ", endAt=" + endAt +
+                ", status='" + status + '\'' +
+                ", programName='" + programName + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", workoutId=" + workoutId +
+                ", exercises=" + exercises +
+                ", date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 }

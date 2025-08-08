@@ -37,15 +37,19 @@ public class UserDAO {
 
     public ArrayList<User> getCustomersByTrainer(int trainerId) {
         ArrayList<User> customers = new ArrayList<>();
-        String sql = "SELECT c.* FROM Customer c JOIN Contracts ct ON c.Id = ct.CustomerID WHERE ct.TrainerID = ?";
+        String sql = "SELECT u.Id, u.Name, u.Email, u.Role " +
+                     "FROM Customer c " +
+                     "JOIN Users u ON c.Id = u.Id " +
+                     "JOIN Contracts ct ON c.Id = ct.CustomerID " +
+                     "WHERE ct.TrainerID = ?";
         try (Connection conn = ConnectDatabase.getInstance().openConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, trainerId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     User user = new User();
-                    user.setUserId(rs.getInt("UserID"));
-                    user.setUserName(rs.getString("UserName"));
+                    user.setUserId(rs.getInt("Id"));
+                    user.setUserName(rs.getString("Name"));
                     user.setEmail(rs.getString("Email"));
                     user.setRole(rs.getString("Role"));
                     customers.add(user);

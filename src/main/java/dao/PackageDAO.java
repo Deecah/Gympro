@@ -3,6 +3,7 @@ package dao;
 import connectDB.ConnectDatabase;
 import java.math.BigDecimal;
 import model.Package;
+import model.PackageDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -395,6 +396,48 @@ public class PackageDAO {
             e.printStackTrace();
         }
 
+        return list;
+    }
+
+   public List<PackageDTO> getPurchasedPackagesByCustomer(int customerId) {
+        List<PackageDTO> list = new ArrayList<>();
+        String sql = "SELECT " +
+                "p.PackageID, p.PackageName, p.Description, p.ImageUrl, p.Price, p.Duration, " +
+                "c.StartDate, c.EndDate, c.Status AS ContractStatus, " +
+                "u.Id AS TrainerID, u.Name AS UserName, u.Gender, u.Email, u.Phone " +
+                "FROM [Transaction] t " +
+                "JOIN Contracts c ON t.ContractID = c.Id " +
+                "JOIN Package p ON c.PackageID = p.PackageID " +
+                "JOIN Users u ON p.TrainerID = u.Id " +
+                "WHERE t.CustomerID = ? AND t.Status = 'completed'";
+        try (Connection con = ConnectDatabase.getInstance().openConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PackageDTO dto = new PackageDTO();
+                    dto.setPackageID(rs.getInt("PackageID"));
+                    dto.setName(rs.getString("PackageName"));
+                    dto.setDescription(rs.getString("Description"));
+                    dto.setImageUrl(rs.getString("ImageUrl"));
+                    dto.setPrice(rs.getDouble("Price"));
+                    dto.setDuration(rs.getInt("Duration"));
+                    dto.setStartDate(rs.getDate("StartDate") != null ?
+                        rs.getDate("StartDate").toLocalDate().atStartOfDay() : null);
+                    dto.setEndDate(rs.getDate("EndDate") != null ?
+                        rs.getDate("EndDate").toLocalDate().atStartOfDay() : null);
+                    dto.setContractStatus(rs.getString("ContractStatus"));
+                    dto.setTrainerID(rs.getInt("TrainerID"));
+                    dto.setUserName(rs.getString("UserName"));
+                    dto.setGender(rs.getString("Gender"));
+                    dto.setEmail(rs.getString("Email"));
+                    dto.setPhone(rs.getString("Phone"));
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(PackageDAO.class.getName()).log(Level.SEVERE, "Get purchased packages failed", e);
+        }
         return list;
     }
 

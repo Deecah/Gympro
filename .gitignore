@@ -4,3 +4,9 @@
 /.smarttomcat
 /SWP391_PT_System.iml
 /src/main/webapp/uploads/
+/.vscode/
+/nb-configuration.xml
+/nbactions.xml
+/src/main/webapp/fonts/
+/src/main/webapp/img/
+/src/main/webapp/js/

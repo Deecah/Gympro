@@ -36,7 +36,7 @@
             </a>
         </li>
         <li class="mb-2">
-            <a href="<%= context %>/trainer/schedule.jsp" class="nav-link text-white btn btn-dark w-100 text-start">
+            <a href="<%= context %>/ScheduleServlet" class="nav-link text-white btn btn-dark w-100 text-start">
                 <i class="fas fa-calendar me-2"></i>Schedule
             </a>
         </li>

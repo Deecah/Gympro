@@ -9,6 +9,8 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @WebServlet("/payos/checkout")
 public class PayOSCheckoutServlet extends HttpServlet {
@@ -20,7 +22,7 @@ public class PayOSCheckoutServlet extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             Integer customerId = (Integer) session.getAttribute("loggedInCustomerId");
-
+            Integer contractId = (Integer) session.getAttribute("contractId");
             int trainerId = Integer.parseInt(request.getParameter("trainerId"));
             int packageId = Integer.parseInt(request.getParameter("packageId"));
             int duration = Integer.parseInt(request.getParameter("duration"));
@@ -33,11 +35,12 @@ public class PayOSCheckoutServlet extends HttpServlet {
             session.setAttribute("selectedPackageDuration", duration);
 
             Transaction transaction = new Transaction();
-            transaction.setCustomerId(customerId);
+            transaction.setContractId(contractId);
             transaction.setAmount(new java.math.BigDecimal(amount)); // Lưu đúng số tiền thực tế
             transaction.setStatus("Processing");
-            transaction.setType("PayOS");
+            transaction.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
             transaction.setDescription("Thanh toán qua PayOS - Gói tập GymPro");
+            transaction.setCustomerId(customerId);
 
             TransactionDAO transactionDAO = new TransactionDAO();
             int transactionId = transactionDAO.addTransaction(transaction);  

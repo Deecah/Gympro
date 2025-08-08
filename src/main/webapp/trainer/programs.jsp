@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
         .sidebar {
-            width: 260px;
             min-height: 100vh;
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -354,9 +353,6 @@
                              </div>
                         </div>
                         <div class="action-buttons-cell d-flex gap-2">
-                            <button class="btn btn-assign" onclick="openAssignModal(${p.programId},'${p.name}','${p.description}')">
-                                <i class="fas fa-paper-plane me-1"></i>Assign
-                            </button>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-dropdown dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -472,7 +468,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="programId" id="assignProgramId" />
                     <c:if test="${not empty error}">
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger program-info-alert">
                             <i class="fas fa-exclamation-triangle me-2"></i>${error}
                         </div>
                     </c:if>
@@ -648,7 +644,7 @@
                 programInfo.className = 'alert program-info-alert alert-info';
                 modalBody.insertBefore(programInfo, modalBody.firstChild);
             }
-            programInfo.innerHTML = `<strong>${name}</strong><br><span>${description}</span>`;
+            programInfo.innerHTML = "<strong>"+name+"</strong><br><span>"+description+"</span>";
             new bootstrap.Modal(document.getElementById('assignProgramModal')).show();
         }
 

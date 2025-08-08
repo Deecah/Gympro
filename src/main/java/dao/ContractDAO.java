@@ -5,34 +5,42 @@ import model.User;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 
 public class ContractDAO {
 
-    public void createContract(int trainerId, int customerId, int packageId, LocalDate startDate, LocalDate endDate) {
+    public int createContract(int trainerId, int customerId, int packageId, Date startDate, Date endDate) {
         // First validate that customer exists
         if (!customerExists(customerId)) {
             Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE,
                     "Customer with ID " + customerId + " does not exist");
-            return;
+            return -1;
         }
 
-        String sql = "INSERT INTO Contracts (TrainerID, CustomerID, PackageID, StartDate, EndDate, Status, ContractType) " +
-                "VALUES (?, ?, ?, ?, ?, 'active', 'package')";
+        String sql = "INSERT INTO Contracts (TrainerID, CustomerID, PackageID, StartDate, EndDate, Status) " +
+                "VALUES (?, ?, ?, ?, ?, 'active')";
         ConnectDatabase db = ConnectDatabase.getInstance();
         Connection con = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             con = db.openConnection();
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, trainerId);
             ps.setInt(2, customerId);
             ps.setInt(3, packageId);
-            ps.setDate(4, Date.valueOf(startDate));
-            ps.setDate(5, Date.valueOf(endDate));
-            ps.executeUpdate();
+            ps.setDate(4, startDate);
+            ps.setDate(5, Date.valueOf(endDate.toLocalDate()));
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
         } catch (Exception e) {
             Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE,
                     "Error creating contract: " + e.getMessage(), e);
@@ -44,6 +52,7 @@ public class ContractDAO {
                 Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return -1;
     }
 
     private boolean customerExists(int customerId) {
