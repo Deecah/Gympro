@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -8,17 +9,19 @@ public class CustomerProgram {
     private int programId;
     private int customerId;
     private LocalDateTime assignedAt;
-    private LocalDate startDate;
+    private Date startDate;
+    private Date endDate;
 
     public CustomerProgram() {
     }
 
-    public CustomerProgram(int id, int programId, int customerId, LocalDateTime assignedAt, LocalDate startDate) {
+    public CustomerProgram(int id, int programId, int customerId, LocalDateTime assignedAt, Date startDate, Date endDate) {
         this.id = id;
         this.programId = programId;
         this.customerId = customerId;
         this.assignedAt = assignedAt;
         this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     // Getter & Setter
@@ -54,11 +57,19 @@ public class CustomerProgram {
         this.assignedAt = assignedAt;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

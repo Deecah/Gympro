@@ -11,7 +11,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import model.Transaction;
 import Utils.NotificationUtil;
 
@@ -48,11 +51,10 @@ public class PayOSReturnServlet extends HttpServlet {
                     throw new Exception("Session thiếu thông tin để xử lý thanh toán PayOS.");
                 }
 
-                java.time.LocalDate start = java.time.LocalDate.now();
-                java.time.LocalDate end = start.plusDays(duration);
-
+                LocalDate startDate = LocalDate.now();
+                LocalDate endDate = startDate.plusDays(duration);
                 ContractDAO contractDAO = new ContractDAO();
-                contractDAO.createContract(trainerId, customerId, packageId, start, end);
+                contractDAO.createContract(trainerId, customerId, packageId, Date.valueOf(startDate), Date.valueOf(endDate));
                 System.out.println("Contract created");
 
                 ProgramDAO programDAO = new ProgramDAO();
@@ -61,7 +63,7 @@ public class PayOSReturnServlet extends HttpServlet {
                 System.out.println("Program ID resolved: " + programId);
 
                 if (programId > 0 && !cpDAO.isProgramAlreadyAssigned(customerId, programId)) {
-                    cpDAO.assignProgramToCustomer(programId, customerId, start);
+                    cpDAO.assignProgramToCustomer(programId, customerId, Date.valueOf(startDate),Date.valueOf(endDate));
                     System.out.println("Program assigned to customer");
                 }
 
