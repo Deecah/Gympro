@@ -1,100 +1,89 @@
-package websocket;
+// src/main/java/websocket/ChatSocket.java
+    package websocket;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
-import dao.ChatDAO;
-import model.Message;
+    import com.google.gson.Gson;
+    import com.google.gson.GsonBuilder;
+    import com.google.gson.JsonObject;
+    import com.google.gson.JsonSerializer;
+    import com.google.gson.JsonPrimitive;
+    import dao.ChatDAO;
+    import model.Message;
 
-import jakarta.websocket.*;
-import jakarta.websocket.server.PathParam;
-import jakarta.websocket.server.ServerEndpoint;
+    import jakarta.websocket.*;
+    import jakarta.websocket.server.PathParam;
+    import jakarta.websocket.server.ServerEndpoint;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+    import java.io.IOException;
+    import java.time.LocalDateTime;
+    import java.util.Collections;
+    import java.util.HashMap;
+    import java.util.Map;
 
+    @ServerEndpoint(value = "/chatendpoint/{roomId}")
+    public class ChatSocket {
 
-@ServerEndpoint(value = "/ws/chat/{chatId}/{userId}")
-public class ChatSocket {
+        private static final Map<String, Map<Session, String>> rooms = Collections.synchronizedMap(new HashMap<>());
+        private static final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+                .create();
 
-
-    private static final Map<Integer, Session> SESSIONS = new ConcurrentHashMap<>();
-    private static final Map<Session, Integer> USER_IDS = new ConcurrentHashMap<>();
-
-    private static final Gson gson = new GsonBuilder()
-    .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) 
-        (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-    .create();
-
-    // ------------- life-cycle -----------------
-
-    @OnOpen
-    public void onOpen(Session session,
-                       @PathParam("chatId") int chatId,
-                       @PathParam("userId") int userId) throws IOException {
-
-        ChatDAO dao = new ChatDAO();
-
-        int otherId = dao.getOtherParticipant(chatId, userId);
-        if (otherId <= 0 || !dao.isChatAllowed(userId, otherId)) {
-            session.close(new CloseReason(
-                    CloseReason.CloseCodes.VIOLATED_POLICY,
-                    "Unauthorized chat access"));
-            return;
+        @OnOpen
+        public void onOpen(Session session, @PathParam("roomId") String roomId) {
+            Map<Session, String> roomClients = rooms.computeIfAbsent(roomId, k -> Collections.synchronizedMap(new HashMap<>()));
+            roomClients.put(session, roomId);
+            rooms.put(roomId, roomClients);
         }
 
-        SESSIONS.put(userId, session);
-        USER_IDS.put(session, userId);
+        @OnMessage
+        public void onMessage(String json, Session session, @PathParam("roomId") String roomId) {
+            try {
+                JsonObject obj = gson.fromJson(json, JsonObject.class);
 
-        System.out.printf("WS OPEN  chat=%d  user=%d%n", chatId, userId);
-    }
+                // Handle initial load message
+                if (obj.has("load")) {
+                    // Optionally send chat history here
+                    return;
+                }
 
-    @OnMessage
-    public void onMessage(String json,
-                          Session session,
-                          @PathParam("chatId") int chatId,
-                          @PathParam("userId") int userId) {
+                if (obj.has("message")) {
+                    JsonObject msgObj = obj.getAsJsonObject("message");
+                    Message msg = new Message();
+                    msg.setChatId(roomId.hashCode());
+                    msg.setSenderUserId(msgObj.get("userId").getAsInt());
+                    msg.setMessageContent(msgObj.get("content").getAsString());
+                    msg.setImageUrl(msgObj.has("imageUrl") && !msgObj.get("imageUrl").isJsonNull() ? msgObj.get("imageUrl").getAsString() : null);
+                    msg.setSentAt(LocalDateTime.now());
 
-        try {
+                    ChatDAO dao = new ChatDAO();
+                    dao.saveMessage(msg);
 
-            Message msg = gson.fromJson(json, Message.class);
-            msg.setChatId(chatId);
-            msg.setSenderUserId(userId);
-            msg.setSentAt(LocalDateTime.now());
+                    String payload = gson.toJson(msg);
 
-            ChatDAO dao = new ChatDAO();
-            dao.saveMessage(msg);
-
-            int receiverId = dao.getOtherParticipant(chatId, userId);
-            String payload = gson.toJson(msg);
-
-            Session receiver = SESSIONS.get(receiverId);
-            if (receiver != null && receiver.isOpen()) {
-                receiver.getAsyncRemote().sendText(payload);
+                    Map<Session, String> roomClients = rooms.get(roomId);
+                    for (Session client : roomClients.keySet()) {
+                        if (client.isOpen()) {
+                            client.getBasicRemote().sendText(payload);
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            if (session.isOpen()) {
-                session.getAsyncRemote().sendText(payload);    
+        }
+
+        @OnClose
+        public void onClose(Session session, @PathParam("roomId") String roomId) {
+            Map<Session, String> roomClients = rooms.get(roomId);
+            if (roomClients != null) {
+                roomClients.remove(session);
+                if (roomClients.isEmpty()) {
+                    rooms.remove(roomId);
+                }
             }
+        }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        @OnError
+        public void onError(Session session, Throwable err) {
+            System.err.println("WS ERROR: " + err.getMessage());
         }
     }
-
-    @OnClose
-    public void onClose(Session session) {
-        Integer uid = USER_IDS.remove(session);
-        if (uid != null) {
-            SESSIONS.remove(uid);
-            System.out.printf("WS CLOSE user=%d%n", uid);
-        }
-    }
-
-    @OnError
-    public void onError(Session session, Throwable err) {
-        System.err.println("WS ERROR: " + err.getMessage());
-    }
-}
