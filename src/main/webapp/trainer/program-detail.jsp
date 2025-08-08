@@ -1,824 +1,407 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, java.util.Map" %>
-<%@ page import="model.Exercise" %>
-<%@ page import="model.Program, model.ProgramWeek, model.ProgramDay, model.ExerciseLibrary, model.Workout" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="model.User" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%
     Program program = (Program) request.getAttribute("program");
     List<ProgramWeek> weeks = (List<ProgramWeek>) request.getAttribute("weeks");
     Map<Integer, List<ProgramDay>> daysMap = (Map<Integer, List<ProgramDay>>) request.getAttribute("daysMap");
     Map<Integer, List<Workout>> dayWorkouts = (Map<Integer, List<Workout>>) request.getAttribute("dayWorkouts");
-    Map<Integer, List<Exercise>> workoutExercises =(Map<Integer, List<Exercise>>) request.getAttribute("workoutExercises");
+    Map<Integer, List<ExerciseLibrary>> workoutExercises = (Map<Integer, List<ExerciseLibrary>>) request.getAttribute("workoutExercises");
     List<ExerciseLibrary> exerciseList = (List<ExerciseLibrary>) request.getAttribute("exerciseList");
-    ArrayList<User> customers = (ArrayList<User>) request.getAttribute("customers");
+    List<User> customers = (List<User>) request.getAttribute("customers");
 %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Program Detail</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/program-detail.css" type="text/css">
+<head>
+    <title>Program Details - <%= program.getName() %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/stylecss/programs.css">
+    <style>
+        .week-container { margin-bottom: 20px; }
+        .day-container { margin-left: 20px; border-left: 2px solid #ddd; padding-left: 10px; }
+        .workout-container { margin-left: 20px; }
+        .exercise-table { margin-top: 10px; }
+        .video-link { cursor: pointer; color: #007bff; }
+        .video-link:hover { text-decoration: underline; }
+    </style>
+    <script src="../js/notification.js"></script>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-dark text-white">
+            <jsp:include page="sidebar.jsp" />
+        </div>
 
-    </head>
-    <body>
-        <div class="d-flex">
-            <div class="sidebar bg-dark text-white">
-                <jsp:include page="sidebar.jsp"/>
-            </div>
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4">
+            <h1 class="mb-3"><i class="fas fa-dumbbell me-2"></i><%= program.getName() %></h1>
+            <p class="text-muted mb-4"><%= program.getDescription() != null ? program.getDescription() : "No description" %></p>
 
-            <div class="flex-grow-1 p-4 bg-light">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <a href="<%= request.getContextPath() %>/ProgramServlet" class="text-decoration-none">&larr; Back to Programs</a>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary" onclick="openAssignModal(<%= program.getProgramId() %>)">
-                            <i class="bi bi-send-fill me-1"></i> Assign to client
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editProgramModal">
-                            <i class="bi bi-pencil-square me-1"></i> Edit Info
-                        </button>
-                    </div>
-                </div>
-
-                <h3><%= program.getName() %></h3>
-                <p class="text-muted"><%= program.getDescription() %></p>
-                <hr/>
-
-                <div id="workoutContainer">
-                    <% for (ProgramWeek week : weeks) { %>
-                    <div class="row week-row" data-week-id="<%= week.getWeekId() %>">
-                        <% List<ProgramDay> days = daysMap.get(week.getWeekId()); %>
-                        <% for (ProgramDay day : days) { %>
-                        <div class="col day-cell"
-                             id="day-<%= day.getDayId() %>"
-                             data-day-id="<%= day.getDayId() %>"
-                             data-has-workout="<%= (dayWorkouts.get(day.getDayId()) != null && !dayWorkouts.get(day.getDayId()).isEmpty()) %>"
-                             onclick="handleDayClick(this)">
-                            <div class="day-header mb-2">Week <%= week.getWeekNumber() %> - Day <%= day.getDayNumber() %></div>
-
-                            <div class="d-flex flex-column gap-2">
-                                <%
-                                  List<Workout> workouts = dayWorkouts.get(day.getDayId());
-                                  if (workouts != null && !workouts.isEmpty()) {
-                                    for (Workout w : workouts) {
-                                %>
-                                <div class="card workout-card shadow-sm">
-                                    <div class="card-body p-2">
-                                        <!-- Title + 3 dots -->
-                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                            <span class="fw-bold">🏋️ <%= w.getTitle() %></span>
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-light"
-                                                        type="button"
-                                                        id="dropdownWorkout<%= w.getWorkoutID() %>"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-expanded="false"
-                                                        onclick="event.stopPropagation();">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end"
-                                                    aria-labelledby="dropdownWorkout<%= w.getWorkoutID() %>"
-                                                    onclick="event.stopPropagation();">
-                                                    <li>
-                                                        <button class="dropdown-item"
-                                                                onclick="openEditWorkoutModal(<%= w.getWorkoutID() %>)">
-                                                            <i class="fas fa-pen me-2"></i> Edit Workout
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button class="dropdown-item text-danger"
-                                                                onclick="deleteWorkout(<%= w.getWorkoutID() %>)">
-                                                            <i class="fas fa-trash me-2"></i> Delete Workout
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                        <!-- Time -->
-                                        <div class="small text-muted text-center mb-1">
-                                            ⏰ <%= w.getStartTime() %> - <%= w.getEndTime() %>
-                                        </div>
-
-                                        <!-- Notes -->
-                                        <% if (w.getNotes() != null && !w.getNotes().isBlank()) { %>
-                                        <div class="small text-body text-center">📝 <%= w.getNotes() %></div>
-                                        <% } %>
-
-                                        <!-- Exercises Section -->
-                                        <hr class="my-2" />
-                                        <%
-                                            List<Exercise> exercises = workoutExercises.get(w.getWorkoutID());
-                                            if (exercises != null && !exercises.isEmpty()) {
-                                        %>
-                                        <ul class="list-group list-group-flush small">
-                                            <% for (Exercise ex : exercises) { %>
-                                            <li class="list-group-item">
-                                                <div class="fw-semibold">
-                                                    <a href="#" class="text-decoration-none" onclick="event.stopPropagation(); openVideoModal('<%= ex.getVideoURL() %>', '<%= ex.getExerciseName() %>')">
-                                                        📺 <%= ex.getExerciseName() %>
-                                                    </a>
-                                                </div>
-                                                <div class="text-muted">
-                                                    Sets: <%= ex.getSets() %>,
-                                                    Reps: <%= ex.getReps() %>,
-                                                    Rest: <%= ex.getRestTimeSeconds() %>s
-                                                    <% if (ex.getNotes() != null && !ex.getNotes().isBlank()) { %>
-                                                    <br>📝 <%= ex.getNotes() %>
-                                                    <% } %>
-                                                </div>
-                                            </li>
-                                            <% } %>
-                                        </ul>
+            <!-- Program Exercises (from ExerciseProgram) -->
+            <div class="mb-4">
+                <h3>Program Exercises</h3>
+                <% if (exerciseList != null && !exerciseList.isEmpty()) { %>
+                    <table class="table table-striped exercise-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest (s)</th>
+                                <th>Description</th>
+                                <th>Video</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (ExerciseLibrary exercise : exerciseList) { %>
+                                <tr>
+                                    <td><%= exercise.getName() %></td>
+                                    <td><%= exercise.getSets() %></td>
+                                    <td><%= exercise.getReps() %></td>
+                                    <td><%= exercise.getRestTimeSeconds() %></td>
+                                    <td><%= exercise.getDescription() != null ? exercise.getDescription() : "No description" %></td>
+                                    <td>
+                                        <% if (exercise.getVideoURL() != null && !exercise.getVideoURL().isEmpty()) { %>
+                                            <a href="#" class="video-link" onclick="openVideoModal('<%= exercise.getVideoURL() %>', '<%= exercise.getName() %>')">View Video</a>
                                         <% } else { %>
-                                        <div class="text-muted fst-italic small text-center">No exercises added yet</div>
+                                            No video
                                         <% } %>
-
-                                        <!-- Bottom action buttons -->
-                                        <div class="workout-actions text-center mt-3">
-                                            <button class="btn btn-sm btn-outline-success me-1"
-                                                    title="Add Exercise"
-                                                    onclick="event.stopPropagation(); openExerciseModal(<%= w.getWorkoutID() %>)">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-primary me-1"
-                                                    title="Edit Exercise"
-                                                    onclick="event.stopPropagation(); openEditExerciseModal(<%= exercises.isEmpty() ? 0 : exercises.get(0).getExerciseId() %>, <%= w.getWorkoutID() %>)"
-                                                    <%= exercises.isEmpty() ? "disabled" : "" %>>
-                                                <i class="fas fa-pen"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger"
-                                                    title="Delete Exercise"
-                                                    onclick="event.stopPropagation(); deleteExercise(<%= exercises.isEmpty() ? 0 : exercises.get(0).getExerciseId() %>)"
-                                                    <%= exercises.isEmpty() ? "disabled" : "" %>>
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% } // end for workout %>
-                                <% } else { %>
-                                <div class="text-muted fst-italic">Click to add workout</div>
-                                <% } %>
-                            </div>
-                        </div>
-                        <% } %>
-                    </div>
-                    <% } %>
-                </div>
-
-
-                <div class="mt-3 d-flex gap-2">
-                    <button class="btn btn-outline-primary" onclick="addWeek()">+ Add week</button>
-                    <button class="btn btn-outline-danger" onclick="removeLastWeek()">🔝 Remove last week</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Workout Modal -->
-        <div class="modal fade" id="addWorkoutModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="AddWorkoutServlet" method="post" class="modal-content" id="addWorkoutForm">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Workout</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="dayId" id="workout-dayId" />
-                        
-                        <!-- Alert for validation errors -->
-                        <div id="workoutValidationAlert" class="alert alert-danger" style="display: none;">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <span id="workoutValidationMessage"></span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input name="title" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Notes</label>
-                            <textarea name="notes" class="form-control"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Start Time</label>
-                            <input type="time" name="startTime" class="form-control" required min="06:00" max="22:00" />
-                            <small class="text-muted">Time must be between 06:00 and 22:00</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">End Time</label>
-                            <input type="time" name="endTime" class="form-control" required min="06:00" max="22:00" />
-                            <small class="text-muted">Time must be between 06:00 and 22:00</small>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" type="submit">Create Workout</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Edit Workout Modal -->
-        <div class="modal fade" id="editWorkoutModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="EditWorkoutServlet" method="post" class="modal-content" id="editWorkoutForm">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Workout</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="workoutId" id="edit-workoutId" />
-                        
-                        <!-- Alert for validation errors -->
-                        <div id="editWorkoutValidationAlert" class="alert alert-danger" style="display: none;">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <span id="editWorkoutValidationMessage"></span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input type="text" name="title" id="edit-workoutTitle" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Notes</label>
-                            <textarea name="notes" id="edit-workoutNotes" class="form-control"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Start Time</label>
-                            <input type="time" name="startTime" id="edit-workoutStartTime" class="form-control" required min="06:00" max="22:00" />
-                            <small class="text-muted">Time must be between 06:00 and 22:00</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">End Time</label>
-                            <input type="time" name="endTime" id="edit-workoutEndTime" class="form-control" required min="06:00" max="22:00" />
-                            <small class="text-muted">Time must be between 06:00 and 22:00</small>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" type="submit">Update Workout</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Add Exercise Modal -->
-        <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="add-exercise" method="post" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Exercise</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="workoutId" id="exercise-workoutId" />
-                        <div class="mb-2">
-                            <label>Choose Exercise</label>
-                            <select name="exerciseId" class="form-select" onchange="previewExercise(this)">
-                                <c:forEach var="e" items="${exerciseList}">
-                                    <option value="${e.exerciseID}" data-video="${e.videoURL}" data-description="${e.description}">
-                                        ${e.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <label>Sets</label>
-                            <input type="number" name="sets" class="form-control" required min="1" />
-                        </div>
-                        <div class="mb-2">
-                            <label>Reps</label>
-                            <input type="number" name="reps" class="form-control" required min="1" />
-                        </div>
-                        <div class="mb-2">
-                            <label>Rest Time (sec)</label>
-                            <input type="number" name="restTime" class="form-control" min="0" />
-                        </div>
-                        <div class="mb-2">
-                            <label>Notes</label>
-                            <textarea name="notes" class="form-control"></textarea>
-                        </div>
-                        <div class="mb-2" id="preview">
-                            <iframe id="exercisePreview" width="100%" height="200" style="display:none;" allowfullscreen></iframe>
-                            <p id="exerciseDescription" class="text-muted mt-1"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" type="submit">Add Exercise</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Edit Exercise Modal -->
-        <div class="modal fade" id="editExerciseModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="EditExerciseServlet" method="post" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Exercise</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="exerciseId" id="edit-exerciseId" />
-                        <input type="hidden" name="workoutId" id="edit-exerciseWorkoutId" />
-                        <div class="mb-2">
-                            <label>Exercise</label>
-                            <select name="exerciseLibraryId" id="edit-exerciseLibraryId" class="form-select" onchange="previewEditExercise(this)">
-                                <c:forEach var="e" items="${exerciseList}">
-                                    <option value="${e.exerciseID}" data-video="${e.videoURL}" data-description="${e.description}">
-                                        ${e.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <label>Sets</label>
-                            <input type="number" name="sets" id="edit-exerciseSets" class="form-control" required min="1" />
-                        </div>
-                        <div class="mb-2">
-                            <label>Reps</label>
-                            <input type="number" name="reps" id="edit-exerciseReps" class="form-control" required min="1" />
-                        </div>
-                        <div class="mb-2">
-                            <label>Rest Time (sec)</label>
-                            <input type="number" name="restTime" id="edit-exerciseRestTime" class="form-control" min="0" />
-                        </div>
-                        <div class="mb-2">
-                            <label>Notes</label>
-                            <textarea name="notes" id="edit-exerciseNotes" class="form-control"></textarea>
-                        </div>
-                        <div class="mb-2" id="editPreview">
-                            <iframe id="editExercisePreview" width="100%" height="200" style="display:none;" allowfullscreen></iframe>
-                            <p id="editExerciseDescription" class="text-muted mt-1"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" type="submit">Update Exercise</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Edit Program Modal -->
-        <div class="modal fade" id="editProgramModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="<%= request.getContextPath() %>/ProgramDetailServlet" method="post" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Program Info</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="action" value="edit" />
-                        <input type="hidden" name="programId" value="<%= program.getProgramId() %>" />
-
-                        <div class="mb-3">
-                            <label class="form-label">Program Name</label>
-                            <input type="text" name="name" class="form-control" value="<%= program.getName() %>" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea name="description" class="form-control"><%= program.getDescription() %></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Package</label>
-                            <select name="packageId" class="form-select">
-                                <option value="0">None</option>
-                                <c:forEach var="pkg" items="${packageList}">
-                                    <option value="${pkg.packageID}"
-                                            ${pkg.packageID == program.packageId ? 'selected' : ''}>
-                                        ${pkg.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save Changes</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- Video Modal -->
-        <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="videoTitle">Exercise Video</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <iframe id="videoFrame" width="100%" height="400" frameborder="0"
-                                allowfullscreen style="border-radius: 10px;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Assign Program Modal -->
-        <div class="modal fade" id="assignProgramModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="<%= request.getContextPath() %>/AssignProgramServlet" method="post" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Assign Program to Customer</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="programId" id="assignProgramId" />
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Program Information</label>
-                            <div class="alert alert-info">
-                                <strong id="programName">Program Name</strong><br>
-                                <span id="programDescription">Program Description</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Select Customer</label>
-                            <% if (customers != null && !customers.isEmpty()) { %>
-                                <select name="customerId" class="form-select" required>
-                                    <option value="">Choose a customer...</option>
-                                    <% for (User customer : customers) { %>
-                                        <option value="<%= customer.getUserId() %>">
-                                            <%= customer.getUserName() %> (<%= customer.getEmail() %>)
-                                        </option>
-                                    <% } %>
-                                </select>
-                            <% } else { %>
-                                <div class="alert alert-warning">
-                                    <i class="fa fa-exclamation-triangle"></i>
-                                    <strong>No customers found!</strong><br>
-                                    You don't have any active contracts with customers yet. 
-                                    Customers will appear here once they purchase your packages.
-                                </div>
-                                <select name="customerId" class="form-select" disabled>
-                                    <option value="">No customers available</option>
-                                </select>
+                                    </td>
+                                </tr>
                             <% } %>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Start Date</label>
-                            <input type="date" name="startDate" class="form-control" required 
-                                   min="<%= java.time.LocalDate.now() %>" />
-                            <div class="form-text">
-                                <i class="fa fa-info-circle"></i> Start date must be today or in the future. 
-                                If you select a date that would cause workouts to fall in the past, 
-                                the system will automatically adjust to the next available date.
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>No exercises added to this program.</p>
+                <% } %>
+                <button class="btn btn-primary" onclick="openAddExerciseModal(<%= program.getProgramId() %>)">
+                    <i class="fas fa-dumbbell me-2"></i>Add Exercise
+                </button>
+            </div>
+
+            <!-- Weekly Schedule -->
+            <h3>Weekly Schedule</h3>
+            <% if (weeks != null && !weeks.isEmpty()) { %>
+                <% for (ProgramWeek week : weeks) { %>
+                    <div class="week-container">
+                        <h4>Week <%= week.getWeekNumber() %></h4>
+                        <% List<ProgramDay> days = daysMap.get(week.getWeekId());
+                           if (days != null) {
+                               for (ProgramDay day : days) { %>
+                                   <div class="day-container">
+                                       <h5>Day <%= day.getDayNumber() %> (<% out.print(java.time.DayOfWeek.of(day.getDayNumber()).name()); %>)</h5>
+                                       <% List<Workout> workouts = dayWorkouts.get(day.getDayId());
+                                          if (workouts != null) {
+                                              for (Workout workout : workouts) { %>
+                                                  <div class="workout-container">
+                                                      <h6><%= workout.getTitle() %></h6>
+                                                      <p>
+                                                          <% if (workout.getStartTime() != null) { %>
+                                                              <strong>Time:</strong> <%= workout.getStartTime() %> - <%= workout.getEndTime() != null ? workout.getEndTime() : "N/A" %><br>
+                                                          <% } %>
+                                                          <strong>Notes:</strong> <%= workout.getNotes() != null ? workout.getNotes() : "No notes" %>
+                                                      </p>
+                                                      <% List<ExerciseLibrary> exercises = workoutExercises.get(workout.getWorkoutId());
+                                                         if (exercises != null && !exercises.isEmpty()) { %>
+                                                             <table class="table table-striped exercise-table">
+                                                                 <thead>
+                                                                     <tr>
+                                                                         <th>Name</th>
+                                                                         <th>Sets</th>
+                                                                         <th>Reps</th>
+                                                                         <th>Rest (s)</th>
+                                                                         <th>Description</th>
+                                                                         <th>Video</th>
+                                                                     </tr>
+                                                                 </thead>
+                                                                 <tbody>
+                                                                     <% for (ExerciseLibrary exercise : exercises) { %>
+                                                                         <tr>
+                                                                             <td><%= exercise.getName() %></td>
+                                                                             <td><%= exercise.getSets() %></td>
+                                                                             <td><%= exercise.getReps() %></td>
+                                                                             <td><%= exercise.getRestTimeSeconds() %></td>
+                                                                             <td><%= exercise.getDescription() != null ? exercise.getDescription() : "No description" %></td>
+                                                                             <td>
+                                                                                 <% if (exercise.getVideoURL() != null && !exercise.getVideoURL().isEmpty()) { %>
+                                                                                     <a href="#" class="video-link" onclick="openVideoModal('<%= exercise.getVideoURL() %>', '<%= exercise.getName() %>')">View Video</a>
+                                                                                 <% } else { %>
+                                                                                     No video
+                                                                                 <% } %>
+                                                                             </td>
+                                                                         </tr>
+                                                                     <% } %>
+                                                                 </tbody>
+                                                             </table>
+                                                         <% } else { %>
+                                                             <p>No exercises scheduled for this workout.</p>
+                                                         <% } %>
+                                                  </div>
+                                              <% } %>
+                                          <% } else { %>
+                                              <p>No workouts scheduled for this day.</p>
+                                          <% } %>
+                                   </div>
+                               <% } %>
+                           <% } else { %>
+                               <p>No days scheduled for this week.</p>
+                           <% } %>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <p>No weeks scheduled for this program.</p>
+            <% } %>
+
+            <!-- Assign Program -->
+            <div class="mt-4">
+                <button class="btn btn-success" onclick="openAssignModal(<%= program.getProgramId() %>, '<%= program.getName() %>', '<%= program.getDescription() != null ? program.getDescription() : "" %>')">
+                    <i class="fas fa-paper-plane me-2"></i>Assign Program
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Exercise Modal -->
+    <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="addExerciseForm" action="<%= request.getContextPath() %>/AddExerciseToProgramServlet" method="post" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-dumbbell me-2"></i>Add Exercises to Program</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="programId" id="addExerciseProgramId" />
+                    <div id="exerciseList">
+                        <div class="exercise-entry">
+                            <div class="mb-2">
+                                <label class="form-label">Exercise</label>
+                                <select name="exerciseLibraryIds" class="form-select exercise-select" required onchange="previewExercise(this)">
+                                    <option value="">Select an exercise...</option>
+                                </select>
+                            </div>
+                            <div class="mb-2 preview">
+                                <iframe class="exercise-preview" width="100%" height="200" style="display:none;" allowfullscreen></iframe>
+                                <p class="exercise-description text-muted mt-1"></p>
+                                <p class="exercise-details text-muted mt-1"></p>
+                            </div>
+                            <div class="mb-2">
+                                <button type="button" class="btn btn-danger remove-btn" onclick="removeExerciseEntry(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <% if (customers != null && !customers.isEmpty()) { %>
-                            <button class="btn btn-success" type="submit">Assign Program</button>
-                        <% } else { %>
-                            <button class="btn btn-success" type="submit" disabled>Assign Program</button>
-                        <% } %>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
+                    <button type="button" class="btn btn-outline-primary mt-2" onclick="addExerciseEntry()">
+                        <i class="fas fa-plus me-2"></i>Add Another Exercise
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check me-2"></i>Add Exercises
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <script>
-            let selectedDayId = null;
-            let selectedWorkoutId = null;
-            const contextPath = "<%= request.getContextPath() %>";
-            const programId = <%= program.getProgramId() %>;
-            let weekCount = <%= weeks.size() %>;
-            const container = document.getElementById("workoutContainer");
+    <!-- Assign Program Modal -->
+    <div class="modal fade" id="assignProgramModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="<%= request.getContextPath() %>/AssignProgramServlet" method="post" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-paper-plane me-2"></i>Assign Program</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="programId" id="assignProgramId" />
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-info-circle me-2"></i>Program Information</label>
+                        <div class="alert program-info-alert">
+                            <strong id="programName"></strong><br>
+                            <span id="programDescription"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-users me-2"></i>Select Customer</label>
+                        <% if (customers != null && !customers.isEmpty()) { %>
+                            <select name="customerId" class="form-select" required>
+                                <option value="">Choose a customer...</option>
+                                <% for (User customer : customers) { %>
+                                    <option value="<%= customer.getUserId() %>">
+                                        <%= customer.getUserName() %> (<%= customer.getEmail() %>)
+                                    </option>
+                                <% } %>
+                            </select>
+                        <% } else { %>
+                            <div class="alert customer-warning-alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>No customers found!</strong><br>
+                                You don't have any active contracts with customers yet.
+                            </div>
+                            <select name="customerId" class="form-select" disabled>
+                                <option value="">No customers available</option>
+                            </select>
+                        <% } %>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-calendar me-2"></i>Start Date</label>
+                        <input type="date" name="startDate" class="form-control" required
+                               min="<%= java.time.LocalDate.now() %>" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <% if (customers != null && !customers.isEmpty()) { %>
+                        <button class="btn btn-success" type="submit">
+                            <i class="fas fa-check me-2"></i>Assign Program
+                        </button>
+                    <% } else { %>
+                        <button class="btn btn-success" type="submit" disabled>
+                            <i class="fas fa-check me-2"></i>Assign Program
+                        </button>
+                    <% } %>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            document.querySelectorAll('.day-cell').forEach(cell => {
-                cell.addEventListener('click', function () {
-                    selectedDayId = this.id.split('-')[1];
-                    document.getElementById('workout-dayId').value = selectedDayId;
-                    new bootstrap.Modal(document.getElementById('addWorkoutModal')).show();
-                });
-            });
-
-            // Validation for Add Workout Form
-            document.getElementById("addWorkoutForm").addEventListener("submit", function (e) {
-                e.preventDefault();
-                const startTime = document.querySelector("#addWorkoutForm input[name='startTime']").value;
-                const endTime = document.querySelector("#addWorkoutForm input[name='endTime']").value;
-                
-                if (!validateWorkoutTime(startTime, endTime, "workoutValidationAlert", "workoutValidationMessage")) {
-                    return;
-                }
-                
-                this.submit();
-            });
-
-            // Validation for Edit Workout Form
-            document.getElementById("editWorkoutForm").addEventListener("submit", function (e) {
-                e.preventDefault();
-                const startTime = document.querySelector("#editWorkoutForm input[name='startTime']").value;
-                const endTime = document.querySelector("#editWorkoutForm input[name='endTime']").value;
-                
-                if (!validateWorkoutTime(startTime, endTime, "editWorkoutValidationAlert", "editWorkoutValidationMessage")) {
-                    return;
-                }
-                
-                this.submit();
-            });
-
-            // Time validation function
-            function validateWorkoutTime(startTime, endTime, alertId, messageId) {
-                const alert = document.getElementById(alertId);
-                const message = document.getElementById(messageId);
-                
-                // Check if times are within 6:00-22:00 range
-                const startHour = parseInt(startTime.split(':')[0]);
-                const endHour = parseInt(endTime.split(':')[0]);
-                
-                if (startHour < 6 || startHour > 22 || endHour < 6 || endHour > 22) {
-                    message.textContent = "Start time and end time must be between 06:00 and 22:00.";
-                    alert.style.display = "block";
-                    return false;
-                }
-                
-                // Check if end time is after start time
-                if (endTime <= startTime) {
-                    message.textContent = "End time must be after start time.";
-                    alert.style.display = "block";
-                    return false;
-                }
-                
-                // Hide alert if validation passes
-                alert.style.display = "none";
-                return true;
-            }
-
-            // mở modal edit program
-            document.querySelector(".btn-edit-program")?.addEventListener("click", () => {
-                new bootstrap.Modal(document.getElementById("editProgramModal")).show();
-            });
-
-            function openExerciseModal(workoutId) {
-                selectedWorkoutId = workoutId;
-                document.getElementById('exercise-workoutId').value = workoutId;
-                new bootstrap.Modal(document.getElementById('addExerciseModal')).show();
-            }
-
-            function previewExercise(el) {
-                const opt = el.selectedOptions[0];
-                const iframe = document.getElementById("exercisePreview");
-                const descBox = document.getElementById("exerciseDescription");
-
-                if (opt.dataset.video) {
-                    iframe.src = opt.dataset.video;
-                    iframe.style.display = "block";
-                } else {
-                    iframe.style.display = "none";
-                    iframe.src = "";
-                }
-                descBox.textContent = opt.dataset.description || "No description.";
-            }
-
-            function previewEditExercise(el) {
-                const opt = el.selectedOptions[0];
-                const iframe = document.getElementById("editExercisePreview");
-                const descBox = document.getElementById("editExerciseDescription");
-
-                if (opt.dataset.video) {
-                    iframe.src = opt.dataset.video;
-                    iframe.style.display = "block";
-                } else {
-                    iframe.style.display = "none";
-                    iframe.src = "";
-                }
-                descBox.textContent = opt.dataset.description || "No description.";
-            }
-
-            function openEditWorkoutModal(workoutId) {
-                console.log('Opening edit workout modal for workoutId:', workoutId);
-                
-                // Fetch workout data first, then show modal
-                fetch(contextPath + '/GetWorkoutServlet?workoutId=' + workoutId)
-                    .then(response => {
-                        console.log('Response status:', response.status);
-                        console.log('Response headers:', response.headers);
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok: ' + response.status);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Workout data received:', data);
-                        if (data.error) {
-                            alert('Error: ' + data.error);
-                            return;
-                        }
-                        
-                        // Populate form fields
-                        document.getElementById('edit-workoutId').value = data.workoutID || '';
-                        document.getElementById('edit-workoutTitle').value = data.title || '';
-                        document.getElementById('edit-workoutNotes').value = data.notes || '';
-                        document.getElementById('edit-workoutStartTime').value = data.startStr || '';
-                        document.getElementById('edit-workoutEndTime').value = data.endStr || '';
-                        
-                        console.log('Form populated successfully');
-                        
-                        // Show modal only after data is loaded successfully
-                        const modal = new bootstrap.Modal(document.getElementById('editWorkoutModal'));
-                        modal.show();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching workout data:', error);
-                        alert('Error loading workout data: ' + error.message);
+    <script>
+        function openAddExerciseModal(programId) {
+            document.getElementById('addExerciseProgramId').value = programId;
+            fetch('<%= request.getContextPath() %>/GetAvailableExercisesServlet?programId=' + programId)
+                .then(response => response.json())
+                .then(data => {
+                    var select = document.querySelector('#addExerciseModal .exercise-select');
+                    select.innerHTML = '<option value="">Select an exercise...</option>';
+                    data.forEach(exercise => {
+                        var option = document.createElement('option');
+                        option.value = exercise.exerciseID;
+                        option.textContent = exercise.name;
+                        option.dataset.video = exercise.videoURL || '';
+                        option.dataset.description = exercise.description || 'No description.';
+                        option.dataset.sets = exercise.sets;
+                        option.dataset.reps = exercise.reps;
+                        option.dataset.rest = exercise.restTimeSeconds;
+                        select.appendChild(option);
                     });
-            }
-
-            function openEditExerciseModal(exerciseId, workoutId) {
-                // Fetch exercise data and populate modal
-                fetch(contextPath + '/GetExerciseServlet?exerciseId=' + exerciseId)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('edit-exerciseId').value = data.exerciseId;
-                        document.getElementById('edit-exerciseWorkoutId').value = workoutId;
-                        document.getElementById('edit-exerciseLibraryId').value = data.exerciseId; // This is the exercise library ID
-                        document.getElementById('edit-exerciseSets').value = data.sets;
-                        document.getElementById('edit-exerciseReps').value = data.reps;
-                        document.getElementById('edit-exerciseRestTime').value = data.restTimeSeconds || '';
-                        document.getElementById('edit-exerciseNotes').value = data.notes || '';
-                        
-                        // Trigger preview
-                        previewEditExercise(document.getElementById('edit-exerciseLibraryId'));
-                        
-                        new bootstrap.Modal(document.getElementById('editExerciseModal')).show();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching exercise data:', error);
-                        alert('Error loading exercise data');
-                    });
-            }
-
-            function deleteWorkout(workoutId) {
-                if (confirm('Are you sure you want to delete this workout? This action cannot be undone.')) {
-                    fetch(contextPath + '/DeleteWorkoutServlet', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'workoutId=' + workoutId
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            alert('Error deleting workout');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error deleting workout');
-                    });
-                }
-            }
-
-            function deleteExercise(exerciseId) {
-                if (confirm('Are you sure you want to delete this exercise? This action cannot be undone.')) {
-                    fetch(contextPath + '/DeleteExerciseServlet', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'exerciseId=' + exerciseId
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            alert('Error deleting exercise');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error deleting exercise');
-                    });
-                }
-            }
-
-            function addWeek() {
-                fetch(contextPath + '/ProgramWeekServlet', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: new URLSearchParams({
-                        action: 'add',
-                        programId: programId,
-                        weekNumber: weekCount + 1
-                    })
+                    document.getElementById('exerciseList').innerHTML = document.querySelector('.exercise-entry').outerHTML;
+                    new bootstrap.Modal(document.getElementById('addExerciseModal')).show();
                 })
-                        .then(res => res.json())
-                        .then(data => {
-                            weekCount++;
-                            renderWeek(weekCount, data);
-                        });
-            }
-
-            function removeLastWeek() {
-                if (weekCount === 0)
-                    return;
-
-                const lastWeekRow = document.querySelectorAll('.week-row')[weekCount - 1];
-                const weekId = lastWeekRow.getAttribute("data-week-id");
-
-                fetch(contextPath + '/ProgramWeekServlet', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: new URLSearchParams({
-                        action: 'delete',
-                        weekId: weekId
-                    })
-                })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.deleted) {
-                                lastWeekRow.remove();
-                                weekCount--;
-                            }
-                        });
-            }
-
-            function handleDayClick(cell) {
-                const dayId = cell.dataset.dayId;
-                const hasWorkout = cell.dataset.hasWorkout === "true";
-
-                if (hasWorkout) {
-                    openEditWorkoutModalByDay(dayId); // Bạn cần định nghĩa hàm này
-                } else {
-                    document.getElementById("workout-dayId").value = dayId;
-                    const modal = new bootstrap.Modal(document.getElementById("addWorkoutModal"));
-                    modal.show();
-                }
-            }
-
-            // Tự động chặn sự kiện nổi từ dropdown, nút bên trong workout
-            document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('.workout-card button, .workout-card form').forEach(el => {
-                    el.addEventListener('click', e => e.stopPropagation());
+                .catch(error => {
+                    console.error('Error fetching exercises:', error);
+                    showNotification('Error loading exercises', 'error');
                 });
+        }
+
+        function addExerciseEntry() {
+            var exerciseList = document.getElementById('exerciseList');
+            var entry = document.createElement('div');
+            entry.className = 'exercise-entry';
+            entry.innerHTML = `
+                <div class="mb-2">
+                    <label class="form-label">Exercise</label>
+                    <select name="exerciseLibraryIds" class="form-select exercise-select" required onchange="previewExercise(this)">
+                        <option value="">Select an exercise...</option>
+                    </select>
+                </div>
+                <div class="mb-2 preview">
+                    <iframe class="exercise-preview" width="100%" height="200" style="display:none;" allowfullscreen></iframe>
+                    <p class="exercise-description text-muted mt-1"></p>
+                    <p class="exercise-details text-muted mt-1"></p>
+                </div>
+                <div class="mb-2">
+                    <button type="button" class="btn btn-danger remove-btn" onclick="removeExerciseEntry(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            exerciseList.appendChild(entry);
+            var firstSelect = document.querySelector('.exercise-select');
+            var newSelect = entry.querySelector('.exercise-select');
+            newSelect.innerHTML = firstSelect.innerHTML;
+        }
+
+        function removeExerciseEntry(button) {
+            if (document.querySelectorAll('.exercise-entry').length > 1) {
+                button.closest('.exercise-entry').remove();
+            } else {
+                alert('At least one exercise is required.');
+            }
+        }
+
+        function previewExercise(select) {
+            var entry = select.closest('.exercise-entry');
+            var iframe = entry.querySelector('.exercise-preview');
+            var desc = entry.querySelector('.exercise-description');
+            var details = entry.querySelector('.exercise-details');
+            var option = select.selectedOptions[0];
+            if (option.dataset.video) {
+                iframe.src = option.dataset.video;
+                iframe.style.display = 'block';
+            } else {
+                iframe.src = '';
+                iframe.style.display = 'none';
+            }
+            desc.textContent = option.dataset.description || 'No description.';
+            details.textContent = 'Sets: ' + (option.dataset.sets || 'N/A') +
+                                 ', Reps: ' + (option.dataset.reps || 'N/A') +
+                                 ', Rest: ' + (option.dataset.rest || '0') + 's';
+        }
+
+        function openVideoModal(videoUrl, title) {
+            var frame = document.createElement('iframe');
+            frame.src = videoUrl;
+            frame.width = '100%';
+            frame.height = '400';
+            frame.frameborder = '0';
+            frame.allowFullscreen = true;
+            frame.style.borderRadius = '10px';
+            var modal = new bootstrap.Modal(document.createElement('div'));
+            modal._element.innerHTML = `
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${title}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            ${frame.outerHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal._element);
+            modal.show();
+            modal._element.addEventListener('hidden.bs.modal', function () {
+                modal._element.remove();
             });
-            
-            function openVideoModal(videoUrl, title) {
-        const frame = document.getElementById("videoFrame");
-        const modalTitle = document.getElementById("videoTitle");
+        }
 
-        frame.src = videoUrl;
-        modalTitle.textContent = title;
+        function openAssignModal(programId, name, description) {
+            document.getElementById('assignProgramId').value = programId;
+            document.querySelector('#assignProgramModal .modal-title').innerHTML =
+                '<i class="fas fa-paper-plane me-2"></i>Assign Program: ' + name;
+            document.getElementById('programName').textContent = name;
+            document.getElementById('programDescription').textContent = description || 'No description';
+            new bootstrap.Modal(document.getElementById('assignProgramModal')).show();
+        }
 
-        const modal = new bootstrap.Modal(document.getElementById("videoModal"));
-        modal.show();
-    }
-
-    // Dọn video khi đóng modal
-    document.getElementById("videoModal").addEventListener("hidden.bs.modal", function () {
-        document.getElementById("videoFrame").src = "";
-    });
-    
-    function openAssignModal(programId) {
-        document.getElementById('assignProgramId').value = programId;
-        
-        // Lấy thông tin chương trình để hiển thị
-        var programName = '<%= program.getName() %>';
-        var programDescription = '<%= program.getDescription() %>';
-        
-        // Cập nhật tiêu đề modal và thông tin chương trình
-        document.querySelector('#assignProgramModal .modal-title').textContent = 
-            'Assign Program: ' + programName;
-        document.getElementById('programName').textContent = programName;
-        document.getElementById('programDescription').textContent = programDescription;
-        
-        var modal = new bootstrap.Modal(document.getElementById('assignProgramModal'));
-        modal.show();
-    }
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <c:if test="${param.error == 'overlap'}">
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var addWorkoutModal = new bootstrap.Modal(document.getElementById('addWorkoutModal'));
-        addWorkoutModal.show();
-        document.getElementById('workoutValidationAlert').style.display = 'block';
-        document.getElementById('workoutValidationMessage').innerText =
-            "Workout time overlaps with another workout in this day. Please choose a different time.";
-    });
-</script>
-</c:if>
-    </body>
+        <% if (request.getParameter("error") != null) { %>
+            showNotification('Error: <%= request.getParameter("error") %>', 'error');
+        <% } %>
+        <% if (request.getParameter("success") != null) { %>
+            showNotification('Success: <%= request.getParameter("success") %>', 'success');
+        <% } %>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

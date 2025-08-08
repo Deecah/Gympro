@@ -29,7 +29,7 @@ public class ChatDAO {
                 return rs.getInt("ChatID");
             }
 
-            String insertSql = "INSERT INTO Chats (UserID1, UserID2, MessageID) VALUES (?, ?, NULL)";
+            String insertSql = "INSERT INTO Chats (UserID1, UserID2) VALUES (?, ?)";
             ps = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, userId1);
             ps.setInt(2, userId2);
@@ -139,17 +139,16 @@ public class ChatDAO {
         ResultSet rs = null;
 
         String sql = "SELECT c.ChatID, " +
-                "       CASE WHEN c.UserID1 = ? THEN c.UserID2 ELSE c.UserID1 END AS partnerId, " +
-                "       u.Name AS partnerName, " +
-                "       u.Role AS partnerRole, " +
-                "       u.AvatarUrl, " +
-                "       m.MessageContent AS lastMessage, " +
-                "       m.SenderUserID " +
-                "FROM Chats c " +
-                "JOIN Users u ON u.Id = CASE WHEN c.UserID1 = ? THEN c.UserID2 ELSE c.UserID1 END " +
-                "LEFT JOIN Messages m ON m.MessageID = c.MessageID " +
-                "WHERE (c.UserID1 = ? OR c.UserID2 = ?) AND c.UserID1 <> c.UserID2 " +
-                "ORDER BY m.SentAt DESC";
+           "CASE WHEN c.UserID1 = ? THEN c.UserID2 ELSE c.UserID1 END AS partnerId, " +
+           "u.Name AS partnerName, " +
+           "u.Role AS partnerRole, " +
+           "u.AvatarUrl, " +
+           "(SELECT TOP 1 MessageContent FROM Messages m WHERE m.ChatID = c.ChatID ORDER BY m.SentAt DESC) AS lastMessage, " +
+           "(SELECT TOP 1 SenderUserID FROM Messages m WHERE m.ChatID = c.ChatID ORDER BY m.SentAt DESC) AS SenderUserID " +
+           "FROM Chats c " +
+           "JOIN Users u ON u.Id = CASE WHEN c.UserID1 = ? THEN c.UserID2 ELSE c.UserID1 END " +
+           "WHERE (c.UserID1 = ? OR c.UserID2 = ?) AND c.UserID1 <> c.UserID2 " +
+           "ORDER BY c.LastMessageAt DESC";
 
         try {
             conn = ConnectDatabase.getInstance().openConnection();

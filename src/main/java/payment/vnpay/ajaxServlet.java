@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @WebServlet(name = "ajaxServlet", urlPatterns = {"/vnpay/payment"})
@@ -46,7 +48,7 @@ public class ajaxServlet extends HttpServlet {
         transaction.setCustomerId(customerId);
         transaction.setAmount(amount);
         transaction.setStatus("Processing");
-        transaction.setType("VNPay"); 
+        transaction.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
         transaction.setDescription("Thanh toán qua VNPay - Gói tập GymPro");
 
         TransactionDAO transactionDao = new TransactionDAO();

@@ -1,138 +1,114 @@
 package controller;
 
+import dao.ExerciseLibraryDAO;
 import dao.PackageDAO;
 import dao.ProgramDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
-import java.io.IOException;
-import java.util.List;
-
+import dao.UserDAO;
+import model.ExerciseLibrary;
 import model.Package;
 import model.Program;
 import model.User;
-import Utils.NotificationUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-@WebServlet(name = "ProgramServlet", urlPatterns = {"/ProgramServlet"})
+@WebServlet("/ProgramServlet")
 public class ProgramServlet extends HttpServlet {
+    private ProgramDAO programDAO = new ProgramDAO();
+    private UserDAO userDAO = new UserDAO();
+    private ExerciseLibraryDAO exerciseLibraryDAO = new ExerciseLibraryDAO();
+    private PackageDAO packageDAO = new PackageDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                userId = cookie.getValue();
+            } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                role = cookie.getValue();
+            }
+        }
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
             return;
         }
 
-        User user = (User) session.getAttribute("user");
-        if (!"Trainer".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        ProgramDAO dao = new ProgramDAO();
-        List<Program> programs = dao.getAllProgramsByTrainer(user.getUserId());
-        List<Package> packageList = new PackageDAO().getAllPackagesByTrainer(user.getUserId());
-
+        List<Package> packages = packageDAO.getAllPackagesByTrainer(Integer.parseInt(userId));
+        List<Program> programs = programDAO.getAllPrograms(Integer.parseInt(userId));
+        List<User> customers = userDAO.getCustomersByTrainer(Integer.parseInt(userId));
+        List<ExerciseLibrary> exerciseLibraries = exerciseLibraryDAO.getAllExercises(Integer.parseInt(userId));
         request.setAttribute("programs", programs);
-        request.setAttribute("packageList", packageList);
-
-        // Load danh sách khách hàng có contract với trainer cho modal gán chương trình
-        dao.ContractDAO contractDAO = new dao.ContractDAO();
-        java.util.ArrayList<User> customers = contractDAO.getCustomersByTrainer(user.getUserId());
         request.setAttribute("customers", customers);
-
-        // Xử lý các thông báo từ AssignProgramServlet
-        String error = request.getParameter("error");
-        String success = request.getParameter("success");
-        
-        if (error != null) {
-            switch (error) {
-                case "invalid_date":
-                    request.setAttribute("error", "Start date cannot be in the past!");
-                    break;
-                case "already_assigned":
-                    request.setAttribute("error", "This program is already assigned to this customer!");
-                    break;
-                case "assignment_failed":
-                    request.setAttribute("error", "Failed to assign program!");
-                    break;
-                case "invalid_input":
-                    request.setAttribute("error", "Invalid input data!");
-                    break;
-                case "system_error":
-                    request.setAttribute("error", "An error occurred while processing your request!");
-                    break;
-                default:
-                    request.setAttribute("error", "An error occurred!");
-                    break;
-            }
-        }
-        
-        if (success != null) {
-            switch (success) {
-                case "assigned":
-                    request.setAttribute("success", "Program has been successfully assigned to the customer!");
-                    break;
-                default:
-                    request.setAttribute("success", "Operation completed successfully!");
-                    break;
-            }
-        }
-
-        request.getRequestDispatcher("trainer/programs.jsp").forward(request, response);
+        request.setAttribute("exerciseLibraries", exerciseLibraries);
+        request.setAttribute("programId", request.getParameter("programId"));
+        request.setAttribute("packages",packages);
+        request.getRequestDispatcher("/trainer/programs.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                userId = cookie.getValue();
+            } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                role = cookie.getValue();
+            }
+        }
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
             return;
         }
 
-        User user = (User) session.getAttribute("user");
-        if (!"Trainer".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
-        }
-
+        String action = request.getParameter("action");
         String name = request.getParameter("name");
         String description = request.getParameter("description");
-        String packageIdStr = request.getParameter("packageId");
+        int packageId = Integer.parseInt(request.getParameter("packageId"));
 
-        Program program = new Program();
-        program.setName(name);
-        program.setDescription(description);
-
-        try {
-            int packageId = Integer.parseInt(packageIdStr);
+        if ("create".equals(action)) {
+            if (packageId == 0) {
+                response.sendRedirect("ProgramServlet?error=Package ID is required");
+                return;
+            }
+            Program program = new Program();
+            program.setName(name);
+            program.setDescription(description);
+            program.setTrainerId(Integer.parseInt(userId));
             program.setPackageId(packageId);
-        } catch (NumberFormatException e) {
-            program.setPackageId(0); 
+            boolean success = programDAO.createProgram(program);
+            if (success) {
+                response.sendRedirect("ProgramServlet?success=Program created successfully");
+            } else {
+                response.sendRedirect("ProgramServlet?error=Failed to create program");
+            }
+        } else if ("edit".equals(action)) {
+            if (packageId == 0) {
+                response.sendRedirect("ProgramServlet?programId=" + request.getParameter("programId") + "&error=Package ID is required");
+                return;
+            }
+            int programId = Integer.parseInt(request.getParameter("programId"));
+            Program program = new Program();
+            program.setProgramId(programId);
+            program.setName(name);
+            program.setDescription(description);
+            program.setTrainerId(Integer.parseInt(userId));
+            program.setPackageId(packageId);
+            boolean success = programDAO.updateProgram(program);
+            if (success) {
+                response.sendRedirect("ProgramServlet?programId=" + programId + "&success=Program updated successfully");
+            } else {
+                response.sendRedirect("ProgramServlet?programId=" + programId + "&error=Failed to update program");
+            }
         }
-
-        ProgramDAO dao = new ProgramDAO();
-        int result = dao.addProgram(program, user.getUserId());
-        boolean success = result > 0;
-
-        if (success) {
-            // Gửi notification thành công
-            NotificationUtil.sendSuccessNotification(user.getUserId(), 
-                "Program Created Successfully", 
-                "Your new program '" + name + "' has been created successfully!");
-        } else {
-            // Gửi notification lỗi
-            NotificationUtil.sendErrorNotification(user.getUserId(), 
-                "Program Creation Failed", 
-                "Failed to create program '" + name + "'. Please try again.");
-        }
-
-        response.sendRedirect(request.getContextPath() + "/ProgramServlet");
     }
 }

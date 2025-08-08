@@ -1,109 +1,81 @@
 package model;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Workout {
+    private int workoutId;
+    private Date date;
+    private Time startTime;
+    private Time endTime;
+    private int trainerId;
+    private String status;
+    private int customerProgramId;
+    private  int scheduleId;
 
-    private int workoutID;
-    private int dayID;
-    private String title;
-    private String notes;
-    private Timestamp createdAt;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private int startHour;
-    private String startStr;
-    private String endStr;
-    private String programName;
-
-    // Getters and Setters
-    public int getWorkoutID() {
-        return workoutID;
+    public int getWorkoutId() {
+        return workoutId;
     }
 
-    public void setWorkoutID(int workoutID) {
-        this.workoutID = workoutID;
+    public void setWorkoutId(int workoutId) {
+        this.workoutId = workoutId;
     }
 
-    public int getDayID() {
-        return dayID;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDayID(int dayID) {
-        this.dayID = dayID;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalTime getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public LocalTime getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalTime endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 
-    public void setStartHour(int startHour) {
-        this.startHour = startHour;
+    public int getTrainerId() {
+        return trainerId;
     }
 
-    public int getStartHour() {
-        return startHour;
+    public void setTrainerId(int trainerId) {
+        this.trainerId = trainerId;
     }
 
-    public void setStartStr(String startStr) {
-        this.startStr = startStr;
+    public String getStatus() {
+        return status;
     }
 
-    public String getStartStr() {
-        return startStr;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setEndStr(String endStr) {
-        this.endStr = endStr;
+    public int getCustomerProgramId() {
+        return customerProgramId;
     }
 
-    public String getEndStr() {
-        return endStr;
+    public void setCustomerProgramId(int customerProgramId) {
+        this.customerProgramId = customerProgramId;
     }
 
-    public String getProgramName() {
-        return programName;
+    public int getScheduleId() {
+        return scheduleId;
     }
 
-    public void setProgramName(String programName) {
-        this.programName = programName;
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
     }
-
 }

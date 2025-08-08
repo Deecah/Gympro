@@ -21,6 +21,133 @@
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <link rel="stylesheet" href="stylecss/package-detail.css" type="text/css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/stylecss/header.css" type="text/css">
+        <style>
+        .card {
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(60, 72, 88, 0.08);
+            transition: box-shadow 0.2s, transform 0.2s;
+            background: #f4fff7; /* Light green background */
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 32px rgba(60, 72, 88, 0.16);
+            transform: translateY(-4px) scale(1.01);
+        }
+
+        .card-body {
+            padding: 1.5rem 2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            color: #555;
+            font-size: 1rem;
+        }
+          .serial-circle {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #e8f5e9;
+          border: 2px solid #43a047;
+          color: #388e3c;
+          font-weight: bold;
+          font-size: 1.1rem;
+          margin-right: 1.25rem;
+        }
+
+        /* Modal custom styles for select program */
+        #selectProgramModal .modal-content {
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(60, 72, 88, 0.16);
+            background: #f8fff8;
+            border: none;
+        }
+        #selectProgramModal .modal-header {
+            border-bottom: none;
+            background: #e8f5e9;
+            border-radius: 18px 18px 0 0;
+        }
+        #selectProgramModal .modal-title {
+            color: #2e7d32;
+            font-weight: 700;
+        }
+        #selectProgramModal .btn-close {
+            background: none;
+            border: none;
+        }
+        #selectProgramModal .modal-body {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        #selectProgramModal .list-group {
+            padding: 0;
+        }
+        #selectProgramModal .select-program-card {
+            border: none;
+            border-radius: 12px;
+            background: #e8f5e9;
+            margin-bottom: 12px;
+            transition: box-shadow 0.2s, background 0.2s;
+            box-shadow: 0 2px 8px rgba(60, 72, 88, 0.08);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+        }
+        #selectProgramModal .select-program-card.selected,
+        #selectProgramModal .select-program-card:hover {
+            background: #c8e6c9;
+            box-shadow: 0 4px 16px rgba(60, 72, 88, 0.16);
+        }
+        #selectProgramModal .form-check-input {
+            margin-right: 1rem;
+            accent-color: #43a047;
+        }
+        #selectProgramModal .form-check-input:checked {
+            background-color: #43a047;
+            border-color: #43a047;
+        }
+        #selectProgramModal .serial-circle {
+            background: #b9f6ca;
+            border: 2px solid #43a047;
+            color: #388e3c;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 1.25rem;
+        }
+        #selectProgramModal .modal-footer {
+            border-top: none;
+            background: #e8f5e9;
+            border-radius: 0 0 18px 18px;
+        }
+        #selectProgramModal .btn-primary {
+            background: #43a047;
+            border: none;
+            font-weight: 600;
+        }
+        #selectProgramModal .btn-primary:hover {
+            background: #388e3c;
+        }
+        #selectProgramModal .btn-secondary {
+            background: #bdbdbd;
+            border: none;
+            color: #333;
+        }
+        #selectProgramModal .btn-secondary:hover {
+            background: #9e9e9e;
+        }
+        </style>
 
     </head>
     <body>
@@ -56,10 +183,7 @@
                             <p><i class="fa fa-clock-o text-success me-2"></i><span class="info-label">  Duration:</span> ${pkg.duration} days</p>
                             <p><i class="fa fa-usd text-success me-2"></i><span class="info-label">  Price:</span> ${pkg.price} VNĐ</p>
                             <div class="text-end mt-4">
-                                <a href="${pageContext.request.contextPath}/purchase?packageId=${pkg.packageID}" 
-                                   class="btn btn-success purchase-btn">
-                                    <i class="fa fa-shopping-cart me-1"></i> Purchase Package
-                                </a>
+                                <button class="btn btn-success purchase-btn" id="purchaseBtn" onclick="openSelectProgramModal()">Purchase</button>
                             </div>
                         </div>
                     </div>
@@ -72,8 +196,11 @@
                 <div class="section-box">
                     <div class="row align-items-center">
                         <div class="col-md-3 text-center mb-3 mb-md-0">
-                            <img src="${trainer.avatarUrl}" class="rounded-circle shadow" 
-                                 style="width: 150px; height: 150px; object-fit: cover;" alt="Trainer Avatar">
+                            <img src="${trainer.avatarUrl}"
+                                      class="shadow rounded-circle"
+                                      style="width: 150px; height: 150px; object-fit: cover;"
+                                      alt="Trainer Avatar"
+                                      onerror="this.onerror=null;this.src='img/avatar/avatar1.jpg';">
                         </div>
                         <div class="col-md-9">
                             <div class="trainer-info-grid">
@@ -89,6 +216,21 @@
                         </div>
                     </div>
                 </div>
+
+                <h4 class="section-heading">Programs</h4>
+                    <div class="section-box">
+                        <c:forEach var="program" items="${programs}" varStatus="status">
+                            <div class="card mb-3">
+                                <div class="card-body d-flex align-items-start">
+                                <span class="serial-circle me-3">${status.index + 1}</span>
+                                    <div>
+                                        <h5 class="card-title mb-1">${program.name}</h5>
+                                        <p class="card-text mb-0">${program.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
 
                 <hr>
 
@@ -146,6 +288,43 @@
             </div>
         </section>
 
+        <!-- Modal for selecting a program -->
+        <div class="modal fade" id="selectProgramModal" tabindex="-1" aria-labelledby="selectProgramModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="selectProgramModalLabel">Select a Program</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <c:if test="${empty programs}">
+          <p>No programs available for this package.</p>
+        </c:if>
+        <c:if test="${not empty programs}">
+          <form id="selectProgramForm">
+            <div class="list-group">
+              <c:forEach var="program" items="${programs}" varStatus="status">
+                <label class="select-program-card w-100 mb-2">
+                  <input class="form-check-input me-2" type="radio" name="programId" value="${program.programId}" style="margin-top:0.2rem;">
+                  <span class="serial-circle me-3">${status.index + 1}</span>
+                  <div>
+                    <h5 class="card-title mb-1">${program.name}</h5>
+                    <p class="card-text mb-0">${program.description}</p>
+                  </div>
+                </label>
+              </c:forEach>
+            </div>
+          </form>
+        </c:if>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmPurchaseBtn" onclick="handleConfirmPurchase()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
         <!-- Footer -->
         <jsp:include page="footer.jsp" />
 
@@ -158,6 +337,53 @@
         <script src="js/masonry.pkgd.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
+
+        <script>
+          function handleConfirmPurchase() {
+            var selected = document.querySelector('input[name="programId"]:checked');
+            if (!selected) {
+              alert('Please select a program.');
+              return;
+            }
+            // Redirect to purchase page with selected programId and packageId
+            var packageId = '${pkg.packageID}';
+            var programId = selected.value;
+            var trainerId = '${pkg.trainerID}';
+            var price = '${pkg.price}';
+            window.location.href = '${pageContext.request.contextPath}/purchase?packageId=' + packageId + '&programId=' + programId + '&trainerId=' + trainerId + '&price=' + price;
+          }
+        </script>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            var purchaseBtn = document.getElementById('purchaseBtn');
+            var selectProgramModal = new bootstrap.Modal(document.getElementById('selectProgramModal'));
+            purchaseBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              selectProgramModal.show();
+            });
+          });
+        </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Highlight selected card on radio change
+          document.querySelectorAll('#selectProgramModal input[name="programId"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              document.querySelectorAll('#selectProgramModal .select-program-card').forEach(function(card) {
+                card.classList.remove('selected');
+              });
+              if (this.checked) {
+                this.closest('.select-program-card').classList.add('selected');
+              }
+            });
+          });
+        });
+        </script>
+        <script>
+function openSelectProgramModal() {
+  var selectProgramModal = new bootstrap.Modal(document.getElementById('selectProgramModal'));
+  selectProgramModal.show();
+}
+</script>
 
     </body>
 </html>

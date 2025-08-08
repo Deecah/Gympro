@@ -1,61 +1,47 @@
 package controller;
 
 import connectDB.ConnectDatabase;
+import dao.PackageDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import model.Package;
+import model.PackageDTO;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
 @WebServlet(name = "PackagesPurchasedServlet", urlPatterns = {"/packagesPurchased"})
 public class PackagesPurchasedServlet extends HttpServlet {
-
+    private PackageDAO packageDAO = new PackageDAO();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        model.User user = (model.User) session.getAttribute("user");
-
-        if (user == null || !"Customer".equals(user.getRole())) {
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                userId = cookie.getValue();
+            } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                role = cookie.getValue();
+            }
+        }
+        if (userId == null || role == null || !role.equalsIgnoreCase("Customer")) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        List<Object[]> purchasedList = new ArrayList<>();
-        String sql = "SELECT p.PackageName, u.Name AS TrainerName, c.StartDate, c.EndDate, c.Status, p.PackageID " +
-                     "FROM Contracts c " +
-                     "JOIN Package p ON c.PackageID = p.PackageID " +
-                     "JOIN Users u ON p.TrainerID = u.Id " +
-                     "WHERE c.CustomerID = ?";
-
-        try (Connection conn = ConnectDatabase.getInstance().openConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, user.getUserId());
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Object[] row = new Object[6];
-                row[0] = rs.getString("PackageName");
-                row[1] = rs.getString("TrainerName");
-                row[2] = rs.getDate("StartDate");
-                row[3] = rs.getDate("EndDate");
-                row[4] = rs.getString("Status");
-                row[5] = rs.getInt("PackageID");  // for feedback if needed
-                purchasedList.add(row);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<PackageDTO> packageList = packageDAO.getPurchasedPackagesByCustomer(Integer.parseInt(userId));
         Boolean feedbackSuccess = (Boolean) request.getSession().getAttribute("feedbackSuccess");
         if (feedbackSuccess != null && feedbackSuccess) {
             request.setAttribute("feedbackSuccess", true);
             request.getSession().removeAttribute("feedbackSuccess"); // prevent showing again on refresh
         }
-        request.setAttribute("purchasedList", purchasedList);
+        request.setAttribute("purchasedList", packageList);
         request.getRequestDispatcher("packagesPurchased.jsp").forward(request, response);
     }
 }

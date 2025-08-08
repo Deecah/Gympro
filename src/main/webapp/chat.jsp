@@ -143,278 +143,97 @@
 
         <!-- ===================== JS ===================== -->
         <script>
-            // Configuration
-            const rawCtx = document.body.dataset.ctx || "";
-            const ctx = rawCtx.endsWith("/") ? rawCtx.slice(0, -1) : rawCtx;
-            const altCtx = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1)) || '';
-            const finalCtx = ctx || altCtx || '/SWP391';
-            
-            const chatId = Number(document.body.dataset.chat);
-            const userId = Number(document.body.dataset.uid);
+        const currentUserId = "${user.getUserId()}";
+        const fullName = "${user.getUserName()}";
+        let ws = null;
+        let currentRoomId = null;
 
-            // Upload function
-            async function doUpload(file, endPoint) {
-                const fd = new FormData();
-                fd.append("file", file);
-                
-                const uploadUrl = finalCtx + '/chat-upload/' + endPoint;
-                console.log("Upload URL:", uploadUrl);
-                
-                try {
-                    const res = await fetch(uploadUrl, {method: "POST", body: fd});
-                    
-                    if (!res.ok) {
-                        if (res.status === 401) {
-                            throw new Error("Unauthorized - Please login again");
-                        }
-                        if (res.status === 500) {
-                            throw new Error("Server error - Please try again later");
-                        }
-                        const errorData = await res.json();
-                        throw new Error(errorData.error || "Upload failed");
+        function openChat(friendId) {
+            if (ws) {
+                ws.close();
+            }
+            currentRoomId =
+                "room_" +
+                Math.min(currentUserId, friendId) +
+                "_" +
+                Math.max(currentUserId, friendId);
+            ws = new WebSocket(
+                "ws://localhost:8080/TripsExeWeb/chatendpoint/" + currentRoomId
+            );
+            ws.onopen = function () {
+                let initobj = {
+                    "load": {
+                        "roomId": currentRoomId
                     }
-                    
-                    const data = await res.json();
-                    if (!data.success && data.error) {
-                        throw new Error(data.error);
-                    }
-                    
-                    return data.url;
-                } catch (error) {
-                    console.error("Upload error:", error);
-                    if (error.message.includes("JSON")) {
-                        throw new Error("Server returned invalid response. Please try again.");
-                    }
-                    throw error;
                 }
-            }
-
-            // WebSocket
-            let socket;
-            function wsUrl() {
-                const proto = location.protocol === "https:" ? "wss" : "ws";
-                return `${proto}${location.host}${ctx}ws/chat/${chatId}/${userId}`;
-            }
-            
-            function connectWs() {
-                if (!chatId || !userId) {
-                    console.warn("Thiếu chatId/userId");
-                    return;
-                }
-                socket = new WebSocket(wsUrl());
-
-                socket.onopen = () => console.log("[WS] open");
-                socket.onclose = () => {
-                    console.warn("[WS] closed – reconnect in 2 s");
-                    setTimeout(connectWs, 2000);
-                };
-                socket.onerror = e => console.error("[WS] error", e);
-                socket.onmessage = e => appendMsg(JSON.parse(e.data));
-            }
-            window.addEventListener("DOMContentLoaded", connectWs);
-
-            // UI helper
-            const box = document.getElementById("messages");
-
-            function appendMsg(m) {
+                ws.send(JSON.stringify(initobj));
+            };
+            ws.onmessage = function (event) {
+                let dataobj = JSON.parse(event.data);
+                const chatBox = document.getElementById("messages");
+                const isCurrentUser = dataobj.senderUserId == currentUserId;
                 const wrap = document.createElement("div");
-                wrap.className = Number(m.senderUserId) === userId ? "text-end" : "text-start";
-
+                wrap.className = isCurrentUser ? "text-end" : "text-start";
                 const b = document.createElement("div");
                 b.className = "p-2 bg-primary text-white rounded mb-2 d-inline-block message-box";
-
                 const content = document.createElement("div");
-                content.textContent = m.messageContent || "";
+                content.textContent = dataobj.messageContent || "";
                 b.appendChild(content);
-
-                if (m.imageUrl) {
+                if (dataobj.imageUrl) {
                     const img = document.createElement("img");
-                    img.src = m.imageUrl;
+                    img.src = dataobj.imageUrl;
                     img.className = "message-image";
                     img.onclick = function() {
-                        showImageModal(m.imageUrl);
+                        showImageModal(dataobj.imageUrl);
                     };
                     b.appendChild(img);
                 }
-
-                if (m.fileUrl) {
+                if (dataobj.fileUrl) {
                     const fileLink = document.createElement("a");
-                    fileLink.href = m.fileUrl;
+                    fileLink.href = dataobj.fileUrl;
                     fileLink.target = "_blank";
                     fileLink.className = "btn btn-sm btn-light text-dark mt-1";
                     fileLink.innerHTML = '<i class="bi bi-download me-1"></i>Tải file';
                     b.appendChild(fileLink);
                 }
-
                 const time = document.createElement("div");
                 time.className = "message-time";
-                time.textContent = new Date(m.sentAt).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+                time.textContent = new Date(dataobj.sentAt).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
                 b.appendChild(time);
-
                 wrap.appendChild(b);
-                document.getElementById("messages").appendChild(wrap);
-                box.scrollTop = box.scrollHeight;
+                chatBox.appendChild(wrap);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            };
+            ws.onerror = function (error) {
+                console.error("WebSocket error: ", error);
+            };
+            ws.onclose = function () {
+                console.log("WebSocket closed");
+            };
+        }
+
+        async function sendMessage() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                alert("WebSocket not connected");
+                return;
             }
-
-            // Send message
-            async function sendMessage() {
-                if (!socket || socket.readyState !== WebSocket.OPEN) {
-                    alert("WebSocket chưa kết nối");
-                    return;
-                }
-
-                const txt = document.getElementById("messageInput").value.trim();
-                let imageUrl = "", fileUrl = "";
-
-                // Show loading
-                const sendButton = document.getElementById('sendButton');
-                const sendText = document.getElementById('sendText');
-                const sendLoading = document.getElementById('sendLoading');
-                
-                sendButton.disabled = true;
-                sendText.style.display = 'none';
-                sendLoading.style.display = 'inline';
-
-                try {
-                    if (imageInput.files.length) {
-                        imageUrl = await doUpload(imageInput.files[0], "image");
-                    }
-                    if (fileInput.files.length) {
-                        fileUrl = await doUpload(fileInput.files[0], "file");
-                    }
-                } catch (e) {
-                    showErrorToast(e.message);
-                    // Reset loading state
-                    sendButton.disabled = false;
-                    sendText.style.display = 'inline';
-                    sendLoading.style.display = 'none';
-                    return;
-                }
-
-                if (!txt && !imageUrl && !fileUrl) {
-                    // Reset loading state
-                    sendButton.disabled = false;
-                    sendText.style.display = 'inline';
-                    sendLoading.style.display = 'none';
-                    return;
-                }
-
-                socket.send(JSON.stringify({chatId, messageContent: txt, imageUrl, fileUrl}));
-
-                // reset form
-                document.getElementById("messageInput").value = "";
-                clearPreview();
-                
-                // Reset loading state
-                sendButton.disabled = false;
-                sendText.style.display = 'inline';
-                sendLoading.style.display = 'none';
-            }
-            
-            function handleKeyPress(event) {
-                if (event.key === 'Enter') {
-                    sendMessage();
+            const txt = document.getElementById("messageInput").value.trim();
+            let imageUrl = "", fileUrl = "";
+            // Add upload logic if needed
+            if (!txt && !imageUrl && !fileUrl) return;
+            let messageobj = {
+                "message": {
+                    "userId": currentUserId,
+                    "roomId": currentRoomId,
+                    "fullName": fullName,
+                    "content": txt,
+                    "imageUrl": imageUrl,
+                    "fileUrl": fileUrl
                 }
             }
-            
-            function showImageModal(imageUrl) {
-                document.getElementById('modalImage').src = imageUrl;
-                const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-                modal.show();
-            }
-            
-            function showErrorToast(message) {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = 'toast-message';
-                toast.textContent = message;
-                
-                container.appendChild(toast);
-                
-                // Auto remove after 5 seconds
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
-                    }
-                }, 5000);
-            }
-
-            function insertEmoji(e) {
-                const inp = document.getElementById("messageInput");
-                inp.value += e;
-                inp.focus();
-            }
-            
-            // Preview functions
-            function showPreview(file, type) {
-                const previewArea = document.getElementById('previewArea');
-                const previewContent = document.getElementById('previewContent');
-                
-                previewContent.innerHTML = '';
-                
-                if (type === 'image') {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    img.className = 'preview-image';
-                    previewContent.appendChild(img);
-                } else if (type === 'file') {
-                    const fileDiv = document.createElement('div');
-                    fileDiv.className = 'preview-file';
-                    
-                    const icon = document.createElement('div');
-                    icon.className = 'preview-file-icon';
-                    icon.textContent = '📎';
-                    
-                    const info = document.createElement('div');
-                    info.className = 'preview-file-info';
-                    
-                    const name = document.createElement('div');
-                    name.className = 'preview-file-name';
-                    name.textContent = file.name;
-                    
-                    const size = document.createElement('div');
-                    size.className = 'preview-file-size';
-                    size.textContent = formatFileSize(file.size);
-                    
-                    info.appendChild(name);
-                    info.appendChild(size);
-                    fileDiv.appendChild(icon);
-                    fileDiv.appendChild(info);
-                    previewContent.appendChild(fileDiv);
-                }
-                
-                previewArea.style.display = 'block';
-            }
-            
-            function clearPreview() {
-                document.getElementById('previewArea').style.display = 'none';
-                document.getElementById('previewContent').innerHTML = '';
-                imageInput.value = '';
-                fileInput.value = '';
-            }
-            
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-            
-            // Add event listeners for file inputs
-            document.addEventListener('DOMContentLoaded', function() {
-                imageInput.addEventListener('change', function(e) {
-                    if (e.target.files.length > 0) {
-                        showPreview(e.target.files[0], 'image');
-                    }
-                });
-                
-                fileInput.addEventListener('change', function(e) {
-                    if (e.target.files.length > 0) {
-                        showPreview(e.target.files[0], 'file');
-                    }
-                });
-            });
+            ws.send(JSON.stringify(messageobj));
+            document.getElementById("messageInput").value = "";
+        }
         </script>
     </body>
 </html>

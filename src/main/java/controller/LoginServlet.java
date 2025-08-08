@@ -78,6 +78,12 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("email", email);
                 session.setAttribute("user", user);
                 session.setAttribute("userId", user.getUserId());
+                Cookie cookie = new Cookie("userId",String.valueOf(user.getUserId()));
+                Cookie roleCookie = new Cookie("role",role);
+                cookie.setMaxAge(60 * 60 * 24 * 7);
+                roleCookie.setMaxAge(60 * 60 * 24 * 7);
+                response.addCookie(cookie);
+                response.addCookie(roleCookie);
                 switch (role) {
                     case "Customer":
                         CustomerDAO customerDAO = new CustomerDAO();
@@ -154,7 +160,12 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("user", user);
             String role = user.getRole() != null ? user.getRole().trim() : "";
-
+            Cookie cookie = new Cookie("userId",String.valueOf(user.getUserId()));
+            Cookie roleCookie = new Cookie("role",role);
+            cookie.setMaxAge(60 * 60 * 24 * 7);
+            roleCookie.setMaxAge(60 * 60 * 24 * 7);
+            response.addCookie(cookie);
+            response.addCookie(roleCookie);
             switch (role) {
                 case "Customer":
                     CustomerDAO customerDAO = new CustomerDAO();

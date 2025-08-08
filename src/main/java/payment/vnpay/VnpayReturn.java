@@ -6,18 +6,24 @@ import dao.TransactionDAO;
 import dao.ChatDAO;
 import dao.CustomerProgramDAO;
 import dao.ProgramDAO;
+
 import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
 import model.Transaction;
 import Utils.NotificationUtil;
 
@@ -32,7 +38,7 @@ public class VnpayReturn extends HttpServlet {
             throws ServletException, IOException {
 
         Map<String, String> fields = new HashMap<>();
-        for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements();) {
+        for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
             String fieldName = params.nextElement();
             String fieldValue = request.getParameter(fieldName);
             if (fieldValue != null && !fieldValue.isEmpty()) {
@@ -71,7 +77,7 @@ public class VnpayReturn extends HttpServlet {
                     LocalDate startDate = LocalDate.now();
                     LocalDate endDate = startDate.plusDays(durationDays);
 
-                    contractDAO.createContract(trainerId, customerId, packageId, startDate, endDate);
+                    contractDAO.createContract(trainerId, customerId, packageId, Date.valueOf(startDate), Date.valueOf(endDate));
                     System.out.println("✅ Contract created");
 
                     ProgramDAO programDAO = new ProgramDAO();
@@ -80,7 +86,7 @@ public class VnpayReturn extends HttpServlet {
                     System.out.println("✅ Program ID resolved: " + programId);
 
                     if (programId > 0 && !cpDAO.isProgramAlreadyAssigned(customerId, programId)) {
-                        cpDAO.assignProgramToCustomer(programId, customerId, startDate);
+                        cpDAO.assignProgramToCustomer(programId, customerId, Date.valueOf(startDate), Date.valueOf(endDate));
                         System.out.println("✅ Program assigned to customer");
                     }
 
@@ -91,16 +97,16 @@ public class VnpayReturn extends HttpServlet {
                         int chatId = chatDAO.createChatIfNotExists(customerId, trainerId);
                         System.out.println("✅ Chat created with ID: " + chatId);
                     }
-                    
+
                     // Gửi notification thành công cho customer
-                    NotificationUtil.sendSuccessNotification(customerId, 
-                        "Payment Successful!", 
-                        "Your package purchase has been completed successfully via VNPay!");
-                    
+                    NotificationUtil.sendSuccessNotification(customerId,
+                            "Payment Successful!",
+                            "Your package purchase has been completed successfully via VNPay!");
+
                     // Gửi notification cho trainer về khách hàng mới
-                    NotificationUtil.sendInfoNotification(trainerId, 
-                        "New Customer Purchase", 
-                        "A new customer has purchased your package!");
+                    NotificationUtil.sendInfoNotification(trainerId,
+                            "New Customer Purchase",
+                            "A new customer has purchased your package!");
 
                     transSuccess = true;
                 } else {

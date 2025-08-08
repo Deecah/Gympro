@@ -100,7 +100,7 @@
                                                         <button class="btn btn-secondary btn-sm" disabled>Already Purchased</button>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <a href="${pageContext.request.contextPath}/purchase?packageId=${p.packageID}" 
+                                                        <a href="${pageContext.request.contextPath}/PackageDetailServlet?packageId=${p["packageID"]}"
                                                            class="btn btn-outline-success btn-sm">Purchase Package</a>
                                                     </c:otherwise>
                                                 </c:choose>

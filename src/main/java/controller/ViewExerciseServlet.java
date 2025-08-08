@@ -19,18 +19,25 @@ public class ViewExerciseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Optional: Check if user is logged in; skip if public
-        HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-        if (user == null) {
-            // Redirect to login or show public view, depending on your design
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+
+        String userId = null;
+        String role = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase("userId") && cookie.getValue() != null) {
+                userId = cookie.getValue();
+            } else if (cookie.getName().equalsIgnoreCase("role") && cookie.getValue() != null) {
+                role = cookie.getValue();
+            }
+        }
+        // Check if user is authenticated and is a trainer
+        if (userId == null || role == null || !role.equalsIgnoreCase("Trainer")) {
+            response.sendRedirect("login.jsp");
             return;
         }
 
         // Get list of all exercises
-        List<ExerciseLibrary> exercises = exerciseDAO.getAllExercises();
+        List<ExerciseLibrary> exercises = exerciseDAO.getAllExercises(Integer.parseInt(userId));
 
         // Set the list as a request attribute for JSP
         request.setAttribute("exercises", exercises);
